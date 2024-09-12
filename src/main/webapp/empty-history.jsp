@@ -10,9 +10,9 @@
 <body>
 	<div class="container">
 		<div class="content">
-			<h2>No games have been played yet!</h2>
+			<h2>${message}</h2>
 			<form action="index-redirect" method="get">
-				<input class="key" type="submit" value="Start new Game">
+				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>
 	</div>

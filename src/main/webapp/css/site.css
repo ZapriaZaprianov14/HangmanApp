@@ -1,5 +1,28 @@
-body {
-	font-family: Candara;
+html,
+body{
+	height:100%;
+	width:100%;
+	margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Candara;
+    background-color: #d9d9d9;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+  	width:65%;
+  	height: 100%;
+  	background-color:white;
+  	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  	overflow: auto; 
+}
+
+.container > * {
+    margin: auto;
 }
 
 button {
@@ -14,32 +37,50 @@ table {
 	border-spacing: 15px;
 }
 
-.keyboard {
-	display: grid;
-	grid-template-columns: repeat(9, 1fr);
-	gap: 5px;
-	min-width: 300px;
+.keyboard-row {
+    display: flex;
+    justify-content: center; /* Center the row horizontally */
+    margin-bottom: 10px; /* Space between rows */
 }
 
 .key {
 	width: 100%;
-	height: 30px;
+	height: 100%;
 	background-color: #18b3b3;
 	border-radius: 8px;
 	border: none;
+	margin: 10px;
+	min-width: 20px;
 }
 
 .key:hover {
 	background-color: #5dc2c2;
 	transition: ease 0.25s;
-	box-shadow: 4px 4px 2px #a1e3e3;
+	box-shadow: 3px 3px 2px #a1e3e3;
+}
+
+.key-disabled{
+	width: 100%;
+	height: 100%;
+	background-color: gray;
+	border-radius: 8px;
+	border: none;
+	margin: 10px;
+	min-width: 20px;
+	cursor:default;
+	color:black;
+}
+
+.key-form{
+	margin:2px;
+	transition: ease 0.25s;
 }
 
 .generic-btn {
 	background-color: #18b3b3;
 	border-radius: 8px;
 	border: none;
-	min-height: 25px;
+	min-height: 35px;
 	min-width: 170px;
 }
 
@@ -51,12 +92,6 @@ table {
 
 .small-btn {
 	min-width: 100px;
-}
-
-.container {
-	display: flex;
-	justify-content: center;
-  	align-items: center;
 }
 
 .content {
