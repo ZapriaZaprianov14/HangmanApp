@@ -1,0 +1,80 @@
+body {
+	font-family: Candara;
+}
+
+button {
+	font-family: Candara;
+}
+
+input {
+	font-family: Candara;
+}
+
+table {
+	border-spacing: 15px;
+}
+
+.keyboard {
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	gap: 5px;
+	min-width: 300px;
+}
+
+.key {
+	width: 100%;
+	height: 30px;
+	background-color: #18b3b3;
+	border-radius: 8px;
+	border: none;
+}
+
+.key:disabled {
+	color: red;
+}
+
+.key:hover {
+	background-color: #5dc2c2;
+	transition: ease 0.25s;
+	box-shadow: 4px 4px 2px #a1e3e3;
+}
+
+.generic-btn {
+	background-color: #18b3b3;
+	border-radius: 8px;
+	border: none;
+	min-height: 25px;
+	min-width: 170px;
+}
+
+.generic-btn:hover {
+	background-color: #5dc2c2;
+	transition: ease 0.25s;
+	box-shadow: 4px 4px 2px #a1e3e3;
+}
+
+.small-btn {
+	min-width: 100px;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+}
+
+.content {
+	text-align: center;
+}
+
+.stickman {
+	max-height: 250px;
+	height: auto;
+}
+
+.check-mark {
+	color: green;
+}
+
+.cross-mark {
+	color: red;
+}
