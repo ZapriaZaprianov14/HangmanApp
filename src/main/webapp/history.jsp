@@ -25,7 +25,7 @@
 					<c:forEach items="${previousGames}" var="game">
 						<c:if test="${!game.value.finished}">
 							<tr>
-								<td>${game.value.wordProgress}</td>
+								<td class="preserve-space">${game.value.wordProgress}</td>
 								<td>${game.value.category}</td>
 								<td>${game.value.lives}</td>
 								<td>

@@ -9,7 +9,7 @@
 	<div class="container">
 		<div class="content">
 			<p>Your chosen category: ${currentGameData.category}</p>
-			<p>Word: ${currentGameData.wordProgress}</p>
+			<p class="preserve-space">Word: ${currentGameData.wordProgress}</p>
 			<br>
 			<div class="keyboard">
 				<c:forEach items="${alphabet}" var="letter">

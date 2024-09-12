@@ -29,10 +29,6 @@ table {
 	border: none;
 }
 
-.key:disabled {
-	color: red;
-}
-
 .key:hover {
 	background-color: #5dc2c2;
 	transition: ease 0.25s;
@@ -60,6 +56,7 @@ table {
 .container {
 	display: flex;
 	justify-content: center;
+  	align-items: center;
 }
 
 .content {
@@ -77,4 +74,8 @@ table {
 
 .cross-mark {
 	color: red;
+}
+
+.preserve-space {
+	white-space: pre;
 }
