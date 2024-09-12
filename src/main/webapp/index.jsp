@@ -1,35 +1,31 @@
 <html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/site.css" />
+<title>Hangman game</title>
+</head>
 <body>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
-<form action="new-game" method="get" style="margin-bottom: 10px">
-    <input type="submit" name="category" value="cars">
-    <input type="submit" name="category" value="cities">
-    <input type="submit" name="category" value="fruits">
-</form>
-<br>
-<p>Previous games:</p>
-<c:forEach items="${previousGames}" var="game">  
-   <c:choose>		
-   		<c:when test="${!game.value.finished}">
-   			<form action="resume-game" method="get" style="margin-bottom: 10px">
-   			 	Progress: ${game.value.wordProgress}
-   				Remaining lives: ${game.value.lives}
-			    <input type="hidden" name="gameId" value="${game.value.id}" />
-			    <input type="submit" name="actionName" value="Resume this Game">
+	<div class="container">
+		<div class="content">
+			<p>Welcome to the Hangman game</p>
+			<p>Choose your category:</p>
+
+
+			<form action="new-game" method="post" style="margin-bottom: 10px">
+				Single-Player: <input class="small-btn generic-btn" type="submit"
+					name="category" value="Cars"> <input
+					class="small-btn generic-btn" type="submit" name="category"
+					value="Cities"> <input class="small-btn generic-btn"
+					type="submit" name="category" value="Fruits">
 			</form>
-   		</c:when>
-   		<c:when test="${game.value.gameWon}">
-   		 	Word: ${game.value.wordProgress}
-   			Remaining lives: ${game.value.lives}
-   			This game has been won!
-   			<br>
-   		</c:when>
-   		<c:otherwise>
-   		 	Word: ${game.value.wordProgress}
-   			This game has been lost!
-   			<br>
-   		</c:otherwise>
-   </c:choose>
-</c:forEach>
+			<p>
+				Multiplayer:
+				<button disabled>Not implemented</button>
+			</p>
+			<form action="view-history" method="get">
+				<input class="generic-btn" type="submit" value="View Game History">
+			</form>
+
+		</div>
+	</div>
 </body>
 </html>
