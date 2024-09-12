@@ -1,5 +1,6 @@
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,12 +31,16 @@ public class NewGameServlet extends HttpServlet {
       session.setAttribute("previousGames", previousGames);
     }
     initializeGame(request);
-    session.setAttribute(
-        "alphabet",
-        new ArrayList<Character>(
-            Arrays.asList(
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')));
+
+    List<List<Character>> qwertyKeyboard = new ArrayList<List<Character>>();
+
+    qwertyKeyboard.add(
+        new ArrayList<Character>(Arrays.asList('Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P')));
+    qwertyKeyboard.add(
+        new ArrayList<Character>(Arrays.asList('A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L')));
+    qwertyKeyboard.add(new ArrayList<Character>(Arrays.asList('Z', 'X', 'C', 'V', 'B', 'N', 'M')));
+
+    session.setAttribute("qwertyKeyboard", qwertyKeyboard);
     RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/game");
     dispatcher.forward(request, response);
   }
@@ -50,15 +55,14 @@ public class NewGameServlet extends HttpServlet {
 
     try {
       JSONParser parser = new JSONParser();
-      JSONObject data =
-          (JSONObject)
-              parser.parse(
-                  new FileReader(
-                      "C:/Users/z.zapryanov/eclipse-workspace/HangmanApp/src/main/resources/words/words_data.json"));
+      InputStream inputStream = NewGameServlet.class.getClassLoader().getResourceAsStream("words_data.json");
+      if (inputStream == null) {
+          System.out.println("File not found!");
+          return;
+      }
+      JSONObject data = (JSONObject) parser.parse(new InputStreamReader(inputStream));
       List<String> words = new ArrayList<>((JSONArray) data.get(category));
-
       gameData.setWord(words.get(random.nextInt(words.size())));
-      gameData.setCategory(category);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ParseException e) {
@@ -67,6 +71,7 @@ public class NewGameServlet extends HttpServlet {
       e.printStackTrace();
     }
 
+    gameData.setCategory(Category.valueOf(category.toUpperCase()));
     String wordToGuess = gameData.getWord();
     Character firstChar = wordToGuess.charAt(0);
     Character lastChar = wordToGuess.charAt(wordToGuess.length() - 1);
