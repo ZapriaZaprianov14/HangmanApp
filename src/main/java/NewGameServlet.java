@@ -2,11 +2,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,36 +18,35 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/new-game")
 public class NewGameServlet extends HttpServlet {
+
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    HttpSession session = request.getSession();
-
-    if (session.getAttribute("previousGames") == null) {
-      HashMap<UUID, GameData> previousGames = new HashMap<UUID, GameData>();
-      session.setAttribute("previousGames", previousGames);
-    }
-    initializeGame(request);
-
-    List<List<Character>> qwertyKeyboard = new ArrayList<List<Character>>();
-
-    qwertyKeyboard.add(
-        new ArrayList<Character>(Arrays.asList('Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P')));
-    qwertyKeyboard.add(
-        new ArrayList<Character>(Arrays.asList('A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L')));
-    qwertyKeyboard.add(new ArrayList<Character>(Arrays.asList('Z', 'X', 'C', 'V', 'B', 'N', 'M')));
-
-    session.setAttribute("qwertyKeyboard", qwertyKeyboard);
+    initializeGame(request, response);
     RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/game");
     dispatcher.forward(request, response);
   }
 
-  private void initializeGame(HttpServletRequest request) {
+  //if user types into the browser
+  //it does not save the game
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    response.sendRedirect("index-redirect");
+    return;
+  }
+
+  private void initializeGame(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
     HttpSession session = request.getSession();
 
     String category = request.getParameter("category");
+
+    // configurable from the initContextListener
+    int maxLives = (int) session.getServletContext().getAttribute("maxLives");
     GameData gameData = new GameData();
+    gameData.setLives(maxLives);
     Random random = new Random();
 
     try {
@@ -64,15 +60,11 @@ public class NewGameServlet extends HttpServlet {
       JSONObject data = (JSONObject) parser.parse(new InputStreamReader(inputStream));
       List<String> words = new ArrayList<>((JSONArray) data.get(category));
       gameData.setWord(words.get(random.nextInt(words.size())));
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ParseException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
+    } catch (IOException | ParseException e) {
       e.printStackTrace();
     }
 
-    gameData.setCategory(Category.valueOf(category.toUpperCase()));
+    gameData.setCategory(CategoryEnum.valueOf(category.toUpperCase()));
     String wordToGuess = gameData.getWord();
     Character firstChar = wordToGuess.charAt(0);
     Character lastChar = wordToGuess.charAt(wordToGuess.length() - 1);
@@ -91,4 +83,5 @@ public class NewGameServlet extends HttpServlet {
     }
     session.setAttribute("currentGameData", gameData);
   }
+  
 }

@@ -21,15 +21,15 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${previousGames}" var="game">
-						<c:if test="${!game.value.finished}">
+					<c:forEach items="${gamesReversed}" var="game">
+						<c:if test="${!game.finished}">
 							<tr>
-								<td class="preserve-space">${game.value.wordProgress}</td>
-								<td>${game.value.category}</td>
-								<td>${game.value.lives}</td>
+								<td class="preserve-space">${game.wordProgress}</td>
+								<td>${game.category}</td>
+								<td>${game.lives}</td>
 								<td>
 									<form action="resume-game" method="post">
-										<input type="hidden" name="gameId" value="${game.value.id}" />
+										<input type="hidden" name="gameId" value="${game.id}" />
 										<input class="small-btn generic-btn" type="submit"
 											name="actionName" value="Resume">
 									</form>

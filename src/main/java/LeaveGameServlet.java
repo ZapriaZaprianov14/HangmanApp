@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
-import jakarta.servlet.RequestDispatcher;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,19 +17,25 @@ public class LeaveGameServlet extends HttpServlet {
 
     // if refresh is clicked
     if (currentGame == null) {
-      RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index.jsp");
-      dispatcher.forward(request, response);
+      response.sendRedirect("index-redirect");
       return;
     }
+
     currentGame.setFinished(false);
-    HashMap<UUID, GameData> previousGames =
-        (HashMap<UUID, GameData>) session.getAttribute("previousGames");
-    previousGames.put(currentGame.getId(), currentGame);
+    List<GameData> previousGames = (List<GameData>) session.getAttribute("previousGames");
+    previousGames.add(currentGame);
 
     session.removeAttribute("currentGameData");
     session.removeAttribute("category");
 
-    RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/index-redirect");
-    dispatcher.forward(request, response);
+    response.sendRedirect("index-redirect");
+    return;
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    response.sendRedirect("index-redirect");
+    return;
   }
 }

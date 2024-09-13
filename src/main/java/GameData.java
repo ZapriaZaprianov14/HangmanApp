@@ -17,7 +17,7 @@ public class GameData implements Serializable {
   private Set<Character> rightGuesses;
   private String word;
   private String wordProgress;
-  private Category category;
+  private CategoryEnum category;
   private boolean gameWon;
   private int irrelevantCharacters;
 
@@ -37,11 +37,13 @@ public class GameData implements Serializable {
     this.gameWon = gameWon;
   }
 
-  public Category getCategory() {
-  return category;}
+  public CategoryEnum getCategory() {
+    return category;
+  }
 
-  public void setCategory(Category category) {
-  this.category = category;}
+  public void setCategory(CategoryEnum category) {
+    this.category = category;
+  }
 
   private boolean finished;
 
@@ -111,9 +113,6 @@ public class GameData implements Serializable {
 
   public GameData() {
     id = UUID.randomUUID();
-    this.lives = 9;
-    this.guessedLetters = 0;
-    this.irrelevantCharacters = 0;
     this.unguessedLetters =
         new ArrayList<Character>(
             Arrays.asList(

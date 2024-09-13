@@ -39,8 +39,8 @@ table {
 
 .keyboard-row {
     display: flex;
-    justify-content: center; /* Center the row horizontally */
-    margin-bottom: 10px; /* Space between rows */
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .key {
@@ -51,6 +51,7 @@ table {
 	border: none;
 	margin: 10px;
 	min-width: 20px;
+	cursor: pointer;
 }
 
 .key:hover {
@@ -82,6 +83,7 @@ table {
 	border: none;
 	min-height: 35px;
 	min-width: 170px;
+	cursor: pointer;
 }
 
 .generic-btn:hover {

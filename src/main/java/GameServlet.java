@@ -1,6 +1,5 @@
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,32 +18,31 @@ public class GameServlet extends HttpServlet {
     HttpSession session = request.getSession();
 
     this.gameData = (GameData) session.getAttribute("currentGameData");
+    String guess = request.getParameter("guess");
+    
     if (gameData == null) {
-      RequestDispatcher dispatcher =
-          this.getServletContext().getRequestDispatcher("/index-redirect");
-      dispatcher.forward(request, response);
+      System.out.println("Redirecting" ); 
+      response.sendRedirect("index-redirect");
       return;
     }
 
-    String guess = request.getParameter("guess");
-
     this.guessLetter(guess);
 
-    String wordProgress = getWordProgress();
-    gameData.setWordProgress(wordProgress);
+    gameData.setWordProgress(getWordProgress());
 
     if (gameData.getLives() <= 0) {
       // Game lost.
       gameData.setFinished(true);
       gameData.setGameWon(false);
       session.removeAttribute("currentGameData");
-      HashMap<UUID, GameData> previousGames =
-          (HashMap<UUID, GameData>) session.getAttribute("previousGames");
-      previousGames.put(gameData.getId(), gameData);
+      List<GameData> previousGames = (List<GameData>) session.getAttribute("previousGames");
+      previousGames.add(gameData);
       request.setAttribute("message", "The word was: " + gameData.getWord());
+
       RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/loss.jsp");
       dispatcher.forward(request, response);
       return;
+
     } else if (gameData.getGuessedLetters()
         >= gameData.getWord().length() - gameData.getIrrelevantCharacters()) {
       // Game won.
@@ -52,10 +50,11 @@ public class GameServlet extends HttpServlet {
       gameData.setGameWon(true);
       session.removeAttribute("currentGameData");
       gameData.setWordProgress(gameData.getWord());
-      HashMap<UUID, GameData> previousGames =
-          (HashMap<UUID, GameData>) session.getAttribute("previousGames");
-      previousGames.put(gameData.getId(), gameData);
-      request.setAttribute("message", "You have successfuly guessed the word " + gameData.getWord());
+      List<GameData> previousGames = (List<GameData>) session.getAttribute("previousGames");
+      previousGames.add(gameData);
+
+      request.setAttribute(
+          "message", "You have successfuly guessed the word " + gameData.getWord());
       RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/win.jsp");
       dispatcher.forward(request, response);
       return;
@@ -63,6 +62,14 @@ public class GameServlet extends HttpServlet {
 
     session.setAttribute("currentGameData", gameData);
 
+    RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/game.jsp");
+    dispatcher.forward(request, response);
+  }
+
+  //if the user types it into the browser
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/game.jsp");
     dispatcher.forward(request, response);
   }

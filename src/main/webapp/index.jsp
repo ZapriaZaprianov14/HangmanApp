@@ -10,7 +10,7 @@
 			<p>Choose your category:</p>
 
 
-			<form action="new-game" method="post" style="margin-bottom: 10px">
+			<form action="new-game" method="post">
 			
 				<input class="generic-btn"
 					type="submit" name="category" value="Cities">
@@ -41,10 +41,10 @@
 				<button disabled>Not implemented</button>
 			</p>
 			<br>
-			<form action="view-history" method="get">
+			<form action="history" method="get">
 				<input class="generic-btn" type="submit" value="View Game History">
 			</form>
-			<form action="view-ongoing" method="get">
+			<form action="ongoing" method="get">
 				<input class="generic-btn" type="submit" value="View Ongoing Games">
 			</form>
 			

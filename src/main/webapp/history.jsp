@@ -21,21 +21,21 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${previousGames}" var="game">
-						<c:if test="${game.value.finished}">
+					<c:forEach items="${gamesReversed}" var="game">
+						<c:if test="${game.finished}">
 							<c:choose>
-								<c:when test="${game.value.gameWon}">
+								<c:when test="${game.gameWon}">
 									<tr>
-										<td>${game.value.word}</td>
-										<td>${game.value.category}</td>
-										<td>${9 - game.value.lives}</td>
+										<td>${game.word}</td>
+										<td>${game.category}</td>
+										<td>${9 - game.lives}</td>
 										<td>Won <b class="check-mark">✔</b></td>
 									</tr>
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td>${game.value.word}</td>
-										<td>${game.value.category}</td>
+										<td>${game.word}</td>
+										<td>${game.category}</td>
 										<td>-</td>
 										<td>Lost <b class="cross-mark">❌</b></td>
 									</tr>
