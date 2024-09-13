@@ -100,7 +100,12 @@ table {
 
 .stickman {
 	max-height: 250px;
-	height: auto;
+	width: auto;
+}
+
+.stickman-big{
+	max-height: 400px;
+	width: auto;
 }
 
 .check-mark {

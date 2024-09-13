@@ -55,10 +55,11 @@ public class NewGameServlet extends HttpServlet {
 
     try {
       JSONParser parser = new JSONParser();
-      InputStream inputStream = NewGameServlet.class.getClassLoader().getResourceAsStream("words_data.json");
+      InputStream inputStream =
+          NewGameServlet.class.getClassLoader().getResourceAsStream("words_data.json");
       if (inputStream == null) {
-          System.out.println("File not found!");
-          return;
+        System.out.println("File not found!");
+        return;
       }
       JSONObject data = (JSONObject) parser.parse(new InputStreamReader(inputStream));
       List<String> words = new ArrayList<>((JSONArray) data.get(category));

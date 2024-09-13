@@ -25,7 +25,6 @@ public class GameServlet extends HttpServlet {
       dispatcher.forward(request, response);
       return;
     }
-    session.removeAttribute("trivialGuess");
 
     String guess = request.getParameter("guess");
 
@@ -42,6 +41,7 @@ public class GameServlet extends HttpServlet {
       HashMap<UUID, GameData> previousGames =
           (HashMap<UUID, GameData>) session.getAttribute("previousGames");
       previousGames.put(gameData.getId(), gameData);
+      request.setAttribute("message", "The word was: " + gameData.getWord());
       RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/loss.jsp");
       dispatcher.forward(request, response);
       return;
@@ -55,6 +55,7 @@ public class GameServlet extends HttpServlet {
       HashMap<UUID, GameData> previousGames =
           (HashMap<UUID, GameData>) session.getAttribute("previousGames");
       previousGames.put(gameData.getId(), gameData);
+      request.setAttribute("message", "You have successfuly guessed the word " + gameData.getWord());
       RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/win.jsp");
       dispatcher.forward(request, response);
       return;

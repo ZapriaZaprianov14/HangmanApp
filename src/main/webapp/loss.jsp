@@ -11,11 +11,11 @@
 	<div class="container">
 		<div class="content">
 			<h1>You lost :(</h1>
-			<p>Try again!</p>
-			<form style="margin-bottom: 50px;" action="index.jsp" method="get">
+			<p>${message}</p>
+			<img class="stickman-big" src="images/hangman-0.png">
+			<form action="index.jsp" method="get">
 				<input class="generic-btn" type="submit" value="Start new game">
 			</form>
-			<img class="stickman" src="images/hangman-0.png">
 		</div>
 	</div>
 </body>

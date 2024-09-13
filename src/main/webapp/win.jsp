@@ -11,6 +11,7 @@
 	<div class="container">
 		<div class="content">
 			<h1>You won the game!!</h1>
+			<p>${message}</p>
 			<form action="index.jsp" method="get">
 				<input class="generic-btn" type="submit" value="Start new game">
 			</form>
