@@ -17,7 +17,7 @@ public class LeaveGameServlet extends HttpServlet {
 
     // if refresh is clicked
     if (currentGame == null) {
-      response.sendRedirect("index-redirect");
+      response.sendRedirect("index");
       return;
     }
 
@@ -26,16 +26,14 @@ public class LeaveGameServlet extends HttpServlet {
     previousGames.add(currentGame);
 
     session.removeAttribute("currentGameData");
-    session.removeAttribute("category");
-
-    response.sendRedirect("index-redirect");
+    response.sendRedirect("index");
     return;
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    response.sendRedirect("index-redirect");
+    response.sendRedirect("index");
     return;
   }
 }

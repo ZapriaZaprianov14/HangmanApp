@@ -16,12 +16,10 @@ public class OngoingGamesServlet extends HttpServlet {
       throws IOException, ServletException {
     HttpSession session = request.getSession();
     List<GameData> previousGames = (List<GameData>) session.getAttribute("previousGames");
-    if (previousGames == null
-        || previousGames.isEmpty()
-        || !containsUnfinishedGames(previousGames)) {
+    // the list has to contain
+    if (previousGames == null || previousGames.isEmpty() || !containsOngoingGames(previousGames)) {
       request.setAttribute("message", "No onging games.");
-      RequestDispatcher dispatcher =
-          this.getServletContext().getRequestDispatcher("/empty-history.jsp");
+      RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/empty.jsp");
       dispatcher.forward(request, response);
     } else {
       request.setAttribute("gamesReversed", reverseData(previousGames));
@@ -30,7 +28,7 @@ public class OngoingGamesServlet extends HttpServlet {
     }
   }
 
-  private boolean containsUnfinishedGames(List<GameData> games) {
+  private boolean containsOngoingGames(List<GameData> games) {
     return games.stream().anyMatch(game -> !game.isFinished());
   }
 

@@ -16,7 +16,9 @@
 					<tr>
 						<th>Word</th>
 						<th>Category</th>
+						<th>Guesses Made</th>
 						<th>Number of Mistakes</th>
+						<th>Gamemode</th>
 						<th>Status</th>
 					</tr>
 				</thead>
@@ -28,7 +30,9 @@
 									<tr>
 										<td>${game.word}</td>
 										<td>${game.category}</td>
+										<td>${game.guessesMade}</td>
 										<td>${9 - game.lives}</td>
+										<td>${game.gamemode}</td>
 										<td>Won <b class="check-mark">✔</b></td>
 									</tr>
 								</c:when>
@@ -45,7 +49,7 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<form style="margin:20px" action="index-redirect" method="get">
+			<form style="margin:20px" action="index" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>

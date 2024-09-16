@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/game")
+@WebServlet(
+    name = "GameServlet",
+    urlPatterns = {"/game"},
+    loadOnStartup = 1)
 public class GameServlet extends HttpServlet {
   private GameData gameData;
 
@@ -19,17 +22,16 @@ public class GameServlet extends HttpServlet {
 
     this.gameData = (GameData) session.getAttribute("currentGameData");
     String guess = request.getParameter("guess");
-    
+
     if (gameData == null) {
-      System.out.println("Redirecting" ); 
-      response.sendRedirect("index-redirect");
+      response.sendRedirect("index");
       return;
     }
 
     this.guessLetter(guess);
-
     gameData.setWordProgress(getWordProgress());
 
+    // check if game is ready to end
     if (gameData.getLives() <= 0) {
       // Game lost.
       gameData.setFinished(true);
@@ -44,7 +46,8 @@ public class GameServlet extends HttpServlet {
       return;
 
     } else if (gameData.getGuessedLetters()
-        >= gameData.getWord().length() - gameData.getIrrelevantCharacters()) {
+        >= gameData.getWord().length()
+            - gameData.getIrrelevantCharacters()) { // ignores irrelevant characters
       // Game won.
       gameData.setFinished(true);
       gameData.setGameWon(true);
@@ -66,7 +69,7 @@ public class GameServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
-  //if the user types it into the browser
+  // if the user types the uri into the browser
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -87,7 +90,9 @@ public class GameServlet extends HttpServlet {
         sb.append(currChar);
         sb.append(' ');
         currentGuessed++;
-      } else if (currChar == ' ' || currChar == '-') {
+      } else if (currChar == ' '
+          || currChar == '-'
+          || currChar == '_') { // outputs the irrelevant characters
         sb.append(' ');
         sb.append(currChar);
         sb.append(' ');
@@ -108,12 +113,13 @@ public class GameServlet extends HttpServlet {
     String word = gameData.getWord();
     Character charToGuess = letter.charAt(0);
     if (word.contains(letter) && gameData.getUnguessedLetters().contains(charToGuess)) {
-
       gameData.getRightGuesses().add(charToGuess);
       gameData.getUnguessedLetters().remove(charToGuess);
+      gameData.setGuessesMade(gameData.getGuessesMade() + 1);
     } else if (gameData.getUnguessedLetters().contains(charToGuess)) {
       gameData.getUnguessedLetters().remove(charToGuess);
       gameData.setLives(gameData.getLives() - 1);
+      gameData.setGuessesMade(gameData.getGuessesMade() + 1);
     }
   }
 }

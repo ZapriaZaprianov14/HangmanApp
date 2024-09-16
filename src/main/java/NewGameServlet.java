@@ -27,8 +27,8 @@ public class NewGameServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
-  //if user types into the browser
-  //it does not save the game
+  // if user types into the browser
+  // it does not save the game
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
@@ -38,12 +38,11 @@ public class NewGameServlet extends HttpServlet {
 
   private void initializeGame(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     HttpSession session = request.getSession();
 
     String category = request.getParameter("category");
 
-    // configurable from the initContextListener
+    // configurable from the initializingContextListener
     int maxLives = (int) session.getServletContext().getAttribute("maxLives");
     GameData gameData = new GameData();
     gameData.setLives(maxLives);
@@ -57,14 +56,16 @@ public class NewGameServlet extends HttpServlet {
         System.out.println("File not found!");
         return;
       }
+
       JSONObject data = (JSONObject) parser.parse(new InputStreamReader(inputStream));
-      List<String> words = new ArrayList<>((JSONArray) data.get(category));
+      List<String> words = new ArrayList<>((JSONArray) data.get(category.toLowerCase()));
       gameData.setWord(words.get(random.nextInt(words.size())));
     } catch (IOException | ParseException e) {
       e.printStackTrace();
     }
 
     gameData.setCategory(CategoryEnum.valueOf(category.toUpperCase()));
+    gameData.setGamemode(GamemodeEnum.SINGLEPLAYER);
     String wordToGuess = gameData.getWord();
     Character firstChar = wordToGuess.charAt(0);
     Character lastChar = wordToGuess.charAt(wordToGuess.length() - 1);
@@ -77,11 +78,10 @@ public class NewGameServlet extends HttpServlet {
 
     for (int i = 0; i < wordToGuess.length(); i++) {
       char currChar = wordToGuess.charAt(i);
-      if (currChar == ' ' || currChar == '-') {
+      if (currChar == ' ' || currChar == '-' || currChar == '_') {
         gameData.setIrrelevantCharacters(gameData.getIrrelevantCharacters() + 1);
       }
     }
     session.setAttribute("currentGameData", gameData);
   }
-  
 }

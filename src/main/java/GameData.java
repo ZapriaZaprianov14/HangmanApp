@@ -12,14 +12,16 @@ public class GameData implements Serializable {
 
   private UUID id;
   private int lives;
-  private int guessedLetters;
-  private List<Character> unguessedLetters;
-  private Set<Character> rightGuesses;
+  private int guessedLetters; // correctlyGuessedLetters
+  private int irrelevantCharacters; // whitespaces _ and - are irrelevant
+  private int guessesMade;
   private String word;
   private String wordProgress;
+  private List<Character> unguessedLetters;
+  private Set<Character> rightGuesses;
   private CategoryEnum category;
+  private GamemodeEnum gamemode;
   private boolean gameWon;
-  private int irrelevantCharacters;
 
   public int getIrrelevantCharacters() {
     return irrelevantCharacters;
@@ -33,6 +35,14 @@ public class GameData implements Serializable {
     return gameWon;
   }
 
+  public int getGuessesMade() {
+    return guessesMade;
+  }
+
+  public void setGuessesMade(int guessesMade) {
+    this.guessesMade = guessesMade;
+  }
+
   public void setGameWon(boolean gameWon) {
     this.gameWon = gameWon;
   }
@@ -43,6 +53,14 @@ public class GameData implements Serializable {
 
   public void setCategory(CategoryEnum category) {
     this.category = category;
+  }
+
+  public GamemodeEnum getGamemode() {
+    return gamemode;
+  }
+
+  public void setGamemode(GamemodeEnum gamemode) {
+    this.gamemode = gamemode;
   }
 
   private boolean finished;

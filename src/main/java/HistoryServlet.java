@@ -19,10 +19,10 @@ public class HistoryServlet extends HttpServlet {
 
     if (previousGames == null || previousGames.isEmpty() || !containsFinishedGames(previousGames)) {
       request.setAttribute("message", "No games have been finished yet.");
-      RequestDispatcher dispatcher =
-          this.getServletContext().getRequestDispatcher("/empty-history.jsp");
+      RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/empty.jsp");
       dispatcher.forward(request, response);
     } else {
+      // reversing to display the last games first inside the page
       request.setAttribute("gamesReversed", reverseData(previousGames));
       RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/history.jsp");
       dispatcher.forward(request, response);

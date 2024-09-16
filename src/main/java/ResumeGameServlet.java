@@ -24,10 +24,10 @@ public class ResumeGameServlet extends HttpServlet {
 
     UUID gameID = UUID.fromString(stringID);
     List<GameData> previousGames = (List<GameData>) session.getAttribute("previousGames");
-    //    GameData gameToResume = previousGames.get(gameID);
     GameData gameToResume = getGame(previousGames, gameID);
+    previousGames.remove(gameToResume);
     session.setAttribute("currentGameData", gameToResume);
-    session.setAttribute("category", gameToResume);
+    session.setAttribute("previousGames", previousGames);
 
     RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/game.jsp");
     dispatcher.forward(request, response);
@@ -36,7 +36,7 @@ public class ResumeGameServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    response.sendRedirect("index-redirect");
+    response.sendRedirect("index");
     return;
   }
 

@@ -15,19 +15,10 @@
 			<c:forEach items="${qwertyKeyboard}" var="row">
 				<div class="keyboard-row">
 					<c:forEach items="${row}" var="letter">
-						<c:choose>
-							<c:when
-								test="${currentGameData.unguessedLetters.contains(letter)}">
-								<form class="key-form" action="game" method="post">
-									<input class="key" type="submit" name="guess" value="${letter}">
-								</form>
-							</c:when>
-							<c:otherwise>
-								<form class="key-form" action="game" method="post">
-									<input disabled class="key-disabled" type="submit" name="guess" value="${letter}">
-								</form>
-							</c:otherwise>
-						</c:choose>
+						<form class="key-form" action="game" method="post">
+							<input type="submit" name="guess" value="${letter}"
+								${ !currentGameData.unguessedLetters.contains(letter) ? 'disabled="disabled" class="key-disabled"' : 'class="key"'} />
+						</form>
 					</c:forEach>
 				</div>
 			</c:forEach>

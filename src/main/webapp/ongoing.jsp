@@ -16,7 +16,9 @@
 					<tr>
 						<th>Progress</th>
 						<th>Category</th>
+						<th>Guesses Made</th>
 						<th>Lives Left</th>
+						<th>Gamemode</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -26,7 +28,9 @@
 							<tr>
 								<td class="preserve-space">${game.wordProgress}</td>
 								<td>${game.category}</td>
+								<td>${game.guessesMade}</td>
 								<td>${game.lives}</td>
+								<td>${game.gamemode}</td>
 								<td>
 									<form action="resume-game" method="post">
 										<input type="hidden" name="gameId" value="${game.id}" />
@@ -40,7 +44,7 @@
 				</tbody>
 			</table>
 			
-			<form style="margin:20px" action="index-redirect" method="get">
+			<form style="margin:20px" action="index" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>

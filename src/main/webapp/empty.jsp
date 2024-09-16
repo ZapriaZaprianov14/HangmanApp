@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>No games played yet</title>
+<title>${message}</title>
 <link rel="stylesheet" type="text/css" href="css/site.css" />
 </head>
 <body>
 	<div class="container">
 		<div class="content">
 			<h2>${message}</h2>
-			<form action="index-redirect" method="get">
+			<form action="index" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>
