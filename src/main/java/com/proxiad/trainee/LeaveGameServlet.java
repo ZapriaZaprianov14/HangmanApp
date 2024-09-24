@@ -17,7 +17,7 @@ public class LeaveGameServlet extends HttpServlet {
 
   @Override
   public void init() {
-    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
     gameService = context.getBean(GameService.class);
   }
 
