@@ -5,17 +5,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpSession;
 
-@Service
 public class GameServiceImpl implements GameService {
 
   private static final int MAX_LIVES = 9;
 
-  @Autowired private GameRepository gameRepository;
-  @Autowired private WordGeneratorService generatorService;
+  private GameRepository gameRepository;
+  private WordGeneratorService wordGeneratorService;
 
   @Override
   public GameData makeTry(GameData game, String guess, HttpSession session) {
@@ -151,7 +148,7 @@ public class GameServiceImpl implements GameService {
   }
 
   private String getRandomWord(String category) {
-    return generatorService.createRandomWord(category);
+    return wordGeneratorService.createRandomWord(category);
   }
 
   private void validateWord(String word) throws InvalidWordException {
@@ -192,5 +189,21 @@ public class GameServiceImpl implements GameService {
       }
     }
     return revealedLetters == word.length();
+  }
+
+  public GameRepository getGameRepository() {
+    return gameRepository;
+  }
+
+  public void setGameRepository(GameRepository gameRepository) {
+    this.gameRepository = gameRepository;
+  }
+
+  public WordGeneratorService getWordGeneratorService() {
+    return wordGeneratorService;
+  }
+
+  public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
+    this.wordGeneratorService = wordGeneratorService;
   }
 }

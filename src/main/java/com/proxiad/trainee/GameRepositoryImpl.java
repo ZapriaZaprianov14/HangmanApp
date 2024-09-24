@@ -3,10 +3,8 @@ package com.proxiad.trainee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.stereotype.Repository;
 import jakarta.servlet.http.HttpSession;
 
-@Repository
 public class GameRepositoryImpl implements GameRepository {
 
   @Override

@@ -1,9 +1,8 @@
 package com.proxiad.trainee;
 
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,11 +13,11 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/game")
 public class GameServlet extends HttpServlet {
   private GameData game;
-  @Autowired private GameService gameService;
+  private GameService gameService;
 
   @Override
   public void init() {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
     gameService = context.getBean(GameService.class);
   }
 
