@@ -1,23 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lost game</title>
+<title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="css/site.css" />
 </head>
 <body>
 	<div class="container">
 		<div class="content">
-			<h1>You lost :(</h1>
-			<p>The word was: ${word}</p>
-			<img class="stickman-big" src="images/hangman-0.png">
-			<form action="home" method="get">
-				<input class="generic-btn" type="submit" value="Start new game">
+			<h2>${message}</h2>
+			<form action="multiplayer.jsp" method="get">
+				<input class="generic-btn" type="submit" value="Enter new Word">
 			</form>
 		</div>
 	</div>
 </body>
 </html>
-

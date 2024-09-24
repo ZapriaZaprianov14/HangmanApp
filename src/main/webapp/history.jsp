@@ -40,7 +40,9 @@
 									<tr>
 										<td>${game.word}</td>
 										<td>${game.category}</td>
-										<td>-</td>
+										<td>${game.guessesMade}</td>
+										<td>${9 - game.lives}</td>
+										<td>${game.gamemode}</td>
 										<td>Lost <b class="cross-mark">❌</b></td>
 									</tr>
 								</c:otherwise>
@@ -49,7 +51,7 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<form style="margin:20px" action="index" method="get">
+			<form style="margin:20px" action="home" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>

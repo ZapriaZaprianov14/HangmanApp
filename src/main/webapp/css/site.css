@@ -92,6 +92,24 @@ table {
 	box-shadow: 4px 4px 2px #a1e3e3;
 }
 
+.multiplayer-select{
+	background-color: #18b3b3;
+	min-width: 100px;
+	border-radius: 8px;
+	border: none;
+	min-height:35px;
+	text-align: center;
+	font-family: Candara;
+	cursor: pointer;
+}
+
+.multiplayer-input{
+	min-width: 25px;
+	margin: 8px;
+	-webkit-text-security: disc; /* For WebKit browsers */
+    text-security: disc; /* For other browsers */
+}
+
 .small-btn {
 	min-width: 100px;
 }

@@ -44,7 +44,7 @@
 				</tbody>
 			</table>
 			
-			<form style="margin:20px" action="index" method="get">
+			<form style="margin:20px" action="home" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>

@@ -1,3 +1,5 @@
+package com.proxiad.trainee;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +14,7 @@ public class GameData implements Serializable {
 
   private UUID id;
   private int lives;
-  private int guessedLetters; // correctlyGuessedLetters
+  private int correctlyGuessedLetters; // correctlyGuessedLetters
   private int irrelevantCharacters; // whitespaces _ and - are irrelevant
   private int guessesMade;
   private String word;
@@ -22,6 +24,7 @@ public class GameData implements Serializable {
   private CategoryEnum category;
   private GamemodeEnum gamemode;
   private boolean gameWon;
+  private boolean finished;
 
   public int getIrrelevantCharacters() {
     return irrelevantCharacters;
@@ -63,8 +66,6 @@ public class GameData implements Serializable {
     this.gamemode = gamemode;
   }
 
-  private boolean finished;
-
   public boolean isFinished() {
     return finished;
   }
@@ -87,14 +88,6 @@ public class GameData implements Serializable {
 
   public void setLives(int lives) {
     this.lives = lives;
-  }
-
-  public int getGuessedLetters() {
-    return guessedLetters;
-  }
-
-  public void setGuessedLetters(int guessedLetters) {
-    this.guessedLetters = guessedLetters;
   }
 
   public Set<Character> getRightGuesses() {
@@ -129,8 +122,16 @@ public class GameData implements Serializable {
     this.unguessedLetters = unguessedLetters;
   }
 
+  public int getCorrectlyGuessedLetters() {
+    return correctlyGuessedLetters;
+  }
+
+  public void setCorrectlyGuessedLetters(int correctlyGuessedLetters) {
+    this.correctlyGuessedLetters = correctlyGuessedLetters;
+  }
+
   public GameData() {
-    id = UUID.randomUUID();
+    this.id = UUID.randomUUID();
     this.unguessedLetters =
         new ArrayList<Character>(
             Arrays.asList(
@@ -139,30 +140,18 @@ public class GameData implements Serializable {
     this.rightGuesses = new HashSet<Character>();
   }
 
-  @Override
-  public String toString() {
-    return "GameData [id="
-        + id
-        + ", lives="
-        + lives
-        + ", guessedLetters="
-        + guessedLetters
-        + ", unguessedLetters="
-        + unguessedLetters
-        + ", rightGuesses="
-        + rightGuesses
-        + ", word="
-        + word
-        + ", wordProgress="
-        + wordProgress
-        + ", category="
-        + category
-        + ", gameWon="
-        + gameWon
-        + ", irrelevantCharacters="
-        + irrelevantCharacters
-        + ", finished="
-        + finished
-        + "]";
+  public GameData(String word, CategoryEnum category, GamemodeEnum gamemode, int lives) {
+    this.id = UUID.randomUUID();
+    this.unguessedLetters =
+        new ArrayList<Character>(
+            Arrays.asList(
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+    this.rightGuesses = new HashSet<Character>();
+    this.word = word;
+    this.category = category;
+    this.gamemode = gamemode;
+    this.lives = lives;
+    this.guessesMade = -2; // because when we initialize the game we call guess twice
   }
 }

@@ -1,3 +1,4 @@
+package com.proxiad.trainee;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
