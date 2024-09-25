@@ -14,7 +14,7 @@ public class GameData implements Serializable {
 
   private UUID id;
   private int lives;
-  private int correctlyGuessedLetters; // correctlyGuessedLetters
+  private int correctlyGuessedLetters;
   private int irrelevantCharacters; // whitespaces _ and - are irrelevant
   private int guessesMade;
   private String word;
@@ -130,28 +130,29 @@ public class GameData implements Serializable {
     this.correctlyGuessedLetters = correctlyGuessedLetters;
   }
 
-  public GameData() {
-    this.id = UUID.randomUUID();
-    this.unguessedLetters =
-        new ArrayList<Character>(
-            Arrays.asList(
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-    this.rightGuesses = new HashSet<Character>();
-  }
+  //  public GameData() {
+  //    this.id = UUID.randomUUID();
+  //    this.unguessedLetters =
+  //        new ArrayList<Character>(
+  //            Arrays.asList(
+  //                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+  // 'Q',
+  //                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+  //    this.rightGuesses = new HashSet<Character>();
+  //  }
 
   public GameData(String word, CategoryEnum category, GamemodeEnum gamemode, int lives) {
-    this.id = UUID.randomUUID();
-    this.unguessedLetters =
+    setId(UUID.randomUUID());
+    setUnguessedLetters(
         new ArrayList<Character>(
             Arrays.asList(
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-    this.rightGuesses = new HashSet<Character>();
-    this.word = word;
-    this.category = category;
-    this.gamemode = gamemode;
-    this.lives = lives;
-    this.guessesMade = -2; // because when we initialize the game we call guess twice
+                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')));
+
+    setRightGuesses(new HashSet<Character>());
+    setWord(word);
+    setCategory(category);
+    setGamemode(gamemode);
+    setLives(lives);
   }
 }

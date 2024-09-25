@@ -1,5 +1,6 @@
 package com.proxiad.trainee;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -9,16 +10,13 @@ import jakarta.servlet.http.HttpSession;
 
 public class GameServiceImpl implements GameService {
 
-  private static final int MAX_LIVES = 9;
-
   private GameRepository gameRepository;
   private WordGeneratorService wordGeneratorService;
 
+  public GameServiceImpl() {}
+
   @Override
   public GameData makeTry(GameData game, String guess, HttpSession session) {
-    if (guess == null) {
-      return game;
-    }
     String word = game.getWord();
     Character charToGuess = guess.charAt(0);
     if (word.contains(guess) && game.getUnguessedLetters().contains(charToGuess)) {
@@ -69,7 +67,7 @@ public class GameServiceImpl implements GameService {
     }
     validateWord(wordToGuess);
     wordToGuess = wordToGuess.toUpperCase();
-    GameData game = new GameData(wordToGuess, categoryEnum, gamemode, MAX_LIVES);
+    GameData game = new GameData(wordToGuess, categoryEnum, gamemode, Constants.MAX_LIVES);
     return initializeaGame(wordToGuess, game, sessionn);
   }
 
@@ -105,8 +103,14 @@ public class GameServiceImpl implements GameService {
       }
     }
 
-    makeTry(game, firstChar.toString(), session);
-    makeTry(game, lastChar.toString(), session);
+    game.getRightGuesses().add(firstChar);
+    game.getRightGuesses().add(lastChar);
+
+    game.getUnguessedLetters().remove(firstChar);
+    game.getUnguessedLetters().remove(lastChar);
+
+    game.setWordProgress(getWordProgress(game));
+    gameRepository.setCurrentGame(game, session);
 
     return game;
   }
@@ -121,15 +125,12 @@ public class GameServiceImpl implements GameService {
       if (game.getRightGuesses().contains(currChar)) {
         sb.append(' ');
         sb.append(currChar);
-        sb.append(' ');
       } else if (currChar == ' ' || currChar == '-' || currChar == '_') {
         sb.append(' ');
         sb.append(currChar);
-        sb.append(' ');
       } else {
         sb.append(' ');
         sb.append('_');
-        sb.append(' ');
       }
     }
     return sb.toString();
@@ -154,11 +155,11 @@ public class GameServiceImpl implements GameService {
   private void validateWord(String word) throws InvalidWordException {
     Character lastChar = word.charAt(word.length() - 1);
     if (!Character.isLetter(lastChar)) {
-      throw new InvalidWordException("Word should end with a letter");
+      throw new InvalidWordException("Word should end with a letter.");
     }
     if (word.length() <= 2) {
       throw new InvalidWordException(
-          "Word should hane at least 3 characters. Word entered: " + word);
+          "Word should have at least 3 characters. Word entered: " + word.toUpperCase());
     }
     String regex = "[a-zA-Z\\s-]+";
     Pattern pattern = Pattern.compile(regex);
@@ -168,7 +169,7 @@ public class GameServiceImpl implements GameService {
           "Word should contain only letters, whitespaces or dashes." + " Word entered: " + word);
     }
 
-    if (isWholeWordRevealed(word)) {
+    if (isWholeWordRevealed(word.toUpperCase())) {
       throw new InvalidWordException(
           "At least one of the letters should not be revealed at the beginning of the game."
               + "The first and last letters are revealed. Word entered: "
@@ -191,19 +192,30 @@ public class GameServiceImpl implements GameService {
     return revealedLetters == word.length();
   }
 
-  public GameRepository getGameRepository() {
-    return gameRepository;
-  }
-
   public void setGameRepository(GameRepository gameRepository) {
     this.gameRepository = gameRepository;
   }
 
-  public WordGeneratorService getWordGeneratorService() {
-    return wordGeneratorService;
-  }
-
   public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
     this.wordGeneratorService = wordGeneratorService;
+  }
+
+  @Override
+  public boolean containsFinishedGames(List<GameData> games) {
+    return games.stream().anyMatch(game -> game.isFinished());
+  }
+
+  @Override
+  public boolean containsOngoingGames(List<GameData> games) {
+    return games.stream().anyMatch(game -> !game.isFinished());
+  }
+
+  @Override
+  public List<GameData> reverseListOfGames(List<GameData> games) {
+    List<GameData> result = new ArrayList<>();
+    for (int i = games.size() - 1; i >= 0; i--) {
+      result.add(games.get(i));
+    }
+    return result;
   }
 }

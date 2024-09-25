@@ -7,7 +7,6 @@ import jakarta.servlet.annotation.WebListener;
 
 @WebListener
 public class InitializingContextListener implements ServletContextListener {
-  private static final int MAX_LIVES = 9;
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
@@ -20,6 +19,5 @@ public class InitializingContextListener implements ServletContextListener {
     };
 
     context.setAttribute("qwertyKeyboard", qwertyKeyboard);
-    context.setAttribute("maxLives", MAX_LIVES);
   }
 }

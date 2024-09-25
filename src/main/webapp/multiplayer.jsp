@@ -37,9 +37,12 @@
 						<option value="${option}">${option}</option>
 					</c:forEach>
 				</select> 
-				<input class="multiplayer-input" type="text" autocomplete="off" 
+				<input class="multiplayer-input" type="text"
 				name="word" oninput="validateInput(event)" required> 
 				<input class="small-btn generic-btn" type="submit" value="Enter Word">
+			</form>
+			<form action="home" method="get">
+				<input class="generic-btn" type="submit" value="Home">
 			</form>
 		</div>
 	</div>

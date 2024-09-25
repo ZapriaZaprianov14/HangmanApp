@@ -35,6 +35,5 @@ public class ResumeGameServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     response.sendRedirect("home");
-    return;
   }
 }

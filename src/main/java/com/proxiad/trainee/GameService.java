@@ -19,4 +19,10 @@ public interface GameService {
   GameData resumeGame(UUID id, HttpSession session);
 
   List<GameData> getAllGames(HttpSession session);
+
+  List<GameData> reverseListOfGames(List<GameData> games);
+
+  boolean containsFinishedGames(List<GameData> games);
+
+  boolean containsOngoingGames(List<GameData> games);
 }

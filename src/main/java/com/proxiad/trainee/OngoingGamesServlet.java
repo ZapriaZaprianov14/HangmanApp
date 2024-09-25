@@ -1,7 +1,6 @@
 package com.proxiad.trainee;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,24 +27,12 @@ public class OngoingGamesServlet extends HttpServlet {
     HttpSession session = request.getSession();
     List<GameData> previousGames = gameService.getAllGames(session);
     // the list has to contain ongoing games
-    if (containsOngoingGames(previousGames)) {
-      request.setAttribute("gamesReversed", reverseListOfGames(previousGames));
+    if (gameService.containsOngoingGames(previousGames)) {
+      request.setAttribute("gamesReversed", gameService.reverseListOfGames(previousGames));
       request.getRequestDispatcher("/ongoing.jsp").forward(request, response);
     } else {
       request.setAttribute("message", "No onging games.");
       request.getRequestDispatcher("/empty.jsp").forward(request, response);
     }
-  }
-
-  private boolean containsOngoingGames(List<GameData> games) {
-    return games.stream().anyMatch(game -> !game.isFinished());
-  }
-
-  private List<GameData> reverseListOfGames(List<GameData> games) {
-    List<GameData> result = new ArrayList<>();
-    for (int i = games.size() - 1; i >= 0; i--) {
-      result.add(games.get(i));
-    }
-    return result;
   }
 }

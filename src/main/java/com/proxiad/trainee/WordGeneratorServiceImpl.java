@@ -1,5 +1,6 @@
 package com.proxiad.trainee;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -8,13 +9,20 @@ import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class WordGeneratorServiceImpl implements WordGeneratorService {
 
   @Override
   public String createRandomWord(String category) {
+    Random random = new Random();
+    List<String> words = getAllWordsFromCategory(category);
+    return words.get(random.nextInt(words.size()));
+  }
+
+  @Override
+  public List<String> getAllWordsFromCategory(String category) {
     try {
-      Random random = new Random();
       JSONParser parser = new JSONParser();
       InputStream inputStream =
           NewGameServlet.class.getClassLoader().getResourceAsStream("words_data.json");
@@ -25,11 +33,10 @@ public class WordGeneratorServiceImpl implements WordGeneratorService {
 
       JSONObject data = (JSONObject) parser.parse(new InputStreamReader(inputStream));
       List<String> words = new ArrayList<String>((JSONArray) data.get(category.toUpperCase()));
-      return words.get(random.nextInt(words.size()));
-
-    } catch (Exception e) {
+      return words;
+    } catch (ParseException | IOException e) {
       e.printStackTrace();
+      return null;
     }
-    return null;
   }
 }

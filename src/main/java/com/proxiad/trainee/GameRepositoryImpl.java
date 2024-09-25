@@ -53,7 +53,7 @@ public class GameRepositoryImpl implements GameRepository {
   @Override
   public GameData resumeGame(UUID id, HttpSession session) {
     GameData game = getGame(id, session);
-    session.setAttribute("currentGame", game);
+    setCurrentGame(game, session);
     List<GameData> previousGames = getAllGames(session);
     previousGames.remove(game);
     return game;
