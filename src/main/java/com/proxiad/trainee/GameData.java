@@ -130,16 +130,15 @@ public class GameData implements Serializable {
     this.correctlyGuessedLetters = correctlyGuessedLetters;
   }
 
-  //  public GameData() {
-  //    this.id = UUID.randomUUID();
-  //    this.unguessedLetters =
-  //        new ArrayList<Character>(
-  //            Arrays.asList(
-  //                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-  // 'Q',
-  //                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-  //    this.rightGuesses = new HashSet<Character>();
-  //  }
+  public GameData() {
+    this.id = UUID.randomUUID();
+    this.unguessedLetters =
+        new ArrayList<Character>(
+            Arrays.asList(
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+    this.rightGuesses = new HashSet<Character>();
+  }
 
   public GameData(String word, CategoryEnum category, GamemodeEnum gamemode, int lives) {
     setId(UUID.randomUUID());

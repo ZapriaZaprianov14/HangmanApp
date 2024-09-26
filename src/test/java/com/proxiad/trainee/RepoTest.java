@@ -1,3 +1,5 @@
+package com.proxiad.trainee;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -26,7 +28,7 @@ public class RepoTest {
 
   @Rule public MockitoRule rule = MockitoJUnit.rule();
 
-  GameRepository repository;
+  private GameRepository repository;
 
   @Before
   public void setUp() {
@@ -37,7 +39,6 @@ public class RepoTest {
   @Test
   public void repoReturnsNullWhenListEmpty() {
     when(session.getAttribute("previousGames")).thenReturn(null);
-    // assertEquals(repository.getAllGames(session), null);
     assertThat(repository.getAllGames(session)).isEqualTo(null);
   }
 
@@ -49,8 +50,9 @@ public class RepoTest {
     List<GameData> games = new ArrayList<GameData>();
     games.add(game1);
     games.add(game2);
+
     when(session.getAttribute("previousGames")).thenReturn(games);
-    // assertEquals(repository.getAllGames(session), games);
+
     assertThat(repository.getAllGames(session)).isEqualTo(games);
   }
 
@@ -62,8 +64,9 @@ public class RepoTest {
     games.add(game1);
     games.add(game2);
     when(session.getAttribute("previousGames")).thenReturn(games);
+
     GameData returnedData = repository.getGame(UUID.randomUUID(), session);
-    // assertEquals(returnedData, null);
+
     assertThat(returnedData).isEqualTo(null);
   }
 
@@ -75,8 +78,9 @@ public class RepoTest {
     games.add(game1);
     games.add(game2);
     when(session.getAttribute("previousGames")).thenReturn(games);
+
     GameData returnedData = repository.getGame(game1.getId(), session);
-    // assertEquals(returnedData, null);
+
     assertThat(returnedData).isEqualTo(game1);
   }
 
@@ -84,8 +88,9 @@ public class RepoTest {
   public void returnsCurrentGame() {
     GameData game = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
     when(session.getAttribute("currentGame")).thenReturn(game);
+
     GameData returnedGame = repository.getCurrentGame(session);
-    // assertEquals(game, returnedGame);
+
     assertThat(game).isEqualTo(returnedGame);
   }
 
@@ -137,7 +142,6 @@ public class RepoTest {
     List<GameData> games = new ArrayList<GameData>();
     games.add(game1);
     games.add(game2);
-
     when(session.getAttribute("previousGames")).thenReturn(games);
 
     GameData returnedGame = repository.resumeGame(game1.getId(), session);

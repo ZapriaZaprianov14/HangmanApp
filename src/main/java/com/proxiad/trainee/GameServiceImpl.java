@@ -18,6 +18,9 @@ public class GameServiceImpl implements GameService {
   @Override
   public GameData makeTry(GameData game, String guess, HttpSession session) {
     String word = game.getWord();
+    if (guess == null) {
+      // throw new EmptyGuessException
+    }
     Character charToGuess = guess.charAt(0);
     if (word.contains(guess) && game.getUnguessedLetters().contains(charToGuess)) {
       game.getRightGuesses().add(charToGuess);
@@ -57,6 +60,9 @@ public class GameServiceImpl implements GameService {
   @Override
   public GameData startNewGame(String category, String wordToGuess, HttpSession sessionn)
       throws InvalidWordException {
+    if (isCategoryInvalid(wordToGuess)) {
+      // throw new InvalidCategoryExeption
+    }
     CategoryEnum categoryEnum = CategoryEnum.valueOf(category.toUpperCase());
     GamemodeEnum gamemode;
     if (wordToGuess == null) {
@@ -217,5 +223,14 @@ public class GameServiceImpl implements GameService {
       result.add(games.get(i));
     }
     return result;
+  }
+
+  public boolean isCategoryInvalid(String value) {
+    try {
+      CategoryEnum.valueOf(value);
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 }
