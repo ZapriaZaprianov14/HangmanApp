@@ -45,7 +45,7 @@ public class HistoryServletTests {
   }
 
   @Test
-  public void whenFinishedGamesPresent() throws IOException, ServletException {
+  public void whenFinishedGamesPresentHistoryJSPIsCalled() throws IOException, ServletException {
     List<GameData> games = Arrays.asList(new GameData(), new GameData());
     when(gameService.reverseListOfGames(games)).thenReturn(games);
     when(gameService.getAllGames(session)).thenReturn(games);
@@ -60,10 +60,10 @@ public class HistoryServletTests {
   }
 
   @Test
-  public void whenNoFinishedGamesPresent() throws IOException, ServletException {
+  public void whenNoFinishedGamesPresentEmptyJSPIsCalled() throws IOException, ServletException {
+
     List<GameData> games = new ArrayList<GameData>();
-    when(gameService.reverseListOfGames(games)).thenReturn(games);
-    when(gameService.getAllGames(session)).thenReturn(null);
+    when(gameService.getAllGames(session)).thenReturn(games);
     when(gameService.containsFinishedGames(games)).thenReturn(false);
     when(request.getRequestDispatcher("/empty.jsp")).thenReturn(requestDispatcher);
 

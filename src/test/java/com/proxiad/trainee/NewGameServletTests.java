@@ -1,6 +1,6 @@
 package com.proxiad.trainee;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
@@ -11,13 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import com.proxiad.trainee.CategoryEnum;
-import com.proxiad.trainee.Constants;
-import com.proxiad.trainee.GameData;
-import com.proxiad.trainee.GameService;
-import com.proxiad.trainee.GamemodeEnum;
-import com.proxiad.trainee.InvalidWordException;
-import com.proxiad.trainee.NewGameServlet;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,18 +39,51 @@ public class NewGameServletTests {
   }
 
   @Test
-  public void testDoPost() throws InvalidWordException, ServletException, IOException {
+  public void testDoPostWithValidWord()
+      throws InvalidWordException, ServletException, IOException, InvalidCategoryException {
     String category = "FRUITS";
     String word = "Peach";
-    GameData game =
-        new GameData(word, CategoryEnum.FRUITS, GamemodeEnum.SINGLEPLAYER, Constants.MAX_LIVES);
-    when(gameService.startNewGame(category, word, session)).thenReturn(game);
     when(request.getRequestDispatcher("/game.jsp")).thenReturn(requestDispatcher);
+    when(request.getParameter("word")).thenReturn(word);
+    when(request.getParameter("category")).thenReturn(category);
+    when(gameService.startNewGame(category, word, session)).thenReturn(new GameData());
 
     servlet.doPost(request, response);
 
-    verify(request).setAttribute(eq("currentGame"), eq(game));
     verify(request).getRequestDispatcher("/game.jsp");
+    verify(requestDispatcher).forward(request, response);
+  }
+
+  @Test
+  public void testDoPostWithInvalidWord()
+      throws InvalidWordException, ServletException, IOException, InvalidCategoryException {
+    String category = "FRUITS";
+    String word = "Aa";
+    when(request.getRequestDispatcher("/bad-request.jsp")).thenReturn(requestDispatcher);
+    when(request.getParameter("word")).thenReturn(word);
+    when(request.getParameter("category")).thenReturn(category);
+    when(gameService.startNewGame(category, word, session)).thenThrow(InvalidWordException.class);
+
+    servlet.doPost(request, response);
+
+    verify(request).getRequestDispatcher("/bad-request.jsp");
+    verify(requestDispatcher).forward(request, response);
+  }
+
+  @Test
+  public void testDoPostWithInvalidCategory()
+      throws InvalidWordException, ServletException, IOException, InvalidCategoryException {
+    String category = "FRUI";
+    String word = "Peach";
+    when(request.getRequestDispatcher("/bad-request.jsp")).thenReturn(requestDispatcher);
+    when(request.getParameter("word")).thenReturn(word);
+    when(request.getParameter("category")).thenReturn(category);
+    when(gameService.startNewGame(category, word, session))
+        .thenThrow(InvalidCategoryException.class);
+
+    servlet.doPost(request, response);
+
+    verify(request).getRequestDispatcher("/bad-request.jsp");
     verify(requestDispatcher).forward(request, response);
   }
 }

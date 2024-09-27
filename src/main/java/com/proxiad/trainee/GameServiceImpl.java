@@ -7,6 +7,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jakarta.servlet.http.HttpSession;
+import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
+;
 
 public class GameServiceImpl implements GameService {
 
@@ -16,11 +18,14 @@ public class GameServiceImpl implements GameService {
   public GameServiceImpl() {}
 
   @Override
-  public GameData makeTry(GameData game, String guess, HttpSession session) {
-    String word = game.getWord();
-    if (guess == null) {
-      // throw new EmptyGuessException
+  public GameData makeTry(GameData game, String guess, HttpSession session)
+      throws InvalidGuessException {
+    if (!Character.isLetter(guess.charAt(0)) || guess.length() > 1) {
+      throw new InvalidGuessException("Your guess was invalid. The guess should be a letter.");
     }
+
+    String word = game.getWord();
+    guess = guess.toUpperCase();
     Character charToGuess = guess.charAt(0);
     if (word.contains(guess) && game.getUnguessedLetters().contains(charToGuess)) {
       game.getRightGuesses().add(charToGuess);
@@ -29,27 +34,29 @@ public class GameServiceImpl implements GameService {
     }
     game.getUnguessedLetters().remove(charToGuess);
     game.setGuessesMade(game.getGuessesMade() + 1);
-
     game.setCorrectlyGuessedLetters(getCorrectlyGuessedLetters(game));
-    if (game.getCorrectlyGuessedLetters() + game.getIrrelevantCharacters()
-        >= game.getWord().length()) {
-      game.setFinished(true);
-      game.setGameWon(true);
-      game.setWordProgress(word);
-      gameRepository.saveGame(game, session);
-      return game;
-    }
-    if (game.getLives() <= 0) {
-      game.setFinished(true);
-      game.setGameWon(false);
-      game.setWordProgress(word);
-      gameRepository.saveGame(game, session);
-      return game;
+
+    boolean gameWon = isWholeWordGuessed(game);
+    if (gameWon || game.getLives() <= 0) {
+      return finalizeGame(game, gameWon, session);
     }
 
     game.setWordProgress(getWordProgress(game));
     gameRepository.setCurrentGame(game, session);
     return game;
+  }
+
+  private GameData finalizeGame(GameData game, boolean gameWon, HttpSession session) {
+    game.setFinished(true);
+    game.setGameWon(gameWon);
+    game.setWordProgress(game.getWord());
+    gameRepository.saveGame(game, session);
+    return game;
+  }
+
+  private boolean isWholeWordGuessed(GameData game) {
+    return game.getCorrectlyGuessedLetters() + game.getIrrelevantCharacters()
+        >= game.getWord().length();
   }
 
   @Override
@@ -59,9 +66,9 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public GameData startNewGame(String category, String wordToGuess, HttpSession sessionn)
-      throws InvalidWordException {
-    if (isCategoryInvalid(wordToGuess)) {
-      // throw new InvalidCategoryExeption
+      throws InvalidWordException, InvalidCategoryException {
+    if (isCategoryInvalid(category)) {
+      throw new InvalidCategoryException("The given category is invalid.");
     }
     CategoryEnum categoryEnum = CategoryEnum.valueOf(category.toUpperCase());
     GamemodeEnum gamemode;
@@ -128,10 +135,7 @@ public class GameServiceImpl implements GameService {
     sb.append(firstChar);
     for (int i = 1; i < game.getWord().length(); i++) {
       char currChar = wordToGuess.charAt(i);
-      if (game.getRightGuesses().contains(currChar)) {
-        sb.append(' ');
-        sb.append(currChar);
-      } else if (currChar == ' ' || currChar == '-' || currChar == '_') {
+      if (game.getRightGuesses().contains(currChar) || IRRELEVANT_CHARACTERS.contains(currChar)) {
         sb.append(' ');
         sb.append(currChar);
       } else {
@@ -190,8 +194,7 @@ public class GameServiceImpl implements GameService {
     for (int i = 0; i < word.length(); i++) {
       if (word.charAt(i) == firstChar
           || word.charAt(i) == lastChar
-          || word.charAt(i) == ' '
-          || word.charAt(i) == '-') {
+          || IRRELEVANT_CHARACTERS.contains(word.charAt(i))) {
         revealedLetters++;
       }
     }
@@ -228,9 +231,9 @@ public class GameServiceImpl implements GameService {
   public boolean isCategoryInvalid(String value) {
     try {
       CategoryEnum.valueOf(value);
-      return true;
-    } catch (IllegalArgumentException e) {
       return false;
+    } catch (IllegalArgumentException e) {
+      return true;
     }
   }
 }

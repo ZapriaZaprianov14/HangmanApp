@@ -3,6 +3,7 @@ package com.proxiad.trainee;
 import java.io.IOException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,9 +30,10 @@ public class NewGameServlet extends HttpServlet {
     String word = request.getParameter("word");
     try {
       gameService.startNewGame(category, word, session);
-    } catch (InvalidWordException e) {
+    } catch (InvalidWordException | InvalidCategoryException e) {
       request.setAttribute("message", e.getMessage());
-      request.getRequestDispatcher("/invalid-word.jsp").forward(request, response);
+      request.getRequestDispatcher("/bad-request.jsp").forward(request, response);
+      return;
     }
 
     request.getRequestDispatcher("/game.jsp").forward(request, response);

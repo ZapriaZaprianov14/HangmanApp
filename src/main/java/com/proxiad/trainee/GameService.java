@@ -5,10 +5,10 @@ import java.util.UUID;
 import jakarta.servlet.http.HttpSession;
 
 public interface GameService {
-  GameData makeTry(GameData game, String guess, HttpSession session);
+  GameData makeTry(GameData game, String guess, HttpSession session) throws InvalidGuessException;
 
   GameData startNewGame(String category, String wordToGuess, HttpSession session)
-      throws InvalidWordException;
+      throws InvalidWordException, InvalidCategoryException;
 
   GameData getGame(UUID id, HttpSession session);
 

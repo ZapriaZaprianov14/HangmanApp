@@ -29,13 +29,17 @@ public class GameServlet extends HttpServlet {
     String guess = request.getParameter("guess");
 
     if (guess == null) {
-      // empty request
       request.getRequestDispatcher("/game.jsp").forward(request, response);
       return;
     }
 
-    // saves the game
-    game = gameService.makeTry(game, guess.toUpperCase(), session);
+    try {
+      game = gameService.makeTry(game, guess, session);
+    } catch (InvalidGuessException e) {
+      request.setAttribute("message", e.getMessage());
+      request.getRequestDispatcher("/bad-request.jsp").forward(request, response);
+      return;
+    }
 
     if (game.isFinished()) {
       request.setAttribute("word", game.getWordProgress());

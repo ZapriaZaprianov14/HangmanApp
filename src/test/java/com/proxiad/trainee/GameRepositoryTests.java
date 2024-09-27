@@ -16,13 +16,9 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import com.proxiad.trainee.CategoryEnum;
-import com.proxiad.trainee.GameData;
-import com.proxiad.trainee.GameRepository;
-import com.proxiad.trainee.GamemodeEnum;
 import jakarta.servlet.http.HttpSession;
 
-public class RepoTest {
+public class GameRepositoryTests {
 
   @Mock HttpSession session;
 
@@ -44,12 +40,7 @@ public class RepoTest {
 
   @Test
   public void repoDoesReturnsAllGames() {
-    // GameData(String word, CategoryEnum category, GamemodeEnum gamemode, int lives)
-    GameData game1 = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game2 = new GameData("PLOVDIV", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
     List<GameData> games = new ArrayList<GameData>();
-    games.add(game1);
-    games.add(game2);
 
     when(session.getAttribute("previousGames")).thenReturn(games);
 
@@ -58,11 +49,7 @@ public class RepoTest {
 
   @Test
   public void returnsNullWhenGameNotFound() {
-    GameData game1 = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game2 = new GameData("PLOVDIV", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
     List<GameData> games = new ArrayList<GameData>();
-    games.add(game1);
-    games.add(game2);
     when(session.getAttribute("previousGames")).thenReturn(games);
 
     GameData returnedData = repository.getGame(UUID.randomUUID(), session);
@@ -72,21 +59,19 @@ public class RepoTest {
 
   @Test
   public void returnsCorrectGame() {
-    GameData game1 = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game2 = new GameData("PLOVDIV", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
     List<GameData> games = new ArrayList<GameData>();
-    games.add(game1);
-    games.add(game2);
+    GameData game = new GameData();
+    games.add(game);
     when(session.getAttribute("previousGames")).thenReturn(games);
 
-    GameData returnedData = repository.getGame(game1.getId(), session);
+    GameData returnedData = repository.getGame(game.getId(), session);
 
-    assertThat(returnedData).isEqualTo(game1);
+    assertThat(returnedData).isEqualTo(game);
   }
 
   @Test
   public void returnsCurrentGame() {
-    GameData game = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
+    GameData game = new GameData();
     when(session.getAttribute("currentGame")).thenReturn(game);
 
     GameData returnedGame = repository.getCurrentGame(session);
@@ -96,7 +81,7 @@ public class RepoTest {
 
   @Test
   public void savesGameCorrectly() {
-    GameData game = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
+    GameData game = new GameData();
     List<GameData> games = new ArrayList<>();
     when(session.getAttribute("previousGames")).thenReturn(games);
 
@@ -106,26 +91,10 @@ public class RepoTest {
     assertThat(games).contains(game);
   }
 
-  //  @Test
-  //  public void savesGameCorrectlyWhenListIsNull() {
-  //    GameData game = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-  //    List<GameData> games = null;
-  //    when(session.getAttribute("previousGames")).thenReturn(games);
-  //
-  //    repository.saveGame(game, session);
-  //
-  //    verify(session).setAttribute(eq("previousGames"), anyList());
-  //    assertThat(games).contains(game);
-  //  }
-
   @Test
   public void leavesGame() {
-    GameData game = new GameData("BURGAS", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game1 = new GameData("PERNIK", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game2 = new GameData("PLOVDIV", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
+    GameData game = new GameData();
     List<GameData> games = new ArrayList<GameData>();
-    games.add(game1);
-    games.add(game2);
     when(session.getAttribute("currentGame")).thenReturn(game);
     when(session.getAttribute("previousGames")).thenReturn(games);
 
@@ -137,17 +106,15 @@ public class RepoTest {
 
   @Test
   public void resumesGame() {
-    GameData game1 = new GameData("PERNIK", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
-    GameData game2 = new GameData("PLOVDIV", CategoryEnum.CITIES, GamemodeEnum.MULTIPLAYER, 9);
     List<GameData> games = new ArrayList<GameData>();
-    games.add(game1);
-    games.add(game2);
+    GameData game = new GameData();
+    games.add(game);
     when(session.getAttribute("previousGames")).thenReturn(games);
 
-    GameData returnedGame = repository.resumeGame(game1.getId(), session);
+    GameData returnedGame = repository.resumeGame(game.getId(), session);
 
-    verify(session).setAttribute("currentGame", game1);
-    assertThat(returnedGame).isEqualTo(game1);
-    assertThat(games).doesNotContain(game1);
+    verify(session).setAttribute("currentGame", game);
+    assertThat(returnedGame).isEqualTo(game);
+    assertThat(games).doesNotContain(game);
   }
 }
