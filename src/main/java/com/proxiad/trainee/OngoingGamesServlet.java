@@ -17,7 +17,8 @@ public class OngoingGamesServlet extends HttpServlet {
 
   @Override
   public void init() {
-    ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+    ApplicationContext context =
+        new ClassPathXmlApplicationContext(Constants.CONFIGURATION_FILE_NAME);
     gameService = context.getBean(GameService.class);
   }
 
@@ -26,7 +27,6 @@ public class OngoingGamesServlet extends HttpServlet {
       throws IOException, ServletException {
     HttpSession session = request.getSession();
     List<GameData> previousGames = gameService.getAllGames(session);
-    // the list has to contain ongoing games
     if (gameService.containsOngoingGames(previousGames)) {
       request.setAttribute("gamesReversed", gameService.reverseListOfGames(previousGames));
       request.getRequestDispatcher("/ongoing.jsp").forward(request, response);

@@ -130,7 +130,7 @@ public class GameServiceTests {
   @Test
   public void throwsExceptionWhenGuessIsInvalid()
       throws InvalidWordException, InvalidCategoryException {
-    GameData game = gameService.startNewGame("CITIES", "word", session);
+    GameData game = new GameData("TOYOTA", CARS, MULTIPLAYER, MAX_LIVES);
 
     assertThatThrownBy(
             () -> {
@@ -207,7 +207,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void repoDoesReturnsAllGames() {
+  public void repoReturnsAllGames() {
     List<GameData> games = new ArrayList<GameData>();
 
     when(session.getAttribute("previousGames")).thenReturn(games);
@@ -262,8 +262,8 @@ public class GameServiceTests {
 
   @Test
   public void resumesGame() {
-    List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
+    List<GameData> games = new ArrayList<GameData>();
     games.add(game);
     when(session.getAttribute("previousGames")).thenReturn(games);
 

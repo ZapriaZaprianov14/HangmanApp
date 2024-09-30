@@ -67,10 +67,11 @@ public class GameServiceImpl implements GameService {
   @Override
   public GameData startNewGame(String category, String wordToGuess, HttpSession sessionn)
       throws InvalidWordException, InvalidCategoryException {
-    if (isCategoryInvalid(category)) {
+    if (category == null || isCategoryInvalid(category)) {
       throw new InvalidCategoryException("The given category is invalid.");
     }
-    CategoryEnum categoryEnum = CategoryEnum.valueOf(category.toUpperCase());
+    category = category.toUpperCase();
+    CategoryEnum categoryEnum = CategoryEnum.valueOf(category);
     GamemodeEnum gamemode;
     if (wordToGuess == null) {
       wordToGuess = getRandomWord(category);
@@ -96,8 +97,7 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public GameData resumeGame(UUID id, HttpSession session) {
-    GameData game = gameRepository.resumeGame(id, session);
-    return game;
+    return gameRepository.resumeGame(id, session);
   }
 
   @Override
@@ -164,12 +164,12 @@ public class GameServiceImpl implements GameService {
 
   private void validateWord(String word) throws InvalidWordException {
     Character lastChar = word.charAt(word.length() - 1);
-    if (!Character.isLetter(lastChar)) {
-      throw new InvalidWordException("Word should end with a letter.");
-    }
     if (word.length() <= 2) {
       throw new InvalidWordException(
-          "Word should have at least 3 characters. Word entered: " + word.toUpperCase());
+          "Word should have at least 3 characters. Word entered: " + word);
+    }
+    if (!Character.isLetter(lastChar)) {
+      throw new InvalidWordException("Word should end with a letter. Word entered: " + word);
     }
     String regex = "[a-zA-Z\\s-]+";
     Pattern pattern = Pattern.compile(regex);
@@ -230,7 +230,7 @@ public class GameServiceImpl implements GameService {
 
   public boolean isCategoryInvalid(String value) {
     try {
-      CategoryEnum.valueOf(value);
+      CategoryEnum.valueOf(value.toUpperCase());
       return false;
     } catch (IllegalArgumentException e) {
       return true;

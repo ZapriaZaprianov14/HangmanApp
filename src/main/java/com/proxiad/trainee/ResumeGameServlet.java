@@ -3,6 +3,7 @@ package com.proxiad.trainee;
 import java.io.IOException;
 import java.util.UUID;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +19,8 @@ public class ResumeGameServlet extends HttpServlet {
 
   @Override
   public void init() {
-    ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+    ApplicationContext context =
+        new ClassPathXmlApplicationContext(Constants.CONFIGURATION_FILE_NAME);
     gameService = context.getBean(GameService.class);
   }
 

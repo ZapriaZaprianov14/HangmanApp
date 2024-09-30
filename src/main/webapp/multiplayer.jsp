@@ -13,17 +13,18 @@
 	          alert('Copying is disabled on this page.');
 	      });
 	  });
-	  
+	  /*
        function validateInput(event) {
            const input = event.target.value;
            const regex = /^[a-zA-Z\s-]{3,}$/;
            if (!regex.test(input)) {
-               event.target.setCustomValidity("Please enter at least 3 letters");
+               event.target.setCustomValidity("Word should be at least 3 letters. Special characters are not allowed");
            } else {
            	
                event.target.setCustomValidity("");
            }
        }
+	  */
     </script>
 </head>
 <body>

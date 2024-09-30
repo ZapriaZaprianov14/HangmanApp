@@ -20,7 +20,6 @@ public class WordGeneratorServiceImpl implements WordGeneratorService {
     return words.get(random.nextInt(words.size()));
   }
 
-  @Override
   public List<String> getAllWordsFromCategory(String category) {
     try {
       JSONParser parser = new JSONParser();

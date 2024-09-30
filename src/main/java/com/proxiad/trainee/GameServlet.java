@@ -17,7 +17,7 @@ public class GameServlet extends HttpServlet {
 
   @Override
   public void init() {
-    ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+    ApplicationContext context = new ClassPathXmlApplicationContext(Constants.CONFIGURATION_FILE_NAME);
     gameService = context.getBean(GameService.class);
   }
 

@@ -11,7 +11,7 @@
 	<div class="container">
 		<div class="content">
 			<h2>${message}</h2>
-			<form action="multiplayer.jsp" method="get">
+			<form action="home.jsp" method="get">
 				<input class="generic-btn" type="submit" value="Enter new Word">
 			</form>
 		</div>
