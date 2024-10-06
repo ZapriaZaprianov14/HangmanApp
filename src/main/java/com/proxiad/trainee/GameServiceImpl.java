@@ -78,11 +78,11 @@ public class GameServiceImpl implements GameService {
       gamemode = GamemodeEnum.SINGLEPLAYER;
     } else {
       gamemode = GamemodeEnum.MULTIPLAYER;
+      validateWord(wordToGuess);
     }
-    validateWord(wordToGuess);
     wordToGuess = wordToGuess.toUpperCase();
     GameData game = new GameData(wordToGuess, categoryEnum, gamemode, Constants.MAX_LIVES);
-    return initializeaGame(wordToGuess, game, sessionn);
+    return initializeGame(wordToGuess, game, sessionn);
   }
 
   @Override
@@ -105,13 +105,13 @@ public class GameServiceImpl implements GameService {
     return gameRepository.getAllGames(session);
   }
 
-  private GameData initializeaGame(String word, GameData game, HttpSession session) {
+  private GameData initializeGame(String word, GameData game, HttpSession session) {
     Character firstChar = word.charAt(0);
     Character lastChar = word.charAt(word.length() - 1);
 
     for (int i = 0; i < word.length(); i++) {
       char currChar = word.charAt(i);
-      if (currChar == ' ' || currChar == '-' || currChar == '_') {
+      if (IRRELEVANT_CHARACTERS.contains(currChar)) {
         game.setIrrelevantCharacters(game.getIrrelevantCharacters() + 1);
       }
     }
@@ -163,13 +163,15 @@ public class GameServiceImpl implements GameService {
   }
 
   private void validateWord(String word) throws InvalidWordException {
-    Character lastChar = word.charAt(word.length() - 1);
     if (word.length() <= 2) {
       throw new InvalidWordException(
           "Word should have at least 3 characters. Word entered: " + word);
     }
-    if (!Character.isLetter(lastChar)) {
-      throw new InvalidWordException("Word should end with a letter. Word entered: " + word);
+    Character firstChar = word.charAt(0);
+    Character lastChar = word.charAt(word.length() - 1);
+    if (!Character.isLetter(firstChar) || !Character.isLetter(lastChar)) {
+      throw new InvalidWordException(
+          "Word should end or begin with a letter. Word entered: " + word);
     }
     String regex = "[a-zA-Z\\s-]+";
     Pattern pattern = Pattern.compile(regex);

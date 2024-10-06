@@ -2,10 +2,13 @@ package com.proxiad.trainee;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
@@ -75,14 +78,14 @@ public class GameServiceTests {
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'L'));
 
-    gameService.makeTry(game, "P", session);
+    gameService.makeTry(game, "p", session);
 
     assertThat(game.getWordProgress()).isEqualTo("O P _ L");
     assertThat(game.getLives()).isEqualTo(MAX_LIVES);
     assertThat(game.getGuessesMade()).isEqualTo(1);
     assertThat(game.getRightGuesses().size()).isEqualTo(3);
-    assertThat(game.getRightGuesses().contains('P'));
-    assertThat(!game.getUnguessedLetters().contains('P'));
+    assertTrue(game.getRightGuesses().contains('P'));
+    assertFalse(game.getUnguessedLetters().contains('P'));
   }
 
   @Test
@@ -103,8 +106,7 @@ public class GameServiceTests {
   public void wrongGuessSavesLosingGame()
       throws InvalidWordException, InvalidCategoryException, InvalidGuessException {
     List<GameData> games = new ArrayList<GameData>();
-    GameData game = new GameData("OPEL", CARS, MULTIPLAYER, MAX_LIVES);
-    game.setLives(1);
+    GameData game = new GameData("OPEL", CARS, MULTIPLAYER, 1);
     games.add(game);
 
     gameService.makeTry(game, "J", session);
@@ -116,8 +118,9 @@ public class GameServiceTests {
     assertThat(game.getWordProgress()).isEqualTo("OPEL");
     assertTrue(game.isFinished());
     assertThat(game.isGameWon()).isEqualTo(expectedIsWon);
-    assertThat(games).contains(game);
-    verify(session).setAttribute("previousGames", games);
+    assertTrue(games.contains(game));
+    verify(session, times(1)).setAttribute("previousGames", games);
+    // verify(session, never()).setAttribute("previousGames", games);
   }
 
   private void assertGameStarted(GameData game, GamemodeEnum gamemodeEnum) {

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Multiplayer</title>
 <link rel="stylesheet" type="text/css" href="css/site.css" />
   <script>
 	  document.addEventListener('DOMContentLoaded', (event) => {

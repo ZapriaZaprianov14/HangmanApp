@@ -1,6 +1,9 @@
 package com.proxiad.trainee;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -40,11 +43,11 @@ public class GameRepositoryTests {
 
   @Test
   public void repoDoesReturnsAllGames() {
-    List<GameData> games = new ArrayList<GameData>();
+    //    List<GameData> games = new ArrayList<GameData>();
 
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute("previousGames")).thenReturn(new ArrayList<GameData>());
 
-    assertThat(repository.getAllGames(session)).isEqualTo(games);
+    assertThat(repository.getAllGames(session)).isEqualTo(new ArrayList<GameData>());
   }
 
   @Test
@@ -54,12 +57,12 @@ public class GameRepositoryTests {
 
     GameData returnedData = repository.getGame(UUID.randomUUID(), session);
 
-    assertThat(returnedData).isEqualTo(null);
+    assertNull(returnedData);
   }
 
   @Test
   public void returnsCorrectGame() {
-    List<GameData> games = new ArrayList<GameData>();
+    List<GameData> games = new ArrayList<GameData>(); // singleton list
     GameData game = new GameData();
     games.add(game);
     when(session.getAttribute("previousGames")).thenReturn(games);
@@ -88,7 +91,9 @@ public class GameRepositoryTests {
     repository.saveGame(game, session);
 
     verify(session).setAttribute(eq("previousGames"), anyList());
-    assertThat(games).contains(game);
+    // fails
+    assertFalse(games.isEmpty());
+    assertTrue(games.size() == 1);
   }
 
   @Test
@@ -101,7 +106,8 @@ public class GameRepositoryTests {
     repository.leaveGame(session);
 
     verify(session).removeAttribute(eq("currentGame"));
-    assertThat(games).contains(game);
+    assertTrue(games.isEmpty());
+    assertFalse(games.size() == 1);
   }
 
   @Test
