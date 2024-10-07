@@ -10,9 +10,9 @@ public class NewGameDTO {
   @Pattern(
       regexp = "[a-zA-Z\\s\\-\\']*",
       message = "Invalid word: must only contain letters, whitespaces or dashes")
-  //  @Pattern(
-  //      regexp = "^[a-zA-Z][a-zA-Z]$",
-  //      message = "Invalid word: cannot begin or end with a special character")
+  @Pattern(
+      regexp = "^[a-zA-Z][a-zA-Z]$",
+      message = "Invalid word: cannot begin or end with a special character")
   private String wordToGuess;
 
   private String gamemode;
@@ -22,9 +22,9 @@ public class NewGameDTO {
   @Pattern(
       regexp = "[a-zA-Z\\s\\-\\']*",
       message = "Invalid category: must only contain letters, whitespaces or dashes")
-  //  @Pattern(
-  //      regexp = "^[a-zA-Z][a-zA-Z]$",
-  //      message = "Invalid category: cannot begin or end with a special character")
+  @Pattern(
+      regexp = "^[a-zA-Z][a-zA-Z]$",
+      message = "Invalid category: cannot begin or end with a special character")
   private String category;
 
   public String getWordToGuess() {

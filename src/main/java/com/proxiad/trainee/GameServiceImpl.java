@@ -1,15 +1,11 @@
 package com.proxiad.trainee;
 
 import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.proxiad.trainee.enums.CategoryEnum;
 import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
@@ -19,7 +15,6 @@ import com.proxiad.trainee.interfaces.GameRepository;
 import com.proxiad.trainee.interfaces.GameService;
 import com.proxiad.trainee.interfaces.WordGeneratorService;
 import jakarta.servlet.http.HttpSession;
-;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -77,20 +72,14 @@ public class GameServiceImpl implements GameService {
     return gameRepository.getGame(id, session);
   }
 
-  // category,word,gamemode -> CreateGameDTO
   @Override
   public GameData startNewGame(NewGameDTO gameDTO, HttpSession session)
       throws InvalidWordException, InvalidCategoryException {
-    //    if (category == null || isCategoryInvalid(category)) {
-    //      throw new InvalidCategoryException("The given category is invalid.");
-    //    }
     String category = gameDTO.getCategory().toUpperCase();
     String wordToGuess = gameDTO.getWordToGuess();
     GamemodeEnum gamemode = GamemodeEnum.valueOf(gameDTO.getGamemode());
-    // CategoryEnum categoryEnum = CategoryEnum.valueOf(category);
     if (wordToGuess == null) {
       wordToGuess = getRandomWord(category);
-      // gamemode = GamemodeEnum.SINGLEPLAYER;
     }
     wordToGuess = wordToGuess.toUpperCase();
     GameData game = new GameData(wordToGuess, category, gamemode, Constants.MAX_LIVES);
@@ -174,83 +163,11 @@ public class GameServiceImpl implements GameService {
     return wordGeneratorService.createRandomWord(category);
   }
 
-  private void validateWord(String word) throws InvalidWordException {
-    if (word.length() <= 2) {
-      throw new InvalidWordException(
-          "Word should have at least 3 characters. Word entered: " + word);
-    }
-    Character firstChar = word.charAt(0);
-    Character lastChar = word.charAt(word.length() - 1);
-    if (!Character.isLetter(firstChar) || !Character.isLetter(lastChar)) {
-      throw new InvalidWordException(
-          "Word should end and begin with a letter. Word entered: " + word);
-    }
-    String regex = "[a-zA-Z\\s-]+";
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(word);
-    if (!matcher.matches()) {
-      throw new InvalidWordException(
-          "Word should contain only letters, whitespaces or dashes." + " Word entered: " + word);
-    }
-
-    if (isWholeWordRevealed(word.toUpperCase())) {
-      throw new InvalidWordException(
-          "At least one of the letters should not be revealed at the beginning of the game."
-              + "The first and last letters are revealed. Word entered: "
-              + word);
-    }
-  }
-
-  private void validateCategory(String category) throws InvalidCategoryException {
-    if (category.length() <= 2) {
-      throw new InvalidCategoryException(
-          "Category should have at least 3 characters. Category entered: " + category);
-    }
-    Character firstChar = category.charAt(0);
-    Character lastChar = category.charAt(category.length() - 1);
-    if (!Character.isLetter(firstChar) || !Character.isLetter(lastChar)) {
-      throw new InvalidCategoryException(
-          "Category should end and begin with a letter. Word entered: " + category);
-    }
-    String regex = "[a-zA-Z\\s-]+";
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(category);
-    if (!matcher.matches()) {
-      throw new InvalidCategoryException(
-          "Category should contain only letters, whitespaces or dashes."
-              + " Word entered: "
-              + category);
-    }
-  }
-
-  private boolean isWholeWordRevealed(String word) {
-    Character firstChar = word.charAt(0);
-    Character lastChar = word.charAt(word.length() - 1);
-    int revealedLetters = 0;
-    for (int i = 0; i < word.length(); i++) {
-      if (word.charAt(i) == firstChar
-          || word.charAt(i) == lastChar
-          || IRRELEVANT_CHARACTERS.contains(word.charAt(i))) {
-        revealedLetters++;
-      }
-    }
-    return revealedLetters == word.length();
-  }
-
   public void setGameRepository(GameRepository gameRepository) {
     this.gameRepository = gameRepository;
   }
 
   public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
     this.wordGeneratorService = wordGeneratorService;
-  }
-
-  public boolean isCategoryInvalid(String value) {
-    try {
-      CategoryEnum.valueOf(value.toUpperCase());
-      return false;
-    } catch (IllegalArgumentException e) {
-      return true;
-    }
   }
 }

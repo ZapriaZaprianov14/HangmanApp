@@ -8,7 +8,7 @@
 <script>
     function submitForm(category) {
         var form = document.getElementById('hangman-form');
-        form.action = '/HangmanAppMVC/games/newGame/' + category;
+        form.action = '/HangmanApp/games/newGame/' + category;
         form.submit();
     }
 </script>

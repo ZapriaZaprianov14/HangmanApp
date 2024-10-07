@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import com.proxiad.trainee.enums.CategoryEnum;
 import com.proxiad.trainee.enums.GamemodeEnum;
 
 public class GameData implements Serializable {

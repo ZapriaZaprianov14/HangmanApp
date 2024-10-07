@@ -9,7 +9,7 @@
 <script>
 function submitForm(guess) {
     var form = document.getElementById('keyboard-form');
-    form.action = '/HangmanAppMVC/games/guess/' + guess;
+    form.action = '/HangmanApp/games/guess/' + guess;
     form.submit();
 }
 </script>

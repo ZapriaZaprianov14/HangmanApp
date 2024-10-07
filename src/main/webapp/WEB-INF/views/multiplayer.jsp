@@ -3,7 +3,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ page import="com.proxiad.trainee.enums.CategoryEnum"%>
 <%@ page import="static com.proxiad.trainee.Constants.HOME_URL"%>
 <%@ page
 	import="static com.proxiad.trainee.Constants.GAMES_CONTROLLER_URL"%>
@@ -20,13 +19,6 @@
 	          alert('Copying is disabled on this page.');
 	      });
 	  });
-	  
-	  function submitForm() {
-	        event.preventDefault();
-	        var form = document.getElementById('enterWordForm');
-	        form.action = '/HangmanApp/games' + '/newGameMultiplayer';
-	        form.submit();
-	    }
 	  
        function validateInput(event) {
            const input = event.target.value;

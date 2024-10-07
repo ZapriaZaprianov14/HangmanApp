@@ -1,6 +1,5 @@
 package com.proxiad.trainee;
 
-import java.io.IOException;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,6 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/games")
-// @SessionAttributes(Constants.CURRENT_GAME)
 public class GameController {
   @Autowired private GameService gameService;
 

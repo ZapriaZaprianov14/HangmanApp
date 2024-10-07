@@ -12,7 +12,7 @@
 <script>
 function submitForm(gameId) {
     var form = document.getElementById('resume-form');
-    form.action = '/HangmanAppMVC/games/' + gameId + '/resume';
+    form.action = '/HangmanApp/games/' + gameId + '/resume';
     form.submit();
 }
 </script>

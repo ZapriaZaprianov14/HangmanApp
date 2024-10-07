@@ -7,10 +7,4 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
 @ComponentScan(basePackages = "com.proxiad.trainee")
-public class RootConfig {
-
-  //  @Bean
-  //  public LocalValidatorFactoryBean validator() {
-  //    return new LocalValidatorFactoryBean();
-  //  }
-}
+public class RootConfig {}
