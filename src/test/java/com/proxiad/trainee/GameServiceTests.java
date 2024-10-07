@@ -22,10 +22,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import static com.proxiad.trainee.CategoryEnum.*;
-import static com.proxiad.trainee.GamemodeEnum.*;
+import com.proxiad.trainee.enums.GamemodeEnum;
+import com.proxiad.trainee.exceptions.GameNotFoundException;
+import com.proxiad.trainee.exceptions.InvalidCategoryException;
+import com.proxiad.trainee.exceptions.InvalidGuessException;
+import com.proxiad.trainee.exceptions.InvalidWordException;
+import com.proxiad.trainee.interfaces.GameService;
+import static com.proxiad.trainee.enums.GamemodeEnum.*;
 import static com.proxiad.trainee.Constants.MAX_LIVES;
 import jakarta.servlet.http.HttpSession;
 
@@ -34,19 +40,14 @@ public class GameServiceTests {
 
   @Rule public MockitoRule rule = MockitoJUnit.rule();
 
-  private GameService gameService;
-
-  @Before
-  public void setUp() {
-    ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
-    gameService = context.getBean(GameService.class);
-  }
+  @Autowired private GameService gameService;
 
   @Test
   public void startsSingleplayerGameCorrectly()
       throws InvalidWordException, InvalidCategoryException {
     String category = "CARS";
-    GameData returnedData = gameService.startNewGame(category, null, session);
+    NewGameDTO newGameDTO = new NewGameDTO(null, "MULTIPLAYER", "CARS");
+    GameData returnedData = gameService.startNewGame(newGameDTO, session);
 
     String wordProgress = returnedData.getWordProgress();
 
@@ -61,7 +62,8 @@ public class GameServiceTests {
   public void startsMultiplayerGameCorrectly()
       throws InvalidWordException, InvalidCategoryException {
     String category = "CARS";
-    GameData returnedData = gameService.startNewGame(category, "Alfa Romeo", session);
+    NewGameDTO newGameDTO = new NewGameDTO("Alfa Romeo", "MULTIPLAYER", "CARS");
+    GameData returnedData = gameService.startNewGame(newGameDTO, session);
 
     String wordProgress = returnedData.getWordProgress();
 
@@ -72,9 +74,8 @@ public class GameServiceTests {
   }
 
   @Test
-  public void makesCorrectGuess()
-      throws InvalidWordException, InvalidCategoryException, InvalidGuessException {
-    GameData game = new GameData("OPEL", CARS, MULTIPLAYER, MAX_LIVES);
+  public void makesCorrectGuess() throws InvalidGuessException, GameNotFoundException {
+    GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, MAX_LIVES);
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'L'));
 
@@ -89,10 +90,9 @@ public class GameServiceTests {
   }
 
   @Test
-  public void rightGuessSavesWinningGame()
-      throws InvalidWordException, InvalidCategoryException, InvalidGuessException {
+  public void rightGuessSavesWinningGame() throws InvalidGuessException, GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
-    GameData game = new GameData("OPEL", CARS, MULTIPLAYER, MAX_LIVES);
+    GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, MAX_LIVES);
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'P', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'P', 'L'));
     games.add(game);
@@ -103,10 +103,9 @@ public class GameServiceTests {
   }
 
   @Test
-  public void wrongGuessSavesLosingGame()
-      throws InvalidWordException, InvalidCategoryException, InvalidGuessException {
+  public void wrongGuessSavesLosingGame() throws InvalidGuessException, GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
-    GameData game = new GameData("OPEL", CARS, MULTIPLAYER, 1);
+    GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, 1);
     games.add(game);
 
     gameService.makeTry(game, "J", session);
@@ -124,7 +123,7 @@ public class GameServiceTests {
   }
 
   private void assertGameStarted(GameData game, GamemodeEnum gamemodeEnum) {
-    assertThat(game.getCategory()).isEqualTo(CARS);
+    assertThat(game.getCategory()).isEqualTo("CARS");
     assertThat(game.getGamemode()).isEqualTo(gamemodeEnum);
     assertThat(game.getLives()).isEqualTo(MAX_LIVES);
     assertThat(game.getRightGuesses()).isNotEmpty();
@@ -133,7 +132,7 @@ public class GameServiceTests {
   @Test
   public void throwsExceptionWhenGuessIsInvalid()
       throws InvalidWordException, InvalidCategoryException {
-    GameData game = new GameData("TOYOTA", CARS, MULTIPLAYER, MAX_LIVES);
+    GameData game = new GameData("TOYOTA", "CARS", MULTIPLAYER, MAX_LIVES);
 
     assertThatThrownBy(
             () -> {
@@ -146,9 +145,10 @@ public class GameServiceTests {
   @Test
   public void throwsExceptionWhenCategoryIsInvalid()
       throws InvalidWordException, InvalidCategoryException {
+    NewGameDTO newGameDTO = new NewGameDTO("word", "MULTIPLAYER", "wrong2Category");
     assertThatThrownBy(
             () -> {
-              gameService.startNewGame("wrongCategory", "word", session);
+              gameService.startNewGame(newGameDTO, session);
             })
         .isInstanceOf(InvalidCategoryException.class)
         .hasMessageContaining("The given category is invalid.");
@@ -156,11 +156,10 @@ public class GameServiceTests {
 
   @Test
   public void throwsExceptionWhenWordIsShort() {
-    String category = "CARS";
-    String word = "Al";
+    NewGameDTO newGameDTO = new NewGameDTO("Al", "MULTIPLAYER", "CARS");
     assertThatThrownBy(
             () -> {
-              gameService.startNewGame(category, word, session);
+              gameService.startNewGame(newGameDTO, session);
             })
         .isInstanceOf(InvalidWordException.class)
         .hasMessageContaining("Word should have at least 3 characters");
@@ -168,11 +167,10 @@ public class GameServiceTests {
 
   @Test
   public void throwsExceptionWhenWordDoesNotEndWithLetter() {
-    String category = "CARS";
-    String word = "Alfa#";
+    NewGameDTO newGameDTO = new NewGameDTO("Alfa ", "MULTIPLAYER", "CARS");
     assertThatThrownBy(
             () -> {
-              gameService.startNewGame(category, word, session);
+              gameService.startNewGame(newGameDTO, session);
             })
         .isInstanceOf(InvalidWordException.class)
         .hasMessageContaining("Word should end with a letter.");
@@ -180,11 +178,10 @@ public class GameServiceTests {
 
   @Test
   public void throwsExceptionWhenWholeWordRevealed() {
-    String category = "CARS";
-    String word = "Aaabbb";
+    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
     assertThatThrownBy(
             () -> {
-              gameService.startNewGame(category, word, session);
+              gameService.startNewGame(newGameDTO, session);
             })
         .isInstanceOf(InvalidWordException.class)
         .hasMessageContaining(
@@ -193,11 +190,10 @@ public class GameServiceTests {
 
   @Test
   public void throwsExceptionWhenWordHasSpecialCharacters() {
-    String category = "CARS";
-    String word = "Aac#bbb";
+    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
     assertThatThrownBy(
             () -> {
-              gameService.startNewGame(category, word, session);
+              gameService.startNewGame(newGameDTO, session);
             })
         .isInstanceOf(InvalidWordException.class)
         .hasMessageContaining("Word should contain only letters, whitespaces or dashes.");
@@ -219,7 +215,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void returnsNullWhenGameNotFound() {
+  public void returnsNullWhenGameNotFound() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     when(session.getAttribute("previousGames")).thenReturn(games);
 
@@ -229,7 +225,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void returnsCorrectGame() {
+  public void returnsCorrectGame() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     games.add(game);
@@ -241,7 +237,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void returnsCurrentGame() {
+  public void returnsCurrentGame() throws GameNotFoundException {
     GameData game = new GameData();
     when(session.getAttribute("currentGame")).thenReturn(game);
 
@@ -251,7 +247,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void leavesGame() {
+  public void leavesGame() throws GameNotFoundException {
     GameData game = new GameData();
     List<GameData> games = new ArrayList<GameData>();
     when(session.getAttribute("currentGame")).thenReturn(game);
@@ -264,7 +260,7 @@ public class GameServiceTests {
   }
 
   @Test
-  public void resumesGame() {
+  public void resumesGame() throws GameNotFoundException {
     GameData game = new GameData();
     List<GameData> games = new ArrayList<GameData>();
     games.add(game);

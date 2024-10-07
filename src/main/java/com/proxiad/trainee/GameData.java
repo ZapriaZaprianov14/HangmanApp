@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import com.proxiad.trainee.enums.CategoryEnum;
+import com.proxiad.trainee.enums.GamemodeEnum;
 
 public class GameData implements Serializable {
   /** */
@@ -21,7 +23,7 @@ public class GameData implements Serializable {
   private String wordProgress;
   private List<Character> unguessedLetters;
   private Set<Character> rightGuesses;
-  private CategoryEnum category;
+  private String category;
   private GamemodeEnum gamemode;
   private boolean gameWon;
   private boolean finished;
@@ -50,11 +52,11 @@ public class GameData implements Serializable {
     this.gameWon = gameWon;
   }
 
-  public CategoryEnum getCategory() {
+  public String getCategory() {
     return category;
   }
 
-  public void setCategory(CategoryEnum category) {
+  public void setCategory(String category) {
     this.category = category;
   }
 
@@ -140,7 +142,7 @@ public class GameData implements Serializable {
     this.rightGuesses = new HashSet<Character>();
   }
 
-  public GameData(String word, CategoryEnum category, GamemodeEnum gamemode, int lives) {
+  public GameData(String word, String category, GamemodeEnum gamemode, int lives) {
     setId(UUID.randomUUID());
     setUnguessedLetters(
         new ArrayList<Character>(

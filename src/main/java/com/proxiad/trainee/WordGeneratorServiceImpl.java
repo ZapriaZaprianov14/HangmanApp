@@ -10,7 +10,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
+import com.proxiad.trainee.interfaces.WordGeneratorService;
 
+@Service
 public class WordGeneratorServiceImpl implements WordGeneratorService {
 
   @Override
@@ -24,7 +27,7 @@ public class WordGeneratorServiceImpl implements WordGeneratorService {
     try {
       JSONParser parser = new JSONParser();
       InputStream inputStream =
-          NewGameServlet.class.getClassLoader().getResourceAsStream("words_data.json");
+          GameController.class.getClassLoader().getResourceAsStream("words_data.json");
       if (inputStream == null) {
         System.out.println("File not found!");
         return null;

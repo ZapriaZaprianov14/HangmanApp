@@ -1,25 +1,37 @@
 package com.proxiad.trainee;
 
+import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.proxiad.trainee.enums.CategoryEnum;
+import com.proxiad.trainee.enums.GamemodeEnum;
+import com.proxiad.trainee.exceptions.GameNotFoundException;
+import com.proxiad.trainee.exceptions.InvalidCategoryException;
+import com.proxiad.trainee.exceptions.InvalidGuessException;
+import com.proxiad.trainee.exceptions.InvalidWordException;
+import com.proxiad.trainee.interfaces.GameRepository;
+import com.proxiad.trainee.interfaces.GameService;
+import com.proxiad.trainee.interfaces.WordGeneratorService;
 import jakarta.servlet.http.HttpSession;
-import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
 ;
 
+@Service
 public class GameServiceImpl implements GameService {
 
-  private GameRepository gameRepository;
-  private WordGeneratorService wordGeneratorService;
+  @Autowired private GameRepository gameRepository;
+  @Autowired private WordGeneratorService wordGeneratorService;
 
   public GameServiceImpl() {}
 
   @Override
   public GameData makeTry(GameData game, String guess, HttpSession session)
-      throws InvalidGuessException {
+      throws InvalidGuessException, GameNotFoundException {
     if (!Character.isLetter(guess.charAt(0)) || guess.length() > 1) {
       throw new InvalidGuessException("Your guess was invalid. The guess should be a letter.");
     }
@@ -46,11 +58,12 @@ public class GameServiceImpl implements GameService {
     return game;
   }
 
-  private GameData finalizeGame(GameData game, boolean gameWon, HttpSession session) {
+  private GameData finalizeGame(GameData game, boolean gameWon, HttpSession session)
+      throws GameNotFoundException {
     game.setFinished(true);
     game.setGameWon(gameWon);
     game.setWordProgress(game.getWord());
-    gameRepository.saveGame(game, session);
+    gameRepository.leaveGame(session);
     return game;
   }
 
@@ -60,43 +73,42 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData getGame(UUID id, HttpSession session) {
+  public GameData getGame(UUID id, HttpSession session) throws GameNotFoundException {
     return gameRepository.getGame(id, session);
   }
 
+  // category,word,gamemode -> CreateGameDTO
   @Override
-  public GameData startNewGame(String category, String wordToGuess, HttpSession sessionn)
+  public GameData startNewGame(NewGameDTO gameDTO, HttpSession session)
       throws InvalidWordException, InvalidCategoryException {
-    if (category == null || isCategoryInvalid(category)) {
-      throw new InvalidCategoryException("The given category is invalid.");
-    }
-    category = category.toUpperCase();
-    CategoryEnum categoryEnum = CategoryEnum.valueOf(category);
-    GamemodeEnum gamemode;
+    //    if (category == null || isCategoryInvalid(category)) {
+    //      throw new InvalidCategoryException("The given category is invalid.");
+    //    }
+    String category = gameDTO.getCategory().toUpperCase();
+    String wordToGuess = gameDTO.getWordToGuess();
+    GamemodeEnum gamemode = GamemodeEnum.valueOf(gameDTO.getGamemode());
+    // CategoryEnum categoryEnum = CategoryEnum.valueOf(category);
     if (wordToGuess == null) {
       wordToGuess = getRandomWord(category);
-      gamemode = GamemodeEnum.SINGLEPLAYER;
-    } else {
-      gamemode = GamemodeEnum.MULTIPLAYER;
-      validateWord(wordToGuess);
+      // gamemode = GamemodeEnum.SINGLEPLAYER;
     }
     wordToGuess = wordToGuess.toUpperCase();
-    GameData game = new GameData(wordToGuess, categoryEnum, gamemode, Constants.MAX_LIVES);
-    return initializeGame(wordToGuess, game, sessionn);
+    GameData game = new GameData(wordToGuess, category, gamemode, Constants.MAX_LIVES);
+    return initializeGame(wordToGuess, game, session);
   }
 
   @Override
-  public GameData getCurrentGame(HttpSession session) {
+  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
     return gameRepository.getCurrentGame(session);
   }
 
   @Override
-  public void leaveGame(HttpSession session) {
+  public void leaveGame(HttpSession session) throws GameNotFoundException {
     gameRepository.leaveGame(session);
   }
 
   @Override
-  public GameData resumeGame(UUID id, HttpSession session) {
+  public GameData resumeGame(UUID id, HttpSession session) throws GameNotFoundException {
     return gameRepository.resumeGame(id, session);
   }
 
@@ -171,7 +183,7 @@ public class GameServiceImpl implements GameService {
     Character lastChar = word.charAt(word.length() - 1);
     if (!Character.isLetter(firstChar) || !Character.isLetter(lastChar)) {
       throw new InvalidWordException(
-          "Word should end or begin with a letter. Word entered: " + word);
+          "Word should end and begin with a letter. Word entered: " + word);
     }
     String regex = "[a-zA-Z\\s-]+";
     Pattern pattern = Pattern.compile(regex);
@@ -186,6 +198,28 @@ public class GameServiceImpl implements GameService {
           "At least one of the letters should not be revealed at the beginning of the game."
               + "The first and last letters are revealed. Word entered: "
               + word);
+    }
+  }
+
+  private void validateCategory(String category) throws InvalidCategoryException {
+    if (category.length() <= 2) {
+      throw new InvalidCategoryException(
+          "Category should have at least 3 characters. Category entered: " + category);
+    }
+    Character firstChar = category.charAt(0);
+    Character lastChar = category.charAt(category.length() - 1);
+    if (!Character.isLetter(firstChar) || !Character.isLetter(lastChar)) {
+      throw new InvalidCategoryException(
+          "Category should end and begin with a letter. Word entered: " + category);
+    }
+    String regex = "[a-zA-Z\\s-]+";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(category);
+    if (!matcher.matches()) {
+      throw new InvalidCategoryException(
+          "Category should contain only letters, whitespaces or dashes."
+              + " Word entered: "
+              + category);
     }
   }
 
@@ -209,25 +243,6 @@ public class GameServiceImpl implements GameService {
 
   public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
     this.wordGeneratorService = wordGeneratorService;
-  }
-
-  @Override
-  public boolean containsFinishedGames(List<GameData> games) {
-    return games.stream().anyMatch(game -> game.isFinished());
-  }
-
-  @Override
-  public boolean containsOngoingGames(List<GameData> games) {
-    return games.stream().anyMatch(game -> !game.isFinished());
-  }
-
-  @Override
-  public List<GameData> reverseListOfGames(List<GameData> games) {
-    List<GameData> result = new ArrayList<>();
-    for (int i = games.size() - 1; i >= 0; i--) {
-      result.add(games.get(i));
-    }
-    return result;
   }
 
   public boolean isCategoryInvalid(String value) {

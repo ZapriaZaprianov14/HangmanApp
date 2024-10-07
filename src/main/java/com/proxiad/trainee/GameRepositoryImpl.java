@@ -3,19 +3,23 @@ package com.proxiad.trainee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.stereotype.Service;
+import com.proxiad.trainee.exceptions.GameNotFoundException;
+import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
 
+@Service
 public class GameRepositoryImpl implements GameRepository {
 
   @Override
-  public GameData getGame(UUID id, HttpSession session) {
+  public GameData getGame(UUID id, HttpSession session) throws GameNotFoundException {
     List<GameData> games = getAllGames(session);
     for (GameData game : games) {
       if (game.getId().equals(id)) {
         return game;
       }
     }
-    return null;
+    throw new GameNotFoundException("This game does not exist.");
   }
 
   @Override
@@ -25,33 +29,37 @@ public class GameRepositoryImpl implements GameRepository {
       games = new ArrayList<GameData>();
     }
     games.add(game);
-    session.setAttribute("previousGames", games);
+    session.setAttribute(Constants.PREVIOUS_GAMES, games);
   }
 
   @Override
-  public void leaveGame(HttpSession session) {
+  public void leaveGame(HttpSession session) throws GameNotFoundException {
     GameData currentGame = getCurrentGame(session);
-    session.removeAttribute("currentGame");
+    session.removeAttribute(Constants.CURRENT_GAME);
     saveGame(currentGame, session);
   }
 
   @Override
   public void setCurrentGame(GameData game, HttpSession session) {
-    session.setAttribute("currentGame", game);
+    session.setAttribute(Constants.CURRENT_GAME, game);
   }
 
   @Override
-  public GameData getCurrentGame(HttpSession session) {
-    return (GameData) session.getAttribute("currentGame");
+  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
+    GameData game = (GameData) session.getAttribute(Constants.CURRENT_GAME);
+    if (game == null) {
+      throw new GameNotFoundException("Current game is null");
+    }
+    return game;
   }
 
   @Override
   public List<GameData> getAllGames(HttpSession session) {
-    return (List<GameData>) session.getAttribute("previousGames");
+    return (List<GameData>) session.getAttribute(Constants.PREVIOUS_GAMES);
   }
 
   @Override
-  public GameData resumeGame(UUID id, HttpSession session) {
+  public GameData resumeGame(UUID id, HttpSession session) throws GameNotFoundException {
     GameData game = getGame(id, session);
     setCurrentGame(game, session);
     List<GameData> previousGames = getAllGames(session);
