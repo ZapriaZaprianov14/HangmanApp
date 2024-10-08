@@ -13,7 +13,7 @@
 		<div class="content">
 			<h1>You lost :(</h1>
 			<p>The word was: ${word}</p>
-			<img class="stickman-big" src="images/hangman-0.png">
+			<img class="stickman-big" src="${pageContext.request.contextPath}/images/hangman-0.png">
 			<form action="${HOME_URL}" method="get">
 				<input class="generic-btn" type="submit" value="Home">
 			</form>

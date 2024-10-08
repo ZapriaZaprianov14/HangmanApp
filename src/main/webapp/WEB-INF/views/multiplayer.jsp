@@ -19,7 +19,7 @@
 	          alert('Copying is disabled on this page.');
 	      });
 	  });
-	  
+	  	/*
        function validateInput(event) {
            const input = event.target.value;
            const regex = /^[a-zA-Z\s-]{3,}$/;
@@ -30,6 +30,7 @@
                event.target.setCustomValidity("");
            }
        }
+	  	*/
 	  
     </script>
 </head>
@@ -37,17 +38,17 @@
 	<div class="container">
 		<div class="content">
 			<h4>Player 1 enter the word</h4>
-			<form:form  class="simple-container" action="${GAMES_CONTROLLER_URL}/newGame/multiplayer"
+			<form:form  class="simple-container" action="${GAMES_CONTROLLER_URL}/game/multiplayer"
 				modelAttribute="newGameDTO" method="post">
 				<table class="content">
 					<tr>
 						<td>Word:</td>
-						<td><form:input path="wordToGuess" required="true"/></td>
+						<td><form:input oninput="validateInput(event)" id="wordToGuess" path="wordToGuess" required="true"/></td>
 						<td><form:errors path="wordToGuess" cssClass="error" /></td>
 					</tr>
 					<tr>
 						<td>Category:</td>
-						<td><form:input path="category" required="true"/></td>
+						<td><form:input oninput="validateInput(event)" id="category" path="category" required="true"/></td>
 						<td><form:errors path="category" cssClass="error" /></td>
 					</tr>
 					<tr>

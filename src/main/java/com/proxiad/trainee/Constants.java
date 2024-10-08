@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Constants {
   public static final int MAX_LIVES = 9;
-  public static final List<Character> IRRELEVANT_CHARACTERS = Arrays.asList(' ', '-');
+  public static final List<Character> IRRELEVANT_CHARACTERS = Arrays.asList(' ', '-', '\'');
   public static final String CURRENT_GAME = "currentGame";
   public static final String PREVIOUS_GAMES = "previousGames";
   public static final String GAMES_CONTROLLER_URL = "/HangmanApp/games";

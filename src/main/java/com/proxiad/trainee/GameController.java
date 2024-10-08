@@ -26,11 +26,10 @@ import jakarta.validation.Valid;
 public class GameController {
   @Autowired private GameService gameService;
 
-  @PostMapping("/newGame/{category}")
+  @PostMapping("game/{category}")
   public String startNewSingleplayerGame(
       @PathVariable("category") String category, HttpSession session, Model model)
       throws InvalidWordException, InvalidCategoryException {
-
     NewGameDTO newGameDTO = new NewGameDTO(null, "SINGLEPLAYER", category);
     gameService.startNewGame(newGameDTO, session);
     return "game";
@@ -42,12 +41,12 @@ public class GameController {
     return "multiplayer";
   }
 
-  @PostMapping("/newGame/multiplayer")
+  @PostMapping("/game/multiplayer")
   public String startNewMultiplayerGame(
-      @Valid @ModelAttribute("newGameDTO") NewGameDTO newGameDTO,
       HttpSession session,
-      Model model,
-      BindingResult bindingResult)
+      @Valid @ModelAttribute("newGameDTO") NewGameDTO newGameDTO,
+      BindingResult bindingResult,
+      Model model)
       throws InvalidWordException, InvalidCategoryException {
 
     if (bindingResult.hasErrors()) {

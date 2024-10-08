@@ -8,6 +8,9 @@ public class IsWordRevealedConstraint implements ConstraintValidator<NotRevealed
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
+    if (value.length() < 3) {
+      return true; // this case is handled by the @Size
+    }
     return !isWholeWordRevealed(value);
   }
 

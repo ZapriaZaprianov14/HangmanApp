@@ -1,30 +1,19 @@
 package com.proxiad.trainee;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class NewGameDTO {
-  @NotRevealed
   @Size(min = 3, message = "Word should be at least 3 letters")
-  @Pattern(
-      regexp = "[a-zA-Z\\s\\-\\']*",
-      message = "Invalid word: must only contain letters, whitespaces or dashes")
-  @Pattern(
-      regexp = "^[a-zA-Z][a-zA-Z]$",
-      message = "Invalid word: cannot begin or end with a special character")
+  @ValidString
+  @NotRevealed
   private String wordToGuess;
 
   private String gamemode;
 
-  @NotNull
+  @NotBlank
   @Size(min = 3, message = "Category should be at least 3 letters")
-  @Pattern(
-      regexp = "[a-zA-Z\\s\\-\\']*",
-      message = "Invalid category: must only contain letters, whitespaces or dashes")
-  @Pattern(
-      regexp = "^[a-zA-Z][a-zA-Z]$",
-      message = "Invalid category: cannot begin or end with a special character")
+  @ValidString
   private String category;
 
   public String getWordToGuess() {
