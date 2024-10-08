@@ -10,10 +10,18 @@
 <title>Ongoing Games</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/site.css">
 <script>
+/*
 function submitForm(gameId) {
     var form = document.getElementById('resume-form');
     form.action = '/HangmanApp/games/' + gameId + '/resume';
     form.submit();
+}
+*/
+function submitFormEvent(gameId) {
+	var form = document.getElementById('resume-form-' + gameId);
+    form.action = '/HangmanApp/games/' + gameId + '/resume';
+    form.submit();
+    return false;
 }
 </script>
 </head>
@@ -41,8 +49,8 @@ function submitForm(gameId) {
 								<td>${game.lives}</td>
 								<td>${game.gamemode}</td>
 								<td>
-									<form id="resume-form" method="post">
-									    <input onclick="submitForm('${game.id}')" class="small-btn generic-btn" type="submit" value="Resume">
+									<form onsubmit="submitFormEvent('${game.id}')" id="resume-form-${game.id}" method="post">
+									    <input  class="small-btn generic-btn" type="submit" value="Resume">
 									</form>
 								</td>
 							</tr>

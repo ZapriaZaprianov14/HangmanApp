@@ -106,10 +106,8 @@ table {
 .multiplayer-input{
 	min-width: 25px;
 	margin: 8px;
-	/*
 	-webkit-text-security: disc;
     text-security: disc;
-    */
 }
 
 .small-btn {
@@ -130,11 +128,11 @@ table {
 	width: auto;
 }
 
-.check-mark {
+.success {
 	color: green;
 }
 
-.cross-mark {
+.error {
 	color: red;
 }
 

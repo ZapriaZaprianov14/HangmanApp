@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.validation;
 
 import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
 import jakarta.validation.ConstraintValidator;

@@ -34,7 +34,7 @@
 										<td>${game.guessesMade}</td>
 										<td>${9 - game.lives}</td>
 										<td>${game.gamemode}</td>
-										<td>Won <b class="check-mark">✔</b></td>
+										<td>Won <b class="success">✔</b></td>
 									</tr>
 								</c:when>
 								<c:otherwise>
@@ -44,7 +44,7 @@
 										<td>${game.guessesMade}</td>
 										<td>${9 - game.lives}</td>
 										<td>${game.gamemode}</td>
-										<td>Lost <b class="cross-mark">❌</b></td>
+										<td>Lost <b class="error">❌</b></td>
 									</tr>
 								</c:otherwise>
 							</c:choose>

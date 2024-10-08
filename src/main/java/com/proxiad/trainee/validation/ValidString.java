@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = IsValidStringContsraint.class)
 public @interface ValidString {
-  String message() default "The word should contain only latin letters, spaces, - or \' ";
+  String message() default "Should contain only latin letters, spaces, - or \' ";
 
   Class<?>[] groups() default {};
 

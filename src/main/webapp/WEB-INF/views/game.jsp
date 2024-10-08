@@ -7,10 +7,11 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/site.css">
 <title>Playing</title>
 <script>
-function submitForm(guess) {
-    var form = document.getElementById('keyboard-form');
-    form.action = '/HangmanApp/games/guess/' + guess;
+function submitForm(letterGuessed) {
+    var form = document.getElementById('keyboard-form-' + letterGuessed);
+    form.action = '/HangmanApp/games/guess/' + letterGuessed;
     form.submit();
+    return false;
 }
 </script>
 </head>
@@ -25,9 +26,11 @@ function submitForm(guess) {
 			<c:forEach items="${qwertyKeyboard}" var="row">
 				<div class="keyboard-row">
 					<c:forEach items="${row}" var="letter">
-						<form action="${GAMES_CONTROLLER_URL}/guess" id="keyboard-form" class="key-form" method="post">
+						<form onsubmit="submitForm('${letter}')" id="keyboard-form-${letter}"
+						 class="key-form" method="post">
 							<input type="submit" name="guess" value="${letter}"
-								${ !currentGame.unguessedLetters.contains(letter) ? 'disabled="disabled" class="key-disabled"' : 'class="key"'} />
+								${ !currentGame.unguessedLetters.contains(letter) ? 
+								'disabled="disabled" class="key-disabled"' : 'class="key"'} />
 						</form>
 					</c:forEach>
 				</div>

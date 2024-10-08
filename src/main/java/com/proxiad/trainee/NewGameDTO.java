@@ -1,5 +1,7 @@
 package com.proxiad.trainee;
 
+import com.proxiad.trainee.validation.NotRevealed;
+import com.proxiad.trainee.validation.ValidString;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

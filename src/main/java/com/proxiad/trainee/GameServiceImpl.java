@@ -16,7 +16,7 @@ import com.proxiad.trainee.interfaces.GameService;
 import com.proxiad.trainee.interfaces.WordGeneratorService;
 import jakarta.servlet.http.HttpSession;
 
-@Service
+// @Service
 public class GameServiceImpl implements GameService {
 
   @Autowired private GameRepository gameRepository;
@@ -30,7 +30,6 @@ public class GameServiceImpl implements GameService {
     if (!Character.isLetter(guess.charAt(0)) || guess.length() > 1) {
       throw new InvalidGuessException("Your guess was invalid. The guess should be a letter.");
     }
-
     String word = game.getWord();
     guess = guess.toUpperCase();
     Character charToGuess = guess.charAt(0);
@@ -73,8 +72,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData startNewGame(NewGameDTO gameDTO, HttpSession session)
-      throws InvalidWordException, InvalidCategoryException {
+  public GameData startNewGame(NewGameDTO gameDTO, HttpSession session) {
     String category = gameDTO.getCategory().toUpperCase();
     String wordToGuess = gameDTO.getWordToGuess();
     GamemodeEnum gamemode = GamemodeEnum.valueOf(gameDTO.getGamemode());

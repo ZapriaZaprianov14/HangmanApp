@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.validation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

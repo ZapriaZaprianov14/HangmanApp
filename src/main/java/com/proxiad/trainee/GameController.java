@@ -2,6 +2,7 @@ package com.proxiad.trainee;
 
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,19 +27,13 @@ import jakarta.validation.Valid;
 public class GameController {
   @Autowired private GameService gameService;
 
-  @PostMapping("game/{category}")
+  @PostMapping("/game/{category}")
   public String startNewSingleplayerGame(
       @PathVariable("category") String category, HttpSession session, Model model)
       throws InvalidWordException, InvalidCategoryException {
     NewGameDTO newGameDTO = new NewGameDTO(null, "SINGLEPLAYER", category);
     gameService.startNewGame(newGameDTO, session);
     return "game";
-  }
-
-  @GetMapping("/multiplayer")
-  public String showForm(Model model) {
-    model.addAttribute("newGameDTO", new NewGameDTO());
-    return "multiplayer";
   }
 
   @PostMapping("/game/multiplayer")
@@ -50,18 +45,24 @@ public class GameController {
       throws InvalidWordException, InvalidCategoryException {
 
     if (bindingResult.hasErrors()) {
-      return "multiplayer";
+      return "multiplayer-input";
     }
 
     gameService.startNewGame(newGameDTO, session);
     return "game";
   }
 
+  @GetMapping("/multiplayerInput")
+  public String showMultiplayerForm(Model model) {
+    model.addAttribute("newGameDTO", new NewGameDTO());
+    return "multiplayer-input";
+  }
+
   // @PostMapping("/guess/{guess}")
   // when using path variable
   // the controller just creates new game???
-  @PostMapping("/guess")
-  public String playGuess(HttpSession session, @RequestParam String guess, Model model)
+  @PostMapping("/guess/{guess}")
+  public String playGuess(HttpSession session, @PathVariable String guess, Model model)
       throws InvalidGuessException, GameNotFoundException {
     GameData game = gameService.getCurrentGame(session);
 
@@ -90,6 +91,17 @@ public class GameController {
     return "home";
   }
 
+  @GetMapping("/leave")
+  public String getHomeJSP() {
+    return "home";
+  }
+
+  @GetMapping({"/game/{category}", "/{gameId}/resume", "/guess/{guess}", "/game/multiplayer"})
+  public String handleGameRequests(HttpSession session) throws GameNotFoundException {
+    gameService.getCurrentGame(session);
+    return "game";
+  }
+
   @ExceptionHandler(value = CustomException.class)
   public String InvalidCategory(CustomException exception, Model model) {
     model.addAttribute("message", exception.getMessage());
@@ -98,7 +110,7 @@ public class GameController {
 
   @ExceptionHandler(value = Exception.class)
   public String unexpectedException(Exception ex, Model model) {
-    model.addAttribute("message", "Unexpected error");
+    model.addAttribute("message", "Page not found");
     return "unexpected";
   }
 }

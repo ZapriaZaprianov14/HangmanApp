@@ -13,7 +13,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import com.proxiad.trainee.interfaces.WordGeneratorService;
 
-@Service
+// @Service
 public class WordGeneratorServiceImpl implements WordGeneratorService {
 
   @Override

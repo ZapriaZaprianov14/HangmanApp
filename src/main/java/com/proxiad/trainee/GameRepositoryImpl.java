@@ -8,7 +8,7 @@ import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
 
-@Service
+// @Service
 public class GameRepositoryImpl implements GameRepository {
 
   @Override
@@ -19,6 +19,7 @@ public class GameRepositoryImpl implements GameRepository {
         return game;
       }
     }
+
     throw new GameNotFoundException("This game does not exist.");
   }
 
