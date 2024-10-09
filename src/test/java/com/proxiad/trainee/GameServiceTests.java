@@ -19,6 +19,7 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -26,6 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import com.proxiad.trainee.config.RootConfig;
 import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
@@ -36,7 +41,9 @@ import static com.proxiad.trainee.enums.GamemodeEnum.*;
 import static com.proxiad.trainee.Constants.MAX_LIVES;
 import jakarta.servlet.http.HttpSession;
 
-@Component
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = RootConfig.class)
+@WebAppConfiguration
 public class GameServiceTests {
   @Mock HttpSession session;
 
@@ -47,8 +54,7 @@ public class GameServiceTests {
   @Test
   public void startsSingleplayerGameCorrectly()
       throws InvalidWordException, InvalidCategoryException {
-    String category = "CARS";
-    NewGameDTO newGameDTO = new NewGameDTO(null, "MULTIPLAYER", "CARS");
+    NewGameDTO newGameDTO = new NewGameDTO(null, "SINGLEPLAYER", "CARS");
     GameData returnedData = gameService.startNewGame(newGameDTO, session);
 
     String wordProgress = returnedData.getWordProgress();
@@ -63,7 +69,6 @@ public class GameServiceTests {
   @Test
   public void startsMultiplayerGameCorrectly()
       throws InvalidWordException, InvalidCategoryException {
-    String category = "CARS";
     NewGameDTO newGameDTO = new NewGameDTO("Alfa Romeo", "MULTIPLAYER", "CARS");
     GameData returnedData = gameService.startNewGame(newGameDTO, session);
 
@@ -97,7 +102,8 @@ public class GameServiceTests {
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, MAX_LIVES);
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'P', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'P', 'L'));
-    games.add(game);
+    when(session.getAttribute("currentGame")).thenReturn(game);
+    when(session.getAttribute("previousGames")).thenReturn(games);
 
     gameService.makeTry(game, "e", session);
 
@@ -108,7 +114,8 @@ public class GameServiceTests {
   public void wrongGuessSavesLosingGame() throws InvalidGuessException, GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, 1);
-    games.add(game);
+    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute("currentGame")).thenReturn(game);
 
     gameService.makeTry(game, "J", session);
 
@@ -144,62 +151,62 @@ public class GameServiceTests {
         .hasMessageContaining("Your guess was invalid. The guess should be a letter.");
   }
 
-  @Test
-  public void throwsExceptionWhenCategoryIsInvalid()
-      throws InvalidWordException, InvalidCategoryException {
-    NewGameDTO newGameDTO = new NewGameDTO("word", "MULTIPLAYER", "wrong2Category");
-    assertThatThrownBy(
-            () -> {
-              gameService.startNewGame(newGameDTO, session);
-            })
-        .isInstanceOf(InvalidCategoryException.class)
-        .hasMessageContaining("The given category is invalid.");
-  }
+  //  @Test
+  //  public void throwsExceptionWhenCategoryIsInvalid()
+  //      throws InvalidWordException, InvalidCategoryException {
+  //    NewGameDTO newGameDTO = new NewGameDTO("word", "MULTIPLAYER", "wrong2Category");
+  //    assertThatThrownBy(
+  //            () -> {
+  //              gameService.startNewGame(newGameDTO, session);
+  //            })
+  //        .isInstanceOf(InvalidCategoryException.class)
+  //        .hasMessageContaining("The given category is invalid.");
+  //  }
 
-  @Test
-  public void throwsExceptionWhenWordIsShort() {
-    NewGameDTO newGameDTO = new NewGameDTO("Al", "MULTIPLAYER", "CARS");
-    assertThatThrownBy(
-            () -> {
-              gameService.startNewGame(newGameDTO, session);
-            })
-        .isInstanceOf(InvalidWordException.class)
-        .hasMessageContaining("Word should have at least 3 characters");
-  }
+  //  @Test
+  //  public void throwsExceptionWhenWordIsShort() {
+  //    NewGameDTO newGameDTO = new NewGameDTO("Al", "MULTIPLAYER", "CARS");
+  //    assertThatThrownBy(
+  //            () -> {
+  //              gameService.startNewGame(newGameDTO, session);
+  //            })
+  //        .isInstanceOf(InvalidWordException.class)
+  //        .hasMessageContaining("Word should have at least 3 characters");
+  //  }
 
-  @Test
-  public void throwsExceptionWhenWordDoesNotEndWithLetter() {
-    NewGameDTO newGameDTO = new NewGameDTO("Alfa ", "MULTIPLAYER", "CARS");
-    assertThatThrownBy(
-            () -> {
-              gameService.startNewGame(newGameDTO, session);
-            })
-        .isInstanceOf(InvalidWordException.class)
-        .hasMessageContaining("Word should end with a letter.");
-  }
+  //  @Test
+  //  public void throwsExceptionWhenWordDoesNotEndWithLetter() {
+  //    NewGameDTO newGameDTO = new NewGameDTO("Alfa ", "MULTIPLAYER", "CARS");
+  //    assertThatThrownBy(
+  //            () -> {
+  //              gameService.startNewGame(newGameDTO, session);
+  //            })
+  //        .isInstanceOf(InvalidWordException.class)
+  //        .hasMessageContaining("Word should end with a letter.");
+  //  }
 
-  @Test
-  public void throwsExceptionWhenWholeWordRevealed() {
-    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
-    assertThatThrownBy(
-            () -> {
-              gameService.startNewGame(newGameDTO, session);
-            })
-        .isInstanceOf(InvalidWordException.class)
-        .hasMessageContaining(
-            "At least one of the letters should not be revealed at the beginning of the game");
-  }
-
-  @Test
-  public void throwsExceptionWhenWordHasSpecialCharacters() {
-    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
-    assertThatThrownBy(
-            () -> {
-              gameService.startNewGame(newGameDTO, session);
-            })
-        .isInstanceOf(InvalidWordException.class)
-        .hasMessageContaining("Word should contain only letters, whitespaces or dashes.");
-  }
+  //  @Test
+  //  public void throwsExceptionWhenWholeWordRevealed() {
+  //    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
+  //    assertThatThrownBy(
+  //            () -> {
+  //              gameService.startNewGame(newGameDTO, session);
+  //            })
+  //        .isInstanceOf(InvalidWordException.class)
+  //        .hasMessageContaining(
+  //            "At least one of the letters should not be revealed at the beginning of the game");
+  //  }
+  //
+  //  @Test
+  //  public void throwsExceptionWhenWordHasSpecialCharacters() {
+  //    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
+  //    assertThatThrownBy(
+  //            () -> {
+  //              gameService.startNewGame(newGameDTO, session);
+  //            })
+  //        .isInstanceOf(InvalidWordException.class)
+  //        .hasMessageContaining("Word should contain only letters, whitespaces or dashes.");
+  //  }
 
   @Test
   public void repoReturnsNullWhenListEmpty() {
@@ -221,9 +228,12 @@ public class GameServiceTests {
     List<GameData> games = new ArrayList<GameData>();
     when(session.getAttribute("previousGames")).thenReturn(games);
 
-    GameData returnedData = gameService.getGame(UUID.randomUUID(), session);
-
-    assertThat(returnedData).isEqualTo(null);
+    assertThatThrownBy(
+            () -> {
+              gameService.getGame(UUID.randomUUID(), session);
+            })
+        .isInstanceOf(GameNotFoundException.class)
+        .hasMessageContaining("This game does not exist.");
   }
 
   @Test

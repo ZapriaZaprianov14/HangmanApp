@@ -16,7 +16,7 @@ import com.proxiad.trainee.interfaces.GameService;
 import com.proxiad.trainee.interfaces.WordGeneratorService;
 import jakarta.servlet.http.HttpSession;
 
-// @Service
+@Service
 public class GameServiceImpl implements GameService {
 
   @Autowired private GameRepository gameRepository;

@@ -107,7 +107,6 @@ public class GameRepositoryTests {
     repository.saveGame(game, session);
 
     verify(session).setAttribute(eq("previousGames"), anyList());
-    // fails
     assertFalse(games.isEmpty());
     assertTrue(games.size() == 1);
   }
@@ -122,7 +121,6 @@ public class GameRepositoryTests {
     repository.leaveGame(session);
 
     verify(session).removeAttribute(eq("currentGame"));
-    System.out.println(previousGames.size());
     assertFalse(previousGames.isEmpty());
     assertTrue(previousGames.size() == 1);
   }

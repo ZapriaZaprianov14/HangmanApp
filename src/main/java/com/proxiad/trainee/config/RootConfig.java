@@ -16,21 +16,21 @@ import com.proxiad.trainee.interfaces.WordGeneratorService;
 @ComponentScan(basePackages = "com.proxiad.trainee")
 public class RootConfig {
 
-  @Bean
-  public GameRepository gameRepository() {
-    return new GameRepositoryImpl();
-  }
-
-  @Bean
-  public WordGeneratorService wordGeneratorService() {
-    return new WordGeneratorServiceImpl();
-  }
-
-  @Bean
-  public GameService gameService() {
-    GameServiceImpl gameService = new GameServiceImpl();
-    gameService.setGameRepository(gameRepository());
-    gameService.setWordGeneratorService(wordGeneratorService());
-    return gameService;
-  }
+  //  @Bean
+  //  public GameRepository gameRepository() {
+  //    return new GameRepositoryImpl();
+  //  }
+  //
+  //  @Bean
+  //  public WordGeneratorService wordGeneratorService() {
+  //    return new WordGeneratorServiceImpl();
+  //  }
+  //
+  //  @Bean
+  //  public GameService gameService() {
+  //    GameServiceImpl gameService = new GameServiceImpl();
+  //    gameService.setGameRepository(gameRepository());
+  //    gameService.setWordGeneratorService(wordGeneratorService());
+  //    return gameService;
+  //  }
 }

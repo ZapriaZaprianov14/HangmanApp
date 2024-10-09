@@ -58,9 +58,6 @@ public class GameController {
     return "multiplayer-input";
   }
 
-  // @PostMapping("/guess/{guess}")
-  // when using path variable
-  // the controller just creates new game???
   @PostMapping("/guess/{guess}")
   public String playGuess(HttpSession session, @PathVariable String guess, Model model)
       throws InvalidGuessException, GameNotFoundException {
