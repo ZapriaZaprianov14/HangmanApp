@@ -11,7 +11,7 @@
 <body>
 	<div class="container">
 		<div class="content">
-			<h2>${message}</h2>
+			<h2 id="message">${message}</h2>
 			<form action="${HOME_URL}" method="get">
 				<input class="generic-btn" type="submit" value="Start new Game">
 			</form>

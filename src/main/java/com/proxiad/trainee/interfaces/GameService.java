@@ -14,7 +14,7 @@ public interface GameService {
   GameData makeTry(GameData game, String guess, HttpSession session)
       throws InvalidGuessException, GameNotFoundException;
 
-  GameData startNewGame(NewGameDTO gameDTO, HttpSession session);
+  GameData startNewGame(NewGameDTO gameDTO, HttpSession session) throws InvalidCategoryException;
 
   GameData getGame(UUID id, HttpSession session) throws GameNotFoundException;
 

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.proxiad.trainee.enums.CategoryEnum;
 import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
@@ -72,7 +73,11 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData startNewGame(NewGameDTO gameDTO, HttpSession session) {
+  public GameData startNewGame(NewGameDTO gameDTO, HttpSession session)
+      throws InvalidCategoryException {
+    if (gameDTO.getGamemode().equals("SINGLEPLAYER") && isCategoryInvalid(gameDTO.getCategory())) {
+      throw new InvalidCategoryException("The given category is invalid.");
+    }
     String category = gameDTO.getCategory().toUpperCase();
     String wordToGuess = gameDTO.getWordToGuess();
     GamemodeEnum gamemode = GamemodeEnum.valueOf(gameDTO.getGamemode());
@@ -167,5 +172,14 @@ public class GameServiceImpl implements GameService {
 
   public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
     this.wordGeneratorService = wordGeneratorService;
+  }
+
+  public boolean isCategoryInvalid(String value) {
+    try {
+      CategoryEnum.valueOf(value.toUpperCase());
+      return false;
+    } catch (IllegalArgumentException e) {
+      return true;
+    }
   }
 }

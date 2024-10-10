@@ -4,19 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -39,6 +31,8 @@ import com.proxiad.trainee.exceptions.InvalidWordException;
 import com.proxiad.trainee.interfaces.GameService;
 import static com.proxiad.trainee.enums.GamemodeEnum.*;
 import static com.proxiad.trainee.Constants.MAX_LIVES;
+import static com.proxiad.trainee.Constants.CURRENT_GAME;
+import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import jakarta.servlet.http.HttpSession;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -102,8 +96,8 @@ public class GameServiceTests {
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, MAX_LIVES);
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'P', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'P', 'L'));
-    when(session.getAttribute("currentGame")).thenReturn(game);
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     gameService.makeTry(game, "e", session);
 
@@ -114,8 +108,8 @@ public class GameServiceTests {
   public void wrongGuessSavesLosingGame() throws InvalidGuessException, GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, 1);
-    when(session.getAttribute("previousGames")).thenReturn(games);
-    when(session.getAttribute("currentGame")).thenReturn(game);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
+    when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
 
     gameService.makeTry(game, "J", session);
 
@@ -128,7 +122,6 @@ public class GameServiceTests {
     assertThat(game.isGameWon()).isEqualTo(expectedIsWon);
     assertTrue(games.contains(game));
     verify(session, times(1)).setAttribute("previousGames", games);
-    // verify(session, never()).setAttribute("previousGames", games);
   }
 
   private void assertGameStarted(GameData game, GamemodeEnum gamemodeEnum) {
@@ -151,82 +144,29 @@ public class GameServiceTests {
         .hasMessageContaining("Your guess was invalid. The guess should be a letter.");
   }
 
-  //  @Test
-  //  public void throwsExceptionWhenCategoryIsInvalid()
-  //      throws InvalidWordException, InvalidCategoryException {
-  //    NewGameDTO newGameDTO = new NewGameDTO("word", "MULTIPLAYER", "wrong2Category");
-  //    assertThatThrownBy(
-  //            () -> {
-  //              gameService.startNewGame(newGameDTO, session);
-  //            })
-  //        .isInstanceOf(InvalidCategoryException.class)
-  //        .hasMessageContaining("The given category is invalid.");
-  //  }
-
-  //  @Test
-  //  public void throwsExceptionWhenWordIsShort() {
-  //    NewGameDTO newGameDTO = new NewGameDTO("Al", "MULTIPLAYER", "CARS");
-  //    assertThatThrownBy(
-  //            () -> {
-  //              gameService.startNewGame(newGameDTO, session);
-  //            })
-  //        .isInstanceOf(InvalidWordException.class)
-  //        .hasMessageContaining("Word should have at least 3 characters");
-  //  }
-
-  //  @Test
-  //  public void throwsExceptionWhenWordDoesNotEndWithLetter() {
-  //    NewGameDTO newGameDTO = new NewGameDTO("Alfa ", "MULTIPLAYER", "CARS");
-  //    assertThatThrownBy(
-  //            () -> {
-  //              gameService.startNewGame(newGameDTO, session);
-  //            })
-  //        .isInstanceOf(InvalidWordException.class)
-  //        .hasMessageContaining("Word should end with a letter.");
-  //  }
-
-  //  @Test
-  //  public void throwsExceptionWhenWholeWordRevealed() {
-  //    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
-  //    assertThatThrownBy(
-  //            () -> {
-  //              gameService.startNewGame(newGameDTO, session);
-  //            })
-  //        .isInstanceOf(InvalidWordException.class)
-  //        .hasMessageContaining(
-  //            "At least one of the letters should not be revealed at the beginning of the game");
-  //  }
-  //
-  //  @Test
-  //  public void throwsExceptionWhenWordHasSpecialCharacters() {
-  //    NewGameDTO newGameDTO = new NewGameDTO("Aaabbb", "MULTIPLAYER", "CARS");
-  //    assertThatThrownBy(
-  //            () -> {
-  //              gameService.startNewGame(newGameDTO, session);
-  //            })
-  //        .isInstanceOf(InvalidWordException.class)
-  //        .hasMessageContaining("Word should contain only letters, whitespaces or dashes.");
-  //  }
-
   @Test
   public void repoReturnsNullWhenListEmpty() {
-    when(session.getAttribute("previousGames")).thenReturn(null);
-    assertThat(gameService.getAllGames(session)).isEqualTo(null);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
+
+    List<GameData> returnedData = gameService.getAllGames(session);
+
+    assertThat(returnedData).isEqualTo(null);
   }
 
   @Test
   public void repoReturnsAllGames() {
     List<GameData> games = new ArrayList<GameData>();
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    List<GameData> returnedData = gameService.getAllGames(session);
 
-    assertThat(gameService.getAllGames(session)).isEqualTo(games);
+    assertThat(returnedData).isEqualTo(games);
   }
 
   @Test
   public void returnsNullWhenGameNotFound() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     assertThatThrownBy(
             () -> {
@@ -251,7 +191,7 @@ public class GameServiceTests {
   @Test
   public void returnsCurrentGame() throws GameNotFoundException {
     GameData game = new GameData();
-    when(session.getAttribute("currentGame")).thenReturn(game);
+    when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
 
     GameData returnedGame = gameService.getCurrentGame(session);
 
@@ -262,12 +202,12 @@ public class GameServiceTests {
   public void leavesGame() throws GameNotFoundException {
     GameData game = new GameData();
     List<GameData> games = new ArrayList<GameData>();
-    when(session.getAttribute("currentGame")).thenReturn(game);
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     gameService.leaveGame(session);
 
-    verify(session).removeAttribute(eq("currentGame"));
+    verify(session).removeAttribute(eq(CURRENT_GAME));
     assertThat(games).contains(game);
   }
 
@@ -276,11 +216,11 @@ public class GameServiceTests {
     GameData game = new GameData();
     List<GameData> games = new ArrayList<GameData>();
     games.add(game);
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     GameData returnedGame = gameService.resumeGame(game.getId(), session);
 
-    verify(session).setAttribute("currentGame", game);
+    verify(session).setAttribute(CURRENT_GAME, game);
     assertThat(returnedGame).isEqualTo(game);
     assertThat(games).doesNotContain(game);
   }

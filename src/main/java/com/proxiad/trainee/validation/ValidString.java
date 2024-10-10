@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = IsValidStringContsraint.class)
 public @interface ValidString {
-  String message() default "Should contain only latin letters, spaces, - or \' ";
+  String message() default "Should contain only latin letters, spaces or commas";
 
   Class<?>[] groups() default {};
 

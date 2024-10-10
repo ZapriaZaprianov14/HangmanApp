@@ -42,7 +42,7 @@ function submitFormEvent(gameId) {
 				<tbody>
 					<c:forEach items="${gamesReversed}" var="game">
 						<c:if test="${!game.finished}">
-							<tr>
+							<tr name="game-row">
 								<td class="preserve-space">${game.wordProgress}</td>
 								<td>${game.category}</td>
 								<td>${game.guessesMade}</td>
@@ -50,7 +50,7 @@ function submitFormEvent(gameId) {
 								<td>${game.gamemode}</td>
 								<td>
 									<form onsubmit="submitFormEvent('${game.id}')" id="resume-form-${game.id}" method="post">
-									    <input  class="small-btn generic-btn" type="submit" value="Resume">
+									    <input name="resume-btn" class="small-btn generic-btn" type="submit" value="Resume">
 									</form>
 								</td>
 							</tr>
@@ -60,7 +60,7 @@ function submitFormEvent(gameId) {
 			</table>
 			
 			<form style="margin:20px" action="${HOME_URL}" method="get">
-				<input class="generic-btn" type="submit" value="Start new Game">
+				<input id="home-btn" class="generic-btn" type="submit" value="Home">
 			</form>
 		</div>
 	</div>

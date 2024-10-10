@@ -37,7 +37,7 @@
 <body>
 	<div class="container">
 		<div class="content">
-			<h4>Player 1 enter the word</h4>
+			<h4>Player 1 enter the word and category</h4>
 			<form:form  class="simple-container" action="${GAMES_CONTROLLER_URL}/game/multiplayer"
 				modelAttribute="newGameDTO" method="post">
 				<table class="content">
@@ -55,7 +55,7 @@
 						<td><form:hidden path="gamemode" value="MULTIPLAYER" /></td>
 					</tr>
 					<tr>
-						<td class="content"><button type="submit" class="small-btn generic-btn">Enter Word</button></td>
+						<td class="content"><button id="enter-btn" type="submit" class="small-btn generic-btn">Enter Word</button></td>
 					</tr>
 				</table>
 			</form:form>

@@ -19,7 +19,7 @@ function submitForm(letterGuessed) {
 	<div class="container">
 		<div class="content">
 			<c:if test="${currentGame.gamemode == MULTIPLAYER}">
-    			<p style="margin-top:1px">Player 2 guess the word</p>
+    			<p id="player2-msg" style="margin-top:1px">Player 2 guess the word</p>
 			</c:if>
 			<p>Category: ${currentGame.category}</p>
 			<p class="preserve-space">${currentGame.wordProgress}</p>
@@ -39,7 +39,7 @@ function submitForm(letterGuessed) {
 			<img class="stickman"
 				src="${pageContext.request.contextPath}/images/hangman-${currentGame.lives}.png">
 			<form action="${GAMES_CONTROLLER_URL}/leave" method="post">
-				<input class="generic-btn" type="submit" value="Leave game">
+				<input id="leave-btn" class="generic-btn" type="submit" value="Leave game">
 			</form>
 		</div>
 	</div>

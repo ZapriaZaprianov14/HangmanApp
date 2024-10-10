@@ -53,7 +53,7 @@
 				</tbody>
 			</table>
 			<form style="margin:20px" action="${HOME_URL}" method="get">
-				<input class="generic-btn" type="submit" value="Start new Game">
+				<input id="home-btn" class="generic-btn" type="submit" value="Start new Game">
 			</form>
 		</div>
 	</div>

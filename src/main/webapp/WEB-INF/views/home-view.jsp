@@ -21,22 +21,20 @@
 			
 			<form id="hangman-form" method="post">
 			    <p>
-			        <input class="generic-btn" type="button" onclick="submitForm('Cities')" value="Cities">
-			        <input class="generic-btn" type="button" onclick="submitForm('Countries')" value="Countries">
-			        <input class="generic-btn" type="button" onclick="submitForm('Places')" value="Places">
+			        <input id="cities-btn" class="generic-btn" type="submit" onclick="submitForm('Cities')" value="Cities">
+			        <input id="countries-btn" class="generic-btn" type="submit" onclick="submitForm('Countries')" value="Countries">
+			        <input id="places-btn" class="generic-btn" type="submit" onclick="submitForm('Places')" value="Places">
 			    </p>
 			    <p>
-			        <input class="generic-btn" type="button" onclick="submitForm('Cars')" value="Cars">
-			        <input class="generic-btn" type="button" onclick="submitForm('Fruits')" value="Fruits">
-			        <input class="generic-btn" type="button" onclick="submitForm('Movies')" value="Movies">
+			        <input id="cars-btn" class="generic-btn" type="submit" onclick="submitForm('Cars')" value="Cars">
+			        <input id="fruits-btn" class="generic-btn" type="submit" onclick="submitForm('Fruits')" value="Fruits">
+			        <input id="movies-btn" class="generic-btn" type="submit" onclick="submitForm('Movies')" value="Movies">
 			    </p>
 			</form>
 			<br>
-			<p>
-				<form action="${GAMES_CONTROLLER_URL}/multiplayerInput">
-					<input class="generic-btn" type="submit" value="Start Multiplayer Game">
-				</form>
-			</p>
+			<form action="${GAMES_CONTROLLER_URL}/multiplayerInput">
+				<input id="multiplayer-btn" class="generic-btn" type="submit" value="Start Multiplayer Game">
+			</form>
 			<br>
 			<form action="${HISTORY_URL}">
 				<input class="generic-btn" type="submit" value="View Game History">
