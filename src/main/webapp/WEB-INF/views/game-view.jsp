@@ -9,7 +9,7 @@
 <script>
 function submitForm(letterGuessed) {
     var form = document.getElementById('keyboard-form-' + letterGuessed);
-    form.action = '/HangmanApp/games/guess/' + letterGuessed;
+    form.action = '/HangmanApp/api/games/guess/' + letterGuessed;
     form.submit();
     return false;
 }
@@ -22,13 +22,13 @@ function submitForm(letterGuessed) {
     			<p id="player2-msg" style="margin-top:1px">Player 2 guess the word</p>
 			</c:if>
 			<p>Category: ${currentGame.category}</p>
-			<p class="preserve-space">${currentGame.wordProgress}</p>
+			<p id="word-progress" class="preserve-space">${currentGame.wordProgress}</p>
 			<c:forEach items="${qwertyKeyboard}" var="row">
 				<div class="keyboard-row">
 					<c:forEach items="${row}" var="letter">
 						<form onsubmit="submitForm('${letter}')" id="keyboard-form-${letter}"
 						 class="key-form" method="post">
-							<input type="submit" name="guess" value="${letter}"
+							<input id="letter-${letter}" type="submit" name="guess" value="${letter}"
 								${ !currentGame.unguessedLetters.contains(letter) ? 
 								'disabled="disabled" class="key-disabled"' : 'class="key"'} />
 						</form>

@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.controllers;
 
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import com.proxiad.trainee.GameData;
+import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.exceptions.CustomException;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
@@ -25,7 +27,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 public class GameController {
   @Autowired private GameService gameService;
 
@@ -97,9 +99,9 @@ public class GameController {
   }
 
   @GetMapping({"/game/{category}", "/{gameId}/resume", "/guess/{guess}", "/game/multiplayer"})
-  public String handleGetRequests(HttpSession session) {
+  public String handleGetRequests(HttpSession session) throws GameNotFoundException {
     // if current game is null throws exception
-    // gameService.getCurrentGame(session);
+    gameService.getCurrentGame(session);
     return "game-view";
   }
 
@@ -118,10 +120,10 @@ public class GameController {
     return "unexpected-view";
   }
 
-  //  @ExceptionHandler(NoHandlerFoundException.class)
-  //  @ResponseStatus(HttpStatus.NOT_FOUND)
-  //  public String handleNotFound(NoHandlerFoundException ex, Model model) {
-  //    model.addAttribute("message", "Page not found");
-  //    return "unexpected";
-  //  }
+  @ExceptionHandler(NoHandlerFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public String handleNotFound(NoHandlerFoundException ex, Model model) {
+    model.addAttribute("message", "Page not found");
+    return "unexpected";
+  }
 }

@@ -13,14 +13,14 @@ public class IsValidStringContsraint implements ConstraintValidator<ValidString,
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
-    if (!stringHasOnlyValidChars(value)) {
-      return false;
-    }
     if (!stringEndsAndBeginsWithLetter(value)) {
       context.disableDefaultConstraintViolation();
       context
           .buildConstraintViolationWithTemplate("Has to begin or end with a letter")
           .addConstraintViolation();
+      return false;
+    }
+    if (!stringHasOnlyValidChars(value)) {
       return false;
     }
     return true;

@@ -19,7 +19,7 @@ function submitForm(gameId) {
 */
 function submitFormEvent(gameId) {
 	var form = document.getElementById('resume-form-' + gameId);
-    form.action = '/HangmanApp/games/' + gameId + '/resume';
+    form.action = '/HangmanApp/api/games/' + gameId + '/resume';
     form.submit();
     return false;
 }

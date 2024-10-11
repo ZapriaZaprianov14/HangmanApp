@@ -181,7 +181,7 @@ public class GameServiceTests {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     games.add(game);
-    when(session.getAttribute("previousGames")).thenReturn(games);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     GameData returnedData = gameService.getGame(game.getId(), session);
 

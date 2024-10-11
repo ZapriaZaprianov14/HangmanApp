@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import static com.proxiad.trainee.Constants.CURRENT_GAME;
 import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Rule;
@@ -39,25 +40,22 @@ public class GameRepositoryTests {
 
   @Autowired private GameRepository repository;
 
-  public void setRepository(GameRepository repository) {
-    this.repository = repository;
-  }
-
-  public GameRepository getRepository() {
-    return this.repository;
-  }
-
   @Test
   public void repoReturnsNullWhenListEmpty() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
-    assertThat(repository.getAllGames(session)).isEqualTo(null);
+
+    List<GameData> returnedGames = repository.getAllGames(session);
+
+    assertThat(returnedGames).isEqualTo(null);
   }
 
   @Test
   public void repoDoesReturnsAllGames() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(new ArrayList<GameData>());
 
-    assertThat(repository.getAllGames(session)).isEqualTo(new ArrayList<GameData>());
+    List<GameData> returnedGames = repository.getAllGames(session);
+
+    assertThat(returnedGames).isEqualTo(new ArrayList<GameData>());
   }
 
   @Test
@@ -75,9 +73,8 @@ public class GameRepositoryTests {
 
   @Test
   public void returnsCorrectGame() throws GameNotFoundException {
-    List<GameData> games = new ArrayList<GameData>(); // singleton list
     GameData game = new GameData();
-    games.add(game);
+    List<GameData> games = Collections.singletonList(game);
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     GameData returnedData = repository.getGame(game.getId(), session);

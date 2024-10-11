@@ -34,11 +34,13 @@ public class GameServiceImpl implements GameService {
     String word = game.getWord();
     guess = guess.toUpperCase();
     Character charToGuess = guess.charAt(0);
+
     if (word.contains(guess) && game.getUnguessedLetters().contains(charToGuess)) {
       game.getRightGuesses().add(charToGuess);
     } else if (game.getUnguessedLetters().contains(charToGuess)) {
       game.setLives(game.getLives() - 1);
     }
+
     game.getUnguessedLetters().remove(charToGuess);
     game.setGuessesMade(game.getGuessesMade() + 1);
     game.setCorrectlyGuessedLetters(getCorrectlyGuessedLetters(game));
@@ -81,11 +83,14 @@ public class GameServiceImpl implements GameService {
     String category = gameDTO.getCategory().toUpperCase();
     String wordToGuess = gameDTO.getWordToGuess();
     GamemodeEnum gamemode = GamemodeEnum.valueOf(gameDTO.getGamemode());
+
     if (wordToGuess == null) {
       wordToGuess = getRandomWord(category);
     }
+
     wordToGuess = wordToGuess.toUpperCase();
     GameData game = new GameData(wordToGuess, category, gamemode, Constants.MAX_LIVES);
+
     return initializeGame(wordToGuess, game, session);
   }
 

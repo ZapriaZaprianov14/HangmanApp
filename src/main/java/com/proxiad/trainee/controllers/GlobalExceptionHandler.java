@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

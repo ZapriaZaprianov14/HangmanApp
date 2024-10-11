@@ -1,6 +1,7 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.integration;
 
 import java.util.List;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,14 +16,19 @@ public class GamePage {
   }
 
   @FindBy(id = "leave-btn")
-  WebElement leaveButton;
+  protected WebElement leaveButton;
 
   @FindBy(id = "player2-msg")
-  WebElement messagePlayer2;
+  protected WebElement messagePlayer2;
 
-  @FindBy(css = ".preserve-space")
-  WebElement wordProgress;
+  @FindBy(id = "word-progress")
+  protected WebElement wordProgress;
 
   @FindBy(css = ".key-disabled")
-  List<WebElement> disabledButtons;
+  protected List<WebElement> disabledButtons;
+
+  protected void clickLetterButton(char letter) {
+    driver.findElement(By.id("letter-" + letter)).click();
+    ;
+  }
 }

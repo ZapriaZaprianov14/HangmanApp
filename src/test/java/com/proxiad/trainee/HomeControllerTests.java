@@ -1,13 +1,10 @@
 package com.proxiad.trainee;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,9 +13,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import com.proxiad.trainee.controllers.HomeController;
 import jakarta.servlet.http.HttpSession;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 public class HomeControllerTests {
 
@@ -38,25 +35,14 @@ public class HomeControllerTests {
 
   @Test
   public void testHome() throws Exception {
-    mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("home-view"));
+    mockMvc.perform(get("/api/")).andExpect(status().isOk()).andExpect(view().name("home-view"));
   }
-
-  //  @GetMapping("/ongoing")
-  //  public String getOngoing(@ModelAttribute("previousGames") List<GameData> games, Model model) {
-  //    if (containsOngoingGames(games)) {
-  //      model.addAttribute("gamesReversed", reverseListOfGames(games));
-  //      return "ongoing";
-  //    } else {
-  //      model.addAttribute("message", "No ongoing games.");
-  //      return "empty";
-  //    }
-  //  }
 
   @Test
   public void returnsEmptyJSPWhenNoOngoingGames() throws Exception {
     List<GameData> games = new ArrayList<GameData>();
     mockMvc
-        .perform(get("/ongoing").sessionAttr("previousGames", games))
+        .perform(get("/api/ongoing").sessionAttr("previousGames", games))
         .andExpect(status().isOk())
         .andExpect(view().name("empty-view"));
   }
@@ -68,20 +54,20 @@ public class HomeControllerTests {
     game.setFinished(false);
     games.add(game);
     mockMvc
-        .perform(get("/ongoing").sessionAttr("previousGames", games))
+        .perform(get("/api/ongoing").sessionAttr("previousGames", games))
         .andExpect(status().isOk())
-        .andExpect(view().name("ongoing-view"));
-    // .andExpect(model().attributeExists("gamesReversed"));
+        .andExpect(view().name("ongoing-view"))
+        .andExpect(model().attributeExists("gamesReversed"));
   }
 
   @Test
   public void returnsEmptyJSPWhenNoFinishedGames() throws Exception {
     List<GameData> games = new ArrayList<GameData>();
     mockMvc
-        .perform(get("/history").sessionAttr("previousGames", games))
+        .perform(get("/api/history").sessionAttr("previousGames", games))
         .andExpect(status().isOk())
-        .andExpect(view().name("empty-view"));
-    // .andExpect(model().attributeExists("gamesReversed"));
+        .andExpect(view().name("empty-view"))
+        .andExpect(model().attributeDoesNotExist("gamesReversed"));
   }
 
   @Test
@@ -91,9 +77,9 @@ public class HomeControllerTests {
     game.setFinished(true);
     games.add(game);
     mockMvc
-        .perform(get("/history").sessionAttr("previousGames", games))
+        .perform(get("/api/history").sessionAttr("previousGames", games))
         .andExpect(status().isOk())
-        .andExpect(view().name("history-view"));
-    // .andExpect(model().attributeExists("gamesReversed"));
+        .andExpect(view().name("history-view"))
+        .andExpect(model().attributeExists("gamesReversed"));
   }
 }

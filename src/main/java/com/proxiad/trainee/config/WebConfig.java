@@ -30,8 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/images/");
   }
 
-  //  @Override
-  //  public void addViewControllers(ViewControllerRegistry registry) {
-  //    registry.addViewController("/").setViewName("home");
-  //  }
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    registry.addViewController("/").setViewName("home-view");
+  }
 }

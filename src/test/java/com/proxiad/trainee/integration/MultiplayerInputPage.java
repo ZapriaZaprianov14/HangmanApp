@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.integration;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,16 +14,22 @@ public class MultiplayerInputPage {
   }
 
   @FindBy(id = "wordToGuess")
-  WebElement wordInputElement;
+  protected WebElement wordInputElement;
 
   @FindBy(id = "category")
-  WebElement categoryInputElement;
+  protected WebElement categoryInputElement;
+
+  @FindBy(id = "word-error")
+  protected WebElement wordError;
+
+  @FindBy(id = "category-error")
+  protected WebElement categoryError;
 
   @FindBy(tagName = "h4")
-  WebElement messageToPlayer1;
+  protected WebElement messageToPlayer1;
 
   @FindBy(id = "enter-btn")
-  WebElement enterButton;
+  protected WebElement enterButton;
 
   public void enterWord(String word) {
     wordInputElement.sendKeys(word);

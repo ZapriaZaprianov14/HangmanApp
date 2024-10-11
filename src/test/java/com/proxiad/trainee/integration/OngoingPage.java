@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.integration;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
@@ -16,11 +16,11 @@ public class OngoingPage {
   }
 
   @FindBy(id = "home-btn")
-  WebElement toHomeBtn;
+  protected WebElement toHomeBtn;
 
   @FindBy(name = "game-row")
-  List<WebElement> gameRows;
+  protected List<WebElement> gameRows;
 
   @FindBy(name = "resume-btn")
-  List<WebElement> resumeButtons;
+  protected List<WebElement> resumeButtons;
 }

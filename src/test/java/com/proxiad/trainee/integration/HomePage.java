@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.integration;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,17 +15,17 @@ public class HomePage {
 
   // Web elements
   @FindBy(xpath = "/html/body/div/div/form[3]/input[1]")
-  WebElement historyButton;
+  protected WebElement historyButton;
 
   @FindBy(xpath = "/html/body/div/div/form[3]/input[2]")
-  WebElement ongoingButton;
+  protected WebElement ongoingButton;
 
   @FindBy(xpath = "/html/body/div/div/p[1]")
-  WebElement welcomeMessage;
+  protected WebElement welcomeMessage;
 
   @FindBy(id = "cities-btn")
-  WebElement singlePlayerButton;
+  protected WebElement singlePlayerButton;
 
   @FindBy(id = "multiplayer-btn")
-  WebElement multiplayerButton;
+  protected WebElement multiplayerButton;
 }

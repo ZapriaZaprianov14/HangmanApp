@@ -44,12 +44,12 @@
 					<tr>
 						<td>Word:</td>
 						<td><form:input oninput="validateInput(event)" id="wordToGuess" path="wordToGuess" required="true"/></td>
-						<td><form:errors path="wordToGuess" cssClass="error" /></td>
+						<td><form:errors id="word-error" path="wordToGuess" cssClass="error" /></td>
 					</tr>
 					<tr>
 						<td>Category:</td>
 						<td><form:input oninput="validateInput(event)" id="category" path="category" required="true"/></td>
-						<td><form:errors path="category" cssClass="error" /></td>
+						<td><form:errors id="category-error" path="category" cssClass="error" /></td>
 					</tr>
 					<tr>
 						<td><form:hidden path="gamemode" value="MULTIPLAYER" /></td>
