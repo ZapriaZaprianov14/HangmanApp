@@ -12,9 +12,7 @@
 	<div class="container">
 		<div class="content">
 			<h2 id="message">${message}</h2>
-			<form action="${HOME_URL}" method="get">
-				<input class="generic-btn" type="submit" value="Start new Game">
-			</form>
+			<a class="generic-btn" href="${HOME_URL}">Home</a>
 		</div>
 	</div>
 </body>

@@ -4,7 +4,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.PageFactoryFinder;
 
 public class WinPage {
   WebDriver driver;
@@ -17,6 +16,6 @@ public class WinPage {
   @FindBy(tagName = "p")
   protected WebElement winningMessagElement;
 
-  @FindBy(tagName = "input")
+  @FindBy(tagName = "a")
   protected WebElement homeButtonElement;
 }

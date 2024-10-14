@@ -7,7 +7,6 @@ import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
 import com.proxiad.trainee.exceptions.InvalidGuessException;
-import com.proxiad.trainee.exceptions.InvalidWordException;
 import jakarta.servlet.http.HttpSession;
 
 public interface GameService {

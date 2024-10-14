@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ page import="static com.proxiad.trainee.Constants.HOME_URL"%>
 <%@ page
 	import="static com.proxiad.trainee.Constants.GAMES_CONTROLLER_URL"%>
@@ -19,18 +17,6 @@
 	          alert('Copying is disabled on this page.');
 	      });
 	  });
-	  	/*
-       function validateInput(event) {
-           const input = event.target.value;
-           const regex = /^[a-zA-Z\s-]{3,}$/;
-           if (!regex.test(input)) {
-               event.target.setCustomValidity("Word should be at least 3 letters. Special characters are not allowed");
-           } else {
-           	
-               event.target.setCustomValidity("");
-           }
-       }
-	  	*/
 	  
     </script>
 </head>
@@ -38,12 +24,12 @@
 	<div class="container">
 		<div class="content">
 			<h4>Player 1 enter the word and category</h4>
-			<form:form  class="simple-container" action="${GAMES_CONTROLLER_URL}/game/multiplayer"
+			<form:form action="${GAMES_CONTROLLER_URL}/multiplayer"
 				modelAttribute="newGameDTO" method="post">
 				<table class="content">
 					<tr>
 						<td>Word:</td>
-						<td><form:input oninput="validateInput(event)" id="wordToGuess" path="wordToGuess" required="true"/></td>
+						<td><form:input class="word-input" oninput="validateInput(event)" id="wordToGuess" path="wordToGuess" required="true"/></td>
 						<td><form:errors id="word-error" path="wordToGuess" cssClass="error" /></td>
 					</tr>
 					<tr>
@@ -55,7 +41,11 @@
 						<td><form:hidden path="gamemode" value="MULTIPLAYER" /></td>
 					</tr>
 					<tr>
-						<td class="content"><button id="enter-btn" type="submit" class="small-btn generic-btn">Enter Word</button></td>
+						<td colspan="3">
+			                <div>
+			                    <button id="enter-btn" type="submit" class="small-btn generic-btn">Enter Word</button>
+			                </div>
+			            </td>
 					</tr>
 				</table>
 			</form:form>

@@ -1,7 +1,6 @@
 package com.proxiad.trainee.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +14,12 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public String handleNotFound(NoHandlerFoundException ex, Model model) {
     model.addAttribute("message", "Page not found");
-    return "unexpected";
+    return "unexpected-view";
+  }
+
+  @ExceptionHandler(Exception.class)
+  public String handleUnexpectedException(Exception ex, Model model) {
+    model.addAttribute("message", "Unexpected exception");
+    return "unexpected-view";
   }
 }

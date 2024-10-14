@@ -2,7 +2,6 @@ package com.proxiad.trainee.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

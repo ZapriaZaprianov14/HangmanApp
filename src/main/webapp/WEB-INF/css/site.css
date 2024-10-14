@@ -52,11 +52,11 @@ table {
 	margin: 10px;
 	min-width: 20px;
 	cursor: pointer;
+	transition: ease 0.25s;
 }
 
 .key:hover {
 	background-color: #5dc2c2;
-	transition: ease 0.25s;
 	box-shadow: 3px 3px 2px #a1e3e3;
 }
 
@@ -77,18 +77,38 @@ table {
 	transition: ease 0.25s;
 }
 
-.generic-btn {
+input.generic-btn, button.generic-btn {
 	background-color: #18b3b3;
 	border-radius: 8px;
+	font-size: 14px;
 	border: none;
 	min-height: 35px;
 	min-width: 170px;
 	cursor: pointer;
+	transition: ease 0.25s;
 }
 
-.generic-btn:hover {
+input.generic-btn:hover, button.generic-btn:hover {
 	background-color: #5dc2c2;
-	transition: ease 0.25s;
+	box-shadow: 4px 4px 2px #a1e3e3;
+}
+
+a.generic-btn {
+	display:inline-block;
+    background-color: #18b3b3;
+    color: black;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    min-height: 35px;
+    min-width: 170px;
+    cursor: pointer;
+    line-height: 35px;
+    transition: ease 0.25s;
+}
+
+a.generic-btn:hover {
+	background-color: #5dc2c2;
 	box-shadow: 4px 4px 2px #a1e3e3;
 }
 
@@ -103,7 +123,7 @@ table {
 	cursor: pointer;
 }
 
-.multiplayer-input{
+.word-input{
 	min-width: 25px;
 	margin: 8px;
 	-webkit-text-security: disc;
@@ -111,7 +131,7 @@ table {
 }
 
 .small-btn {
-	min-width: 100px;
+	min-width: 100px !important;
 }
 
 .content {
@@ -119,6 +139,7 @@ table {
 }
 
 .stickman {
+	margin-top:10px;
 	max-height: 250px;
 	width: auto;
 }

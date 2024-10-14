@@ -16,6 +16,6 @@ public class LosePage {
   @FindBy(tagName = "p")
   protected WebElement loosingMessagElement;
 
-  @FindBy(tagName = "input")
+  @FindBy(tagName = "a")
   protected WebElement homeButtonElement;
 }

@@ -16,6 +16,6 @@ public class EmptyPage {
   @FindBy(id = "message")
   protected WebElement messageElement;
 
-  @FindBy(tagName = "input")
+  @FindBy(tagName = "a")
   protected WebElement homeButton;
 }

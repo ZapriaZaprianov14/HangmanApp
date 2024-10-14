@@ -24,7 +24,7 @@ public class WordGeneratorServiceImpl implements WordGeneratorService {
     return words.get(random.nextInt(words.size()));
   }
 
-  public List<String> getAllWordsFromCategory(String category) {
+  private List<String> getAllWordsFromCategory(String category) {
     try {
       JSONParser parser = new JSONParser();
       InputStream inputStream =

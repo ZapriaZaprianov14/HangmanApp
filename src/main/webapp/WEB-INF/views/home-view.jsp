@@ -8,7 +8,7 @@
 <script>
     function submitForm(category) {
         var form = document.getElementById('hangman-form');
-        form.action = '/HangmanApp/api/games/game/' + category;
+        form.action = '/HangmanApp/api/games/singleplayer/category/' + category;
         form.submit();
     }
 </script>
@@ -36,11 +36,9 @@
 				<input id="multiplayer-btn" class="generic-btn" type="submit" value="Start Multiplayer Game">
 			</form>
 			<br>
-			<form action="${HISTORY_URL}">
-				<input class="generic-btn" type="submit" value="View Game History">
-				<input class="generic-btn" formaction="${ONGOING_URL}" type="submit"
-					value="View Ongoing Games">
-			</form>
+			
+			<a href="${HISTORY_URL}" class="generic-btn">View Game History</a>
+			<a href="${ONGOING_URL}" class="generic-btn">View Ongoing Games</a>
 		</div>
 	</div>
 </body>

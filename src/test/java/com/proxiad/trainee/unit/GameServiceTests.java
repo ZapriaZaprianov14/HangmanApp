@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import com.proxiad.trainee.GameData;
+import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.config.RootConfig;
 import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
@@ -39,6 +41,7 @@ import jakarta.servlet.http.HttpSession;
 @ContextConfiguration(classes = RootConfig.class)
 @WebAppConfiguration
 public class GameServiceTests {
+
   @Mock HttpSession session;
 
   @Rule public MockitoRule rule = MockitoJUnit.rule();
@@ -141,7 +144,7 @@ public class GameServiceTests {
               gameService.makeTry(game, "#", session);
             })
         .isInstanceOf(InvalidGuessException.class)
-        .hasMessageContaining("Your guess was invalid. The guess should be a letter.");
+        .hasMessageContaining("Your guess was invalid. It should be a letter.");
   }
 
   @Test

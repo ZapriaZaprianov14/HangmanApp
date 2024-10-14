@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.unit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import com.proxiad.trainee.GameData;
 import com.proxiad.trainee.controllers.HomeController;
 import jakarta.servlet.http.HttpSession;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -34,7 +35,7 @@ public class HomeControllerTests {
   }
 
   @Test
-  public void testHome() throws Exception {
+  public void returnsHomeJSP() throws Exception {
     mockMvc.perform(get("/api/")).andExpect(status().isOk()).andExpect(view().name("home-view"));
   }
 
@@ -48,7 +49,7 @@ public class HomeControllerTests {
   }
 
   @Test
-  public void returnsOngoingJSPWhenOngoingGames() throws Exception {
+  public void returnsOngoingJSPWhenPresentOngoingGames() throws Exception {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     game.setFinished(false);
@@ -71,7 +72,7 @@ public class HomeControllerTests {
   }
 
   @Test
-  public void returnsHistoryJSPWhenFinishedGames() throws Exception {
+  public void returnsHistoryJSPWhenPresentFinishedGames() throws Exception {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     game.setFinished(true);

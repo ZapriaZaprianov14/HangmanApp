@@ -52,9 +52,7 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<form style="margin:20px" action="${HOME_URL}" method="get">
-				<input id="home-btn" class="generic-btn" type="submit" value="Start new Game">
-			</form>
+			<a style="margin:20px" class="generic-btn" href="${HOME_URL}">Home</a>
 		</div>
 	</div>
 </body>

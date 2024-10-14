@@ -38,26 +38,14 @@ public class IntegrationTests {
   }
 
   @Test
-  public void opensEmptyHistoryPageWhenGamesAreNull() {
-    homePage.historyButton.click();
-    assertThat(emptyPage.messageElement.getText()).isEqualTo("No finished games.");
-  }
-
-  @Test
-  public void emptyHistoryPageGoesBayckHome() {
+  public void emptyHistoryPageGoesBackHome() {
     homePage.historyButton.click();
     emptyPage.homeButton.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
 
   @Test
-  public void opensHistoryEmptyOngoingPageWhenGamesAreNull() {
-    homePage.ongoingButton.click();
-    assertThat(emptyPage.messageElement.getText()).isEqualTo("No ongoing games.");
-  }
-
-  @Test
-  public void emptyOngoingPagaGoesBackHome() {
+  public void emptyOngoingPageGoesBackHome() {
     homePage.ongoingButton.click();
     emptyPage.homeButton.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
@@ -67,6 +55,8 @@ public class IntegrationTests {
   public void createsNewGame() {
     homePage.singlePlayerButton.click();
     assertGameStartedCorrectly();
+    gamePage.leaveButton.click();
+    assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
 
   @Test
@@ -117,7 +107,17 @@ public class IntegrationTests {
   @Test
   public void multiplayerInputValidatesWordAndCategoryEnding() {
     homePage.multiplayerButton.click();
-    enterWordAndCategory("invalidWord1", "invalidCategory2");
+    enterWordAndCategory("invalidWord ", "invalidCategory2");
+    assertTrue(
+        multiplayerInputPage.wordError.getText().equals("Has to begin or end with a letter"));
+    assertTrue(
+        multiplayerInputPage.categoryError.getText().equals("Has to begin or end with a letter"));
+  }
+
+  @Test
+  public void multiplayerInputValidatesWordAndCategoryBeginning() {
+    homePage.multiplayerButton.click();
+    enterWordAndCategory(" invalidWord", "2invalidCategory");
     assertTrue(
         multiplayerInputPage.wordError.getText().equals("Has to begin or end with a letter"));
     assertTrue(

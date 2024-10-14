@@ -13,9 +13,7 @@
 		<div class="content">
 			<h1>You won the game!!</h1>
 			<p>You have successfully guessed the word: ${word}</p>
-			<form action="${HOME_URL}" method="get">
-				<input class="generic-btn" type="submit" value="Home">
-			</form>
+			<a class="generic-btn" href="${HOME_URL}">Home</a>
 		</div>
 	</div>
 </body>

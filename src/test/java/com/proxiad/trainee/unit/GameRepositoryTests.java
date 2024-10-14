@@ -1,4 +1,4 @@
-package com.proxiad.trainee;
+package com.proxiad.trainee.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.proxiad.trainee.GameData;
 import com.proxiad.trainee.config.RootConfig;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
@@ -41,7 +42,7 @@ public class GameRepositoryTests {
   @Autowired private GameRepository repository;
 
   @Test
-  public void repoReturnsNullWhenListEmpty() {
+  public void returnsNullWhenListEmpty() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
 
     List<GameData> returnedGames = repository.getAllGames(session);
@@ -50,7 +51,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void repoDoesReturnsAllGames() {
+  public void returnsAllGames() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(new ArrayList<GameData>());
 
     List<GameData> returnedGames = repository.getAllGames(session);

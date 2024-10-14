@@ -1,29 +1,20 @@
 package com.proxiad.trainee.controllers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import com.proxiad.trainee.GameData;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/api")
-@SessionAttributes("previousGames")
+@SessionAttributes(PREVIOUS_GAMES)
 public class HomeController {
 
   @GetMapping()
@@ -32,7 +23,7 @@ public class HomeController {
   }
 
   @GetMapping("/ongoing")
-  public String getOngoing(@ModelAttribute("previousGames") List<GameData> games, Model model) {
+  public String getOngoing(@ModelAttribute(PREVIOUS_GAMES) List<GameData> games, Model model) {
     if (containsOngoingGames(games)) {
       model.addAttribute("gamesReversed", reverseListOfGames(games));
       return "ongoing-view";
@@ -43,7 +34,7 @@ public class HomeController {
   }
 
   @GetMapping("/history")
-  public String getPrevious(@ModelAttribute("previousGames") List<GameData> games, Model model) {
+  public String getPrevious(@ModelAttribute(PREVIOUS_GAMES) List<GameData> games, Model model) {
     if (containsFinishedGames(games)) {
       model.addAttribute("gamesReversed", reverseListOfGames(games));
       return "history-view";
@@ -59,26 +50,19 @@ public class HomeController {
     return "unexpected-view";
   }
 
-  public boolean containsFinishedGames(List<GameData> games) {
+  private boolean containsFinishedGames(List<GameData> games) {
     return games.stream().anyMatch(game -> game.isFinished());
   }
 
-  public boolean containsOngoingGames(List<GameData> games) {
+  private boolean containsOngoingGames(List<GameData> games) {
     return games.stream().anyMatch(game -> !game.isFinished());
   }
 
-  public List<GameData> reverseListOfGames(List<GameData> games) {
+  private List<GameData> reverseListOfGames(List<GameData> games) {
     List<GameData> result = new ArrayList<>();
     for (int i = games.size() - 1; i >= 0; i--) {
       result.add(games.get(i));
     }
     return result;
-  }
-
-  @ExceptionHandler(NoHandlerFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public String handleNotFound(NoHandlerFoundException ex, Model model) {
-    model.addAttribute("message", "Page not found");
-    return "unexpected-view";
   }
 }

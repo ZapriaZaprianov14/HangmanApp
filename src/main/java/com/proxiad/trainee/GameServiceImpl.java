@@ -11,7 +11,6 @@ import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
 import com.proxiad.trainee.exceptions.InvalidGuessException;
-import com.proxiad.trainee.exceptions.InvalidWordException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import com.proxiad.trainee.interfaces.GameService;
 import com.proxiad.trainee.interfaces.WordGeneratorService;
@@ -29,7 +28,7 @@ public class GameServiceImpl implements GameService {
   public GameData makeTry(GameData game, String guess, HttpSession session)
       throws InvalidGuessException, GameNotFoundException {
     if (!Character.isLetter(guess.charAt(0)) || guess.length() > 1) {
-      throw new InvalidGuessException("Your guess was invalid. The guess should be a letter.");
+      throw new InvalidGuessException("Your guess was invalid. It should be a letter.");
     }
     String word = game.getWord();
     guess = guess.toUpperCase();
@@ -179,7 +178,7 @@ public class GameServiceImpl implements GameService {
     this.wordGeneratorService = wordGeneratorService;
   }
 
-  public boolean isCategoryInvalid(String value) {
+  private boolean isCategoryInvalid(String value) {
     try {
       CategoryEnum.valueOf(value.toUpperCase());
       return false;

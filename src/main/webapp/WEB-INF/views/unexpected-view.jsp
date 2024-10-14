@@ -12,9 +12,7 @@
 	<div class="container">
 		<div class="content">
 			<h2>${message}</h2>
-			<form action="${HOME_URL}" method="get">
-				<input class="generic-btn" type="submit" value="Enter new Word">
-			</form>
+			<a class="generic-btn" href="${HOME_URL}">Home</a>
 		</div>
 	</div>
 </body>
