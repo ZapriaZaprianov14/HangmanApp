@@ -56,7 +56,24 @@ public class GameRepositoryImpl implements GameRepository {
 
   @Override
   public List<GameData> getAllGames(HttpSession session) {
-    return (List<GameData>) session.getAttribute(Constants.PREVIOUS_GAMES);
+    List<GameData> allGames = (List<GameData>) session.getAttribute(Constants.PREVIOUS_GAMES);
+    if (allGames == null) {
+      return new ArrayList<GameData>();
+    }
+
+    return allGames;
+  }
+
+  @Override
+  public List<GameData> getAllFinishedGames(HttpSession session) {
+    List<GameData> allGames = getAllGames(session);
+    return allGames.stream().filter(x -> x.isFinished()).toList();
+  }
+
+  @Override
+  public List<GameData> getAllOngoingGames(HttpSession session) {
+    List<GameData> allGames = getAllGames(session);
+    return allGames.stream().filter(x -> !x.isFinished()).toList();
   }
 
   @Override

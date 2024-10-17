@@ -22,7 +22,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.proxiad.trainee.GameData;
-import com.proxiad.trainee.config.RootConfig;
+// import com.proxiad.trainee.RootConfig;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
@@ -31,10 +31,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = RootConfig.class)
+// @ContextConfiguration(classes = RootConfig.class)
 @WebAppConfiguration
 public class GameRepositoryTests {
 
+  // add test for getAllFinished/OngoingGames
   @Mock HttpSession session;
 
   @Rule public MockitoRule rule = MockitoJUnit.rule();

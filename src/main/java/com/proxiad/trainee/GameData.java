@@ -142,6 +142,9 @@ public class GameData implements Serializable {
   }
 
   public GameData(String word, String category, GamemodeEnum gamemode, int lives) {
+    // id should be a sequence
+    // auto increment
+    // or time stamp
     setId(UUID.randomUUID());
     setUnguessedLetters(
         new ArrayList<Character>(

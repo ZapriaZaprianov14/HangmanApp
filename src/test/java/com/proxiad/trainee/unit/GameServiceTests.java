@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import com.proxiad.trainee.GameData;
 import com.proxiad.trainee.NewGameDTO;
-import com.proxiad.trainee.config.RootConfig;
+// import com.proxiad.trainee.RootConfig;
 import com.proxiad.trainee.enums.GamemodeEnum;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.exceptions.InvalidCategoryException;
@@ -38,7 +38,7 @@ import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import jakarta.servlet.http.HttpSession;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = RootConfig.class)
+// @ContextConfiguration(classes = RootConfig.class)
 @WebAppConfiguration
 public class GameServiceTests {
 

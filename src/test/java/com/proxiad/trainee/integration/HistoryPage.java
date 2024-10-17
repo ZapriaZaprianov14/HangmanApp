@@ -6,11 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class OngoingPage {
-
+public class HistoryPage {
   WebDriver driver;
 
-  public OngoingPage(WebDriver driver) {
+  public HistoryPage(WebDriver driver) {
     this.driver = driver;
     PageFactory.initElements(driver, this);
   }
@@ -20,9 +19,6 @@ public class OngoingPage {
 
   @FindBy(name = "game-row")
   protected List<WebElement> gameRows;
-
-  @FindBy(name = "resume-btn")
-  protected List<WebElement> resumeButtons;
 
   @FindBy(id = "message")
   protected WebElement noGamesMessage;

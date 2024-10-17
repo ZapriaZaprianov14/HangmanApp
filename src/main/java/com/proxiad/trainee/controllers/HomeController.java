@@ -2,6 +2,7 @@ package com.proxiad.trainee.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,51 +12,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import com.proxiad.trainee.GameData;
+import com.proxiad.trainee.interfaces.GameRepository;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/api")
-@SessionAttributes(PREVIOUS_GAMES)
 public class HomeController {
 
-  @GetMapping()
+  @Autowired private GameRepository repository;
+
+  @GetMapping("/home")
   public String getHome() {
     return "home-view";
   }
 
   @GetMapping("/ongoing")
-  public String getOngoing(@ModelAttribute(PREVIOUS_GAMES) List<GameData> games, Model model) {
-    if (containsOngoingGames(games)) {
-      model.addAttribute("gamesReversed", reverseListOfGames(games));
-      return "ongoing-view";
-    } else {
-      model.addAttribute("message", "No ongoing games.");
-      return "empty-view";
-    }
+  public String getOngoing(HttpSession session, Model model) {
+    List<GameData> ongoingGames = repository.getAllOngoingGames(session);
+    model.addAttribute("gamesReversed", reverseListOfGames(ongoingGames));
+    return "ongoing-view";
   }
 
+  // could return the data without the if and if the data is null then handle that in jsp
+  // this way the if is gone and the empty-view page is also gone
   @GetMapping("/history")
-  public String getPrevious(@ModelAttribute(PREVIOUS_GAMES) List<GameData> games, Model model) {
-    if (containsFinishedGames(games)) {
-      model.addAttribute("gamesReversed", reverseListOfGames(games));
-      return "history-view";
-    } else {
-      model.addAttribute("message", "No finished games.");
-      return "empty-view";
-    }
+  public String getFinished(HttpSession session, Model model) {
+    List<GameData> finishedGames = repository.getAllFinishedGames(session);
+    model.addAttribute("gamesReversed", reverseListOfGames(finishedGames));
+    return "history-view";
   }
 
   @ExceptionHandler(value = Exception.class)
   public String unexpectedException(Exception ex, Model model) {
     model.addAttribute("message", "Unexpected error");
     return "unexpected-view";
-  }
-
-  private boolean containsFinishedGames(List<GameData> games) {
-    return games.stream().anyMatch(game -> game.isFinished());
-  }
-
-  private boolean containsOngoingGames(List<GameData> games) {
-    return games.stream().anyMatch(game -> !game.isFinished());
   }
 
   private List<GameData> reverseListOfGames(List<GameData> games) {

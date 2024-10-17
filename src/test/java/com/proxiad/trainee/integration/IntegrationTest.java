@@ -8,25 +8,29 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class IntegrationTests {
+// should be called something more concrete
+// all test methods begin with testCamelCase
+public class IntegrationTest {
 
   private WebDriver driver;
   private HomePage homePage;
   private OngoingPage ongoingPage;
   private GamePage gamePage;
-  private EmptyPage emptyPage;
   private MultiplayerInputPage multiplayerInputPage;
   private WinPage winPage;
   private LosePage losePage;
+  private HistoryPage historyPage;
+
+  // private static String defaultGam
 
   @BeforeEach
   public void setUp() {
     driver = new ChromeDriver();
-    driver.get("http://localhost:8080/HangmanApp/");
+    driver.get("http://localhost:8080/HangmanApp/api/home");
     homePage = new HomePage(driver);
     ongoingPage = new OngoingPage(driver);
     gamePage = new GamePage(driver);
-    emptyPage = new EmptyPage(driver);
+    historyPage = new HistoryPage(driver);
     multiplayerInputPage = new MultiplayerInputPage(driver);
     winPage = new WinPage(driver);
     losePage = new LosePage(driver);
@@ -40,14 +44,16 @@ public class IntegrationTests {
   @Test
   public void emptyHistoryPageGoesBackHome() {
     homePage.historyButton.click();
-    emptyPage.homeButton.click();
+    assertTrue(historyPage.noGamesMessage.getText().equals("No finished games"));
+    historyPage.homeBtn.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
 
   @Test
   public void emptyOngoingPageGoesBackHome() {
     homePage.ongoingButton.click();
-    emptyPage.homeButton.click();
+    assertTrue(ongoingPage.noGamesMessage.getText().equals("No ongoing games"));
+    ongoingPage.homeBtn.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
 
@@ -75,8 +81,7 @@ public class IntegrationTests {
     multiplayerInputPage.enterWord("word");
     multiplayerInputPage.enterCategory("category");
     multiplayerInputPage.enterButton.click();
-    assertTrue(gamePage.disabledButtons.size() == 2);
-    assertTrue(gamePage.wordProgress.getText().equals("W _ _ D"));
+    assertGameStartedCorrectly();
     assertTrue(gamePage.messagePlayer2.getText().equals("Player 2 guess the word"));
   }
 
@@ -159,6 +164,7 @@ public class IntegrationTests {
   @Test
   public void losesGameCorrectly() {
     homePage.multiplayerButton.click();
+    // should be an actual word and category
     enterWordAndCategory("word", "category");
     gamePage.clickLetterButton('Z');
     gamePage.clickLetterButton('X');
@@ -211,5 +217,6 @@ public class IntegrationTests {
   private void assertGameStartedCorrectly() {
     assertTrue(gamePage.wordProgress.getText().contains("_"));
     assertThat(gamePage.disabledButtons.size() == 2);
+    // should test for the specific buttons
   }
 }

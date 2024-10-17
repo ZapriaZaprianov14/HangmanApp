@@ -17,6 +17,10 @@ public interface GameRepository {
 
   List<GameData> getAllGames(HttpSession session);
 
+  List<GameData> getAllFinishedGames(HttpSession session);
+
+  List<GameData> getAllOngoingGames(HttpSession session);
+
   void leaveGame(HttpSession session) throws GameNotFoundException;
 
   GameData resumeGame(UUID id, HttpSession session) throws GameNotFoundException;
