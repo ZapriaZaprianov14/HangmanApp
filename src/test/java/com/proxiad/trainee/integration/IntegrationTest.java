@@ -21,7 +21,7 @@ public class IntegrationTest {
   private LosePage losePage;
   private HistoryPage historyPage;
 
-  // private static String defaultGam
+  // private static String defaultGame
 
   @BeforeEach
   public void setUp() {
