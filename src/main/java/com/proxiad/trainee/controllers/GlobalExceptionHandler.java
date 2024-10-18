@@ -6,18 +6,26 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(NoHandlerFoundException.class)
+  @ExceptionHandler(value = NoResourceFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public String handleNotFound(NoHandlerFoundException ex, Model model) {
+  public String handleException(NoResourceFoundException ex, Model model) {
     model.addAttribute("message", "Page not found");
     return "unexpected-view";
   }
 
-  @ExceptionHandler(Exception.class)
+  @ExceptionHandler(value = NoHandlerFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public String handleException(NoHandlerFoundException ex, Model model) {
+    model.addAttribute("message", "Page not found");
+    return "unexpected-view";
+  }
+
+  @ExceptionHandler(value = Exception.class)
   public String handleUnexpectedException(Exception ex, Model model) {
     model.addAttribute("message", "Unexpected exception");
     return "unexpected-view";

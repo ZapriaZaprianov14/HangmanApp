@@ -6,14 +6,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import com.proxiad.trainee.enums.GamemodeEnum;
 
 public class GameData implements Serializable {
   /** */
   private static final long serialVersionUID = 1L;
 
-  private UUID id;
+  public static int latestGameId = 0;
+
+  private int id;
   private int lives;
   private int correctlyGuessedLetters;
   private int irrelevantCharacters; // whitespaces _ and - are irrelevant
@@ -107,11 +108,11 @@ public class GameData implements Serializable {
     this.word = word;
   }
 
-  public UUID getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -132,7 +133,6 @@ public class GameData implements Serializable {
   }
 
   public GameData() {
-    this.id = UUID.randomUUID();
     this.unguessedLetters =
         new ArrayList<Character>(
             Arrays.asList(
@@ -145,7 +145,6 @@ public class GameData implements Serializable {
     // id should be a sequence
     // auto increment
     // or time stamp
-    setId(UUID.randomUUID());
     setUnguessedLetters(
         new ArrayList<Character>(
             Arrays.asList(

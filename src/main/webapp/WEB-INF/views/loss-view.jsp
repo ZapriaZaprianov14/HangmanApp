@@ -14,7 +14,9 @@
 			<h1>You lost :(</h1>
 			<p>The word was: ${word}</p>
 			<img class="stickman-big" src="${pageContext.request.contextPath}/images/hangman-0.png">
-			<a class="generic-btn" href="${HOME_URL}">Home</a>
+			<p>
+				<a class="generic-btn" href="${HOME_URL}">Home</a>
+			</p>
 		</div>
 	</div>
 </body>

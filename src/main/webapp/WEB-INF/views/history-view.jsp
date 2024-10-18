@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="static com.proxiad.trainee.Constants.HOME_URL" %>
-<!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -23,6 +23,7 @@
 								<th>Number of Mistakes</th>
 								<th>Gamemode</th>
 								<th>Status</th>
+								<th>Id</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -36,6 +37,7 @@
 											<td>${9 - game.lives}</td>
 											<td>${game.gamemode}</td>
 											<td>Won <b class="success">✔</b></td>
+											<td>${game.id}</td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -46,6 +48,7 @@
 											<td>${9 - game.lives}</td>
 											<td>${game.gamemode}</td>
 											<td>Lost <b class="error">❌</b></td>
+											<td>${game.id}</td>
 										</tr>
 									</c:otherwise>
 								</c:choose>

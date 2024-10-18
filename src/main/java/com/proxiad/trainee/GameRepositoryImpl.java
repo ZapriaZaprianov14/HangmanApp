@@ -12,10 +12,10 @@ import jakarta.servlet.http.HttpSession;
 public class GameRepositoryImpl implements GameRepository {
 
   @Override
-  public GameData getGame(UUID id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(int id, HttpSession session) throws GameNotFoundException {
     List<GameData> games = getAllGames(session);
     for (GameData game : games) {
-      if (game.getId().equals(id)) {
+      if (game.getId() == id) {
         return game;
       }
     }
@@ -77,7 +77,7 @@ public class GameRepositoryImpl implements GameRepository {
   }
 
   @Override
-  public GameData resumeGame(UUID id, HttpSession session) throws GameNotFoundException {
+  public GameData resumeGame(int id, HttpSession session) throws GameNotFoundException {
     GameData game = getGame(id, session);
     setCurrentGame(game, session);
     List<GameData> previousGames = getAllGames(session);

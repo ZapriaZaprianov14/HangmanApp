@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="static com.proxiad.trainee.Constants.HOME_URL" %>
 <%@ page import="static com.proxiad.trainee.Constants.GAMES_CONTROLLER_URL" %>
 <!DOCTYPE html>
@@ -31,6 +31,7 @@ function submitForm(gameId) {
 								<th>Guesses Made</th>
 								<th>Lives Left</th>
 								<th>Gamemode</th>
+								<th>Id</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -42,6 +43,7 @@ function submitForm(gameId) {
 									<td>${game.guessesMade}</td>
 									<td>${game.lives}</td>
 									<td>${game.gamemode}</td>
+									<td>${game.id}</td>
 									<td>
 										<form onsubmit="submitForm('${game.id}')" id="resume-form-${game.id}" method="post">
 										    <input name="resume-btn" class="small-btn generic-btn" type="submit" value="Resume">

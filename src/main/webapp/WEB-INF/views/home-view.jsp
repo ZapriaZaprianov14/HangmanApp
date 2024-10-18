@@ -1,6 +1,7 @@
 <%@ page import="static com.proxiad.trainee.Constants.HISTORY_URL" %>
 <%@ page import="static com.proxiad.trainee.Constants.ONGOING_URL" %>
 <%@ page import="static com.proxiad.trainee.Constants.GAMES_CONTROLLER_URL" %>
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/site.css">

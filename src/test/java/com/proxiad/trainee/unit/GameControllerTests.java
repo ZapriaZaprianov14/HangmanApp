@@ -147,9 +147,11 @@ public class GameControllerTests {
         .andExpect(view().name("loss-view"));
   }
 
+  // dont know if this will fail, because we changed UUID with int
+  // may need to refactor
   @Test
   public void resumesGame() throws Exception {
-    when(gameService.resumeGame(any(UUID.class), any(MockHttpSession.class)))
+    when(gameService.resumeGame(any(Integer.class), any(MockHttpSession.class)))
         .thenReturn(new GameData());
     mockMvc
         .perform(
@@ -158,6 +160,7 @@ public class GameControllerTests {
         .andExpect(view().name("game-view"));
   }
 
+  // same here
   @Test
   public void testResumeWhenGameNotFound() throws Exception {
     when(gameService.resumeGame(any(UUID.class), any(MockHttpSession.class)))

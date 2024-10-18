@@ -69,7 +69,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData getGame(UUID id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(int id, HttpSession session) throws GameNotFoundException {
     return gameRepository.getGame(id, session);
   }
 
@@ -104,7 +104,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData resumeGame(UUID id, HttpSession session) throws GameNotFoundException {
+  public GameData resumeGame(int id, HttpSession session) throws GameNotFoundException {
     return gameRepository.resumeGame(id, session);
   }
 
@@ -131,6 +131,8 @@ public class GameServiceImpl implements GameService {
     game.getUnguessedLetters().remove(lastChar);
 
     game.setWordProgress(getWordProgress(game));
+    GameData.latestGameId += 1;
+    game.setId(GameData.latestGameId);
     gameRepository.setCurrentGame(game, session);
 
     return game;

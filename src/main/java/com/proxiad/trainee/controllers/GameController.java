@@ -80,9 +80,9 @@ public class GameController {
   }
 
   @PostMapping("{gameId}/resume")
-  public String resumeGame(HttpSession session, @PathVariable String gameId, Model model)
+  public String resumeGame(HttpSession session, @PathVariable int gameId, Model model)
       throws GameNotFoundException {
-    gameService.resumeGame(UUID.fromString(gameId), session);
+    gameService.resumeGame(gameId, session);
     return "game-view";
   }
 

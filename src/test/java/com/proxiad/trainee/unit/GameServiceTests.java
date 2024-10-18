@@ -173,7 +173,7 @@ public class GameServiceTests {
 
     assertThatThrownBy(
             () -> {
-              gameService.getGame(UUID.randomUUID(), session);
+              gameService.getGame(1000, session);
             })
         .isInstanceOf(GameNotFoundException.class)
         .hasMessageContaining("This game does not exist.");
