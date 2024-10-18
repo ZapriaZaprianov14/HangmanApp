@@ -15,13 +15,13 @@ public interface GameService {
 
   GameData startNewGame(NewGameDTO gameDTO, HttpSession session) throws InvalidCategoryException;
 
-  GameData getGame(int id, HttpSession session) throws GameNotFoundException;
+  GameData getGame(Integer id, HttpSession session) throws GameNotFoundException;
 
   GameData getCurrentGame(HttpSession session) throws GameNotFoundException;
 
   void leaveGame(HttpSession session) throws GameNotFoundException;
 
-  GameData resumeGame(int id, HttpSession session) throws GameNotFoundException;
+  GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException;
 
   List<GameData> getAllGames(HttpSession session);
 }

@@ -21,38 +21,42 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import com.proxiad.trainee.GameData;
-// import com.proxiad.trainee.RootConfig;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-// @ContextConfiguration(classes = RootConfig.class)
-@WebAppConfiguration
 public class GameRepositoryTests {
 
-  // add test for getAllFinished/OngoingGames
   @Mock HttpSession session;
 
   @Rule public MockitoRule rule = MockitoJUnit.rule();
 
   @Autowired private GameRepository repository;
 
+  public GameRepository getRepository() {
+    return repository;
+  }
+
+  public void setRepository(GameRepository repository) {
+    this.repository = repository;
+  }
+
   @Test
-  public void returnsNullWhenListEmpty() {
+  public void testReturnsNullWhenListEmpty() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
 
     List<GameData> returnedGames = repository.getAllGames(session);
 
-    assertThat(returnedGames).isEqualTo(null);
+    assertThat(returnedGames).isEqualTo(new ArrayList<GameData>());
   }
 
   @Test
-  public void returnsAllGames() {
+  public void testReturnsAllGames() {
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(new ArrayList<GameData>());
 
     List<GameData> returnedGames = repository.getAllGames(session);
@@ -61,7 +65,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void returnsNullWhenGameNotFound() throws GameNotFoundException {
+  public void testReturnsNullWhenGameNotFound() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
@@ -74,7 +78,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void returnsCorrectGame() throws GameNotFoundException {
+  public void testReturnsCorrectGame() throws GameNotFoundException {
     GameData game = new GameData();
     List<GameData> games = Collections.singletonList(game);
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
@@ -85,7 +89,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void returnsCurrentGame() throws GameNotFoundException {
+  public void testReturnsCurrentGame() throws GameNotFoundException {
     GameData game = new GameData();
     when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
 
@@ -95,7 +99,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void savesGameCorrectly() {
+  public void testSavesGameCorrectly() {
     GameData game = new GameData();
     List<GameData> games = new ArrayList<>();
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
@@ -108,7 +112,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void leavesGame() throws GameNotFoundException {
+  public void testLeavesGame() throws GameNotFoundException {
     GameData game = new GameData();
     List<GameData> previousGames = new ArrayList<GameData>();
     when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
@@ -122,7 +126,7 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void resumesGame() throws GameNotFoundException {
+  public void testResumesGame() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     games.add(game);

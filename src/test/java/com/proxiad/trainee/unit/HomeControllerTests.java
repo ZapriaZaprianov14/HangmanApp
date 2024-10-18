@@ -1,28 +1,34 @@
 package com.proxiad.trainee.unit;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import com.proxiad.trainee.GameData;
+import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.controllers.HomeController;
+import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 public class HomeControllerTests {
 
-  @Mock private HttpSession session;
-
   @Mock private Model model;
+
+  @Mock private GameRepository repository;
 
   @InjectMocks private HomeController homeController;
 
@@ -36,51 +42,36 @@ public class HomeControllerTests {
 
   @Test
   public void returnsHomeJSP() throws Exception {
-    mockMvc.perform(get("/api/")).andExpect(status().isOk()).andExpect(view().name("home-view"));
-  }
-
-  @Test
-  public void returnsEmptyJSPWhenNoOngoingGames() throws Exception {
-    List<GameData> games = new ArrayList<GameData>();
     mockMvc
-        .perform(get("/api/ongoing").sessionAttr("previousGames", games))
+        .perform(get("/api/home"))
         .andExpect(status().isOk())
-        .andExpect(view().name("empty-view"));
+        .andExpect(view().name("home-view"));
   }
 
   @Test
-  public void returnsOngoingJSPWhenPresentOngoingGames() throws Exception {
-    List<GameData> games = new ArrayList<GameData>();
+  public void returnsOngoingViewWithData() throws Exception {
+    // List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     game.setFinished(false);
-    games.add(game);
+    List<GameData> games = Collections.singletonList(game);
+    when(repository.getAllOngoingGames(any(MockHttpSession.class))).thenReturn(games);
     mockMvc
-        .perform(get("/api/ongoing").sessionAttr("previousGames", games))
+        .perform(get("/api/ongoing"))
         .andExpect(status().isOk())
         .andExpect(view().name("ongoing-view"))
-        .andExpect(model().attributeExists("gamesReversed"));
-  }
-
-  @Test
-  public void returnsEmptyJSPWhenNoFinishedGames() throws Exception {
-    List<GameData> games = new ArrayList<GameData>();
-    mockMvc
-        .perform(get("/api/history").sessionAttr("previousGames", games))
-        .andExpect(status().isOk())
-        .andExpect(view().name("empty-view"))
-        .andExpect(model().attributeDoesNotExist("gamesReversed"));
+        .andExpect(model().attribute("gamesReversed", games));
   }
 
   @Test
   public void returnsHistoryJSPWhenPresentFinishedGames() throws Exception {
-    List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     game.setFinished(true);
-    games.add(game);
+    List<GameData> games = Collections.singletonList(game);
+    when(repository.getAllFinishedGames(any(MockHttpSession.class))).thenReturn(games);
     mockMvc
-        .perform(get("/api/history").sessionAttr("previousGames", games))
+        .perform(get("/api/history"))
         .andExpect(status().isOk())
         .andExpect(view().name("history-view"))
-        .andExpect(model().attributeExists("gamesReversed"));
+        .andExpect(model().attribute("gamesReversed", games));
   }
 }

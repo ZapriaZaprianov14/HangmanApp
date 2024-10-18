@@ -18,6 +18,9 @@ public class GamePage {
   @FindBy(id = "leave-btn")
   protected WebElement leaveButton;
 
+  @FindBy(id = "category")
+  protected WebElement gameCategory;
+
   @FindBy(id = "player2-msg")
   protected WebElement messagePlayer2;
 

@@ -23,7 +23,6 @@
 								<th>Number of Mistakes</th>
 								<th>Gamemode</th>
 								<th>Status</th>
-								<th>Id</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -37,7 +36,6 @@
 											<td>${9 - game.lives}</td>
 											<td>${game.gamemode}</td>
 											<td>Won <b class="success">✔</b></td>
-											<td>${game.id}</td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -48,7 +46,6 @@
 											<td>${9 - game.lives}</td>
 											<td>${game.gamemode}</td>
 											<td>Lost <b class="error">❌</b></td>
-											<td>${game.id}</td>
 										</tr>
 									</c:otherwise>
 								</c:choose>

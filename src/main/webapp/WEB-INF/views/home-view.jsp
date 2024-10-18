@@ -37,9 +37,11 @@
 				<input id="multiplayer-btn" class="generic-btn" type="submit" value="Start Multiplayer Game">
 			</form>
 			<br>
+			<p>
+				<a href="${HISTORY_URL}" class="generic-btn">View Game History</a>
+				<a href="${ONGOING_URL}" class="generic-btn">View Ongoing Games</a>
+			</p>
 			
-			<a href="${HISTORY_URL}" class="generic-btn">View Game History</a>
-			<a href="${ONGOING_URL}" class="generic-btn">View Ongoing Games</a>
 		</div>
 	</div>
 </body>

@@ -2,10 +2,13 @@ package com.proxiad.trainee.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.booleanThat;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 // should be called something more concrete
@@ -21,7 +24,8 @@ public class IntegrationTest {
   private LosePage losePage;
   private HistoryPage historyPage;
 
-  // private static String defaultGame
+  private static final String DEFAULT_WORD = "mazda";
+  private static final String DEFAULT_CATEGORY = "cars";
 
   @BeforeEach
   public void setUp() {
@@ -42,7 +46,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void emptyHistoryPageGoesBackHome() {
+  public void testEmptyHistoryPageGoesBackHome() {
     homePage.historyButton.click();
     assertTrue(historyPage.noGamesMessage.getText().equals("No finished games"));
     historyPage.homeBtn.click();
@@ -50,7 +54,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void emptyOngoingPageGoesBackHome() {
+  public void testEmptyOngoingPageGoesBackHome() {
     homePage.ongoingButton.click();
     assertTrue(ongoingPage.noGamesMessage.getText().equals("No ongoing games"));
     ongoingPage.homeBtn.click();
@@ -58,7 +62,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void createsNewGame() {
+  public void testCreatesNewGame() {
     homePage.singlePlayerButton.click();
     assertGameStartedCorrectly();
     gamePage.leaveButton.click();
@@ -66,7 +70,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void opensMultiplayerInputJSP() {
+  public void testOpensMultiplayerInputJSP() {
     homePage.multiplayerButton.click();
     assertTrue(
         multiplayerInputPage
@@ -76,17 +80,27 @@ public class IntegrationTest {
   }
 
   @Test
-  public void createsMultiplayerGameWithValidData() {
+  public void testCreatesMultiplayerGameWithValidData() {
     homePage.multiplayerButton.click();
-    multiplayerInputPage.enterWord("word");
-    multiplayerInputPage.enterCategory("category");
+    multiplayerInputPage.enterWord(DEFAULT_WORD);
+    multiplayerInputPage.enterCategory(DEFAULT_CATEGORY);
     multiplayerInputPage.enterButton.click();
-    assertGameStartedCorrectly();
+    assertMultiplayerGameStartedCorrectly();
+  }
+
+  @Test
+  public void testCreatesGameWithWordBegginingAndEngingInSameLetter() {
+    homePage.multiplayerButton.click();
+    multiplayerInputPage.enterWord("aba");
+    multiplayerInputPage.enterCategory(DEFAULT_CATEGORY);
+    multiplayerInputPage.enterButton.click();
+    assertTrue(gamePage.wordProgress.getText().contains("_"));
+    assertTrue(gamePage.disabledButtons.get(0).getAttribute("id").equals("letter-A"));
     assertTrue(gamePage.messagePlayer2.getText().equals("Player 2 guess the word"));
   }
 
   @Test
-  public void multiplayerInputValidatesRevealedWord() {
+  public void testMultiplayerInputValidatesRevealedWord() {
     homePage.multiplayerButton.click();
     enterWordAndCategory("aaabbb", "validCategory");
     assertTrue(
@@ -94,7 +108,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void multiplayerInputValidatesInvalidWordAndCategory() {
+  public void testMultiplayerInputValidatesInvalidWordAndCategory() {
     homePage.multiplayerButton.click();
     enterWordAndCategory("invalid1Word", "invalid2Category");
     assertTrue(
@@ -110,7 +124,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void multiplayerInputValidatesWordAndCategoryEnding() {
+  public void testMultiplayerInputValidatesWordAndCategoryEnding() {
     homePage.multiplayerButton.click();
     enterWordAndCategory("invalidWord ", "invalidCategory2");
     assertTrue(
@@ -120,7 +134,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void multiplayerInputValidatesWordAndCategoryBeginning() {
+  public void testMultiplayerInputValidatesWordAndCategoryBeginning() {
     homePage.multiplayerButton.click();
     enterWordAndCategory(" invalidWord", "2invalidCategory");
     assertTrue(
@@ -130,7 +144,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void multiplayerInputValidatesShortWordAndCategory() {
+  public void testMultiplayerInputValidatesShortWordAndCategory() {
     homePage.multiplayerButton.click();
     enterWordAndCategory("aa", "bb");
     assertTrue(
@@ -143,44 +157,42 @@ public class IntegrationTest {
   }
 
   @Test
-  public void winsGameCorrectly() {
+  public void testWinsGameCorrectly() {
     homePage.multiplayerButton.click();
-    enterWordAndCategory("word", "category");
-    gamePage.clickLetterButton('O');
+    enterWordAndCategory(DEFAULT_WORD, DEFAULT_CATEGORY);
+    gamePage.clickLetterButton('D');
 
-    assertTrue(gamePage.wordProgress.getText().equals("W O _ D"));
+    assertTrue(gamePage.wordProgress.getText().equals("M A _ D A"));
     assertTrue(gamePage.disabledButtons.size() == 3);
-    gamePage.clickLetterButton('R');
+    gamePage.clickLetterButton('Z');
     assertTrue(
         winPage
             .winningMessagElement
             .getText()
-            .equals("You have successfully guessed the word: WORD"));
+            .equals("You have successfully guessed the word: MAZDA"));
 
     winPage.homeButtonElement.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
 
   @Test
-  public void losesGameCorrectly() {
+  public void testLosesGameCorrectly() {
     homePage.multiplayerButton.click();
-    // should be an actual word and category
-    enterWordAndCategory("word", "category");
-    gamePage.clickLetterButton('Z');
+    enterWordAndCategory(DEFAULT_WORD, DEFAULT_CATEGORY);
     gamePage.clickLetterButton('X');
     gamePage.clickLetterButton('C');
     gamePage.clickLetterButton('V');
     gamePage.clickLetterButton('B');
     gamePage.clickLetterButton('N');
-    gamePage.clickLetterButton('M');
-    gamePage.clickLetterButton('A');
+    gamePage.clickLetterButton('S');
+    gamePage.clickLetterButton('F');
+    gamePage.clickLetterButton('G');
 
     assertTrue(gamePage.disabledButtons.size() == 10);
-    assertTrue(gamePage.wordProgress.getText().equals("W _ _ D"));
+    assertTrue(gamePage.wordProgress.getText().equals("M A _ _ A"));
 
-    gamePage.clickLetterButton('S');
-    assertThat(losePage.loosingMessagElement.getText().equals("The word was: WORD"));
-
+    gamePage.clickLetterButton('H');
+    assertThat(losePage.loosingMessagElement.getText().equals("The word was: MAZDA"));
     losePage.homeButtonElement.click();
     assertThat(homePage.welcomeMessage.getText()).contains("Welcome");
   }
@@ -192,7 +204,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void opensOngoingWhereGamesPresent() {
+  public void testOpensOngoingWhereGamesPresent() {
     int numberOfGames = 3;
     createOnoingGames(numberOfGames);
     homePage.ongoingButton.click();
@@ -200,7 +212,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void resumeGameOpensGamePage() {
+  public void testResumeGameOpensGamePage() {
     createOnoingGames(2);
     homePage.ongoingButton.click();
     ongoingPage.resumeButtons.get(1).click();
@@ -216,7 +228,16 @@ public class IntegrationTest {
 
   private void assertGameStartedCorrectly() {
     assertTrue(gamePage.wordProgress.getText().contains("_"));
-    assertThat(gamePage.disabledButtons.size() == 2);
-    // should test for the specific buttons
+    assertTrue(gamePage.disabledButtons.size() == 2);
+    assertTrue(gamePage.gameCategory.getText().equals("Category: CARS"));
+  }
+
+  private void assertMultiplayerGameStartedCorrectly() {
+    assertTrue(gamePage.wordProgress.getText().contains("_"));
+    assertTrue(gamePage.disabledButtons.size() == 2);
+    assertTrue(gamePage.disabledButtons.get(0).getAttribute("id").equals("letter-A"));
+    assertTrue(gamePage.disabledButtons.get(1).getAttribute("id").equals("letter-M"));
+    assertTrue(gamePage.messagePlayer2.getText().equals("Player 2 guess the word"));
+    assertTrue(gamePage.gameCategory.getText().equals("Category: CARS"));
   }
 }

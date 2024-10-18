@@ -35,7 +35,7 @@ public class GameControllerTests {
   }
 
   @Test
-  public void startNewSingleplayerGame() throws Exception {
+  public void testStartNewSingleplayerGame() throws Exception {
     mockMvc
         .perform(post(CONTROLLER_MAPPING + "/singleplayer/category/{category}", "CARS"))
         .andExpect(status().isOk())
@@ -97,7 +97,7 @@ public class GameControllerTests {
   }
 
   @Test
-  public void returnsMultiplayerInputPage() throws Exception {
+  public void testReturnsMultiplayerInputPage() throws Exception {
     mockMvc
         .perform(get(CONTROLLER_MAPPING + "/multiplayerInput"))
         .andExpect(status().isOk())
@@ -105,7 +105,7 @@ public class GameControllerTests {
   }
 
   @Test
-  public void playsGuessCorrectly() throws Exception {
+  public void testPlaysGuessCorrectly() throws Exception {
     GameData game = new GameData();
     when(gameService.getCurrentGame(any(MockHttpSession.class))).thenReturn(game);
     when(gameService.makeTry(any(GameData.class), anyString(), any(MockHttpSession.class)))
@@ -118,7 +118,7 @@ public class GameControllerTests {
   }
 
   @Test
-  public void returnsWinPageWhenGameWon() throws Exception {
+  public void testReturnsWinPageWhenGameWon() throws Exception {
     GameData game = new GameData();
     game.setGameWon(true);
     game.setFinished(true);
@@ -133,7 +133,7 @@ public class GameControllerTests {
   }
 
   @Test
-  public void returnsLossPageWhenGameLost() throws Exception {
+  public void testReturnsLossPageWhenGameLost() throws Exception {
     GameData game = new GameData();
     game.setGameWon(false);
     game.setFinished(true);
@@ -150,12 +150,11 @@ public class GameControllerTests {
   // dont know if this will fail, because we changed UUID with int
   // may need to refactor
   @Test
-  public void resumesGame() throws Exception {
+  public void testResumesGame() throws Exception {
     when(gameService.resumeGame(any(Integer.class), any(MockHttpSession.class)))
         .thenReturn(new GameData());
     mockMvc
-        .perform(
-            post(CONTROLLER_MAPPING + "/{gameID}/resume", "123e4567-a89b-12d3-a456-426614174000"))
+        .perform(post(CONTROLLER_MAPPING + "/{gameID}/resume", "1"))
         .andExpect(status().isOk())
         .andExpect(view().name("game-view"));
   }
@@ -163,12 +162,11 @@ public class GameControllerTests {
   // same here
   @Test
   public void testResumeWhenGameNotFound() throws Exception {
-    when(gameService.resumeGame(any(UUID.class), any(MockHttpSession.class)))
+    when(gameService.resumeGame(any(Integer.class), any(MockHttpSession.class)))
         .thenThrow(GameNotFoundException.class);
 
     mockMvc
-        .perform(
-            post(CONTROLLER_MAPPING + "/{gameId}/resume", "123e4567-a89b-12d3-a456-426614174000"))
+        .perform(post(CONTROLLER_MAPPING + "/{gameId}/resume", "1"))
         .andExpect(status().isBadRequest())
         .andExpect(view().name("bad-request-view"));
   }

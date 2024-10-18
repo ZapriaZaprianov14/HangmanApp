@@ -25,19 +25,19 @@ function submitForm(letterGuessed) {
 			<c:if test="${currentGame.gamemode == MULTIPLAYER}">
     			<p id="player2-msg" style="margin-top:1px">Player 2 guess the word</p>
 			</c:if>
-			<p>Category: ${currentGame.category}</p>
+			<p id="category">Category: ${currentGame.category}</p>
 			<p id="word-progress" class="preserve-space">${currentGame.wordProgress}</p>
-			<form id="keyboard-form" class="key-form" method="post">
-			<c:forEach items="${QWERTY_KEYBOARD}" var="row">
-				<div class="keyboard-row">
-					<c:forEach items="${row}" var="letter">
-							<input id="letter-${letter}" onclick="submitForm('${letter}')" type="submit" name="guess" value="${letter}"
-								${ !currentGame.unguessedLetters.contains(letter) ? 
-								'disabled="disabled" class="key-disabled"' : 'class="key"'} />
-						
-					</c:forEach>
-				</div>
-			</c:forEach>
+			<form id="keyboard-form" method="post">
+				<c:forEach items="${QWERTY_KEYBOARD}" var="row">
+					<div class="keyboard-row">
+						<c:forEach items="${row}" var="letter">
+								<input id="letter-${letter}" onclick="submitForm('${letter}')" type="submit" name="guess" value="${letter}"
+									${ !currentGame.unguessedLetters.contains(letter) ? 
+									'disabled="disabled" class="key-disabled"' : 'class="key"'} />
+							
+						</c:forEach>
+					</div>
+				</c:forEach>
 			</form>
 			<img class="stickman"
 				src="${pageContext.request.contextPath}/images/hangman-${currentGame.lives}.png">

@@ -12,7 +12,7 @@ public class GameData implements Serializable {
   /** */
   private static final long serialVersionUID = 1L;
 
-  public static int latestGameId = 0;
+  public static Integer latestGameId = 0;
 
   private int id;
   private int lives;
@@ -112,7 +112,7 @@ public class GameData implements Serializable {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -37,9 +38,8 @@ import static com.proxiad.trainee.Constants.CURRENT_GAME;
 import static com.proxiad.trainee.Constants.PREVIOUS_GAMES;
 import jakarta.servlet.http.HttpSession;
 
+@SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-// @ContextConfiguration(classes = RootConfig.class)
-@WebAppConfiguration
 public class GameServiceTests {
 
   @Mock HttpSession session;
@@ -153,7 +153,7 @@ public class GameServiceTests {
 
     List<GameData> returnedData = gameService.getAllGames(session);
 
-    assertThat(returnedData).isEqualTo(null);
+    assertThat(returnedData).isEqualTo(new ArrayList<GameData>());
   }
 
   @Test

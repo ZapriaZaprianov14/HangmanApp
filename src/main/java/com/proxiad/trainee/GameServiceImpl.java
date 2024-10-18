@@ -3,7 +3,6 @@ package com.proxiad.trainee;
 import static com.proxiad.trainee.Constants.IRRELEVANT_CHARACTERS;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.trainee.enums.CategoryEnum;
@@ -69,7 +68,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData getGame(int id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(Integer id, HttpSession session) throws GameNotFoundException {
     return gameRepository.getGame(id, session);
   }
 
@@ -104,7 +103,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData resumeGame(int id, HttpSession session) throws GameNotFoundException {
+  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
     return gameRepository.resumeGame(id, session);
   }
 

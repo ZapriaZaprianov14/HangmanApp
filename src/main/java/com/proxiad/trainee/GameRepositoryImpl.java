@@ -3,16 +3,18 @@ package com.proxiad.trainee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
 
-@Service
+// changed this recently could cause problems
+@Repository
 public class GameRepositoryImpl implements GameRepository {
 
   @Override
-  public GameData getGame(int id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(Integer id, HttpSession session) throws GameNotFoundException {
     List<GameData> games = getAllGames(session);
     for (GameData game : games) {
       if (game.getId() == id) {
@@ -77,7 +79,7 @@ public class GameRepositoryImpl implements GameRepository {
   }
 
   @Override
-  public GameData resumeGame(int id, HttpSession session) throws GameNotFoundException {
+  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
     GameData game = getGame(id, session);
     setCurrentGame(game, session);
     List<GameData> previousGames = getAllGames(session);

@@ -14,16 +14,16 @@ public class HomePage {
   }
 
   // Web elements
-  @FindBy(xpath = "/html/body/div/div/a[1]")
+  @FindBy(xpath = "/html/body/div/div/p[3]/a[1]")
   protected WebElement historyButton;
 
-  @FindBy(xpath = "/html/body/div/div/a[2]")
+  @FindBy(xpath = "/html/body/div/div/p[3]/a[2]")
   protected WebElement ongoingButton;
 
   @FindBy(xpath = "/html/body/div/div/p[1]")
   protected WebElement welcomeMessage;
 
-  @FindBy(id = "cities-btn")
+  @FindBy(id = "cars-btn")
   protected WebElement singlePlayerButton;
 
   @FindBy(id = "multiplayer-btn")
