@@ -1,7 +1,6 @@
 package com.proxiad.trainee.interfaces;
 
 import java.util.List;
-import java.util.UUID;
 import com.proxiad.trainee.GameData;
 import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
@@ -16,12 +15,6 @@ public interface GameService {
   GameData startNewGame(NewGameDTO gameDTO, HttpSession session) throws InvalidCategoryException;
 
   GameData getGame(Integer id, HttpSession session) throws GameNotFoundException;
-
-  GameData getCurrentGame(HttpSession session) throws GameNotFoundException;
-
-  void leaveGame(HttpSession session) throws GameNotFoundException;
-
-  GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException;
 
   List<GameData> getAllGames(HttpSession session);
 }

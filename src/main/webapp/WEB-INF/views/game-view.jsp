@@ -11,9 +11,9 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/site.css">
 <title>Playing</title>
 <script>
-function submitForm(letterGuessed) {
+function submitForm(letterGuessed,gameId) {
     var form = document.getElementById('keyboard-form');
-    form.action = '/HangmanApp/api/games/guess/' + letterGuessed;
+    form.action = '/HangmanApp/api/games/' + gameId + '/guess/' + letterGuessed;
     form.submit();
     return false;
 }
@@ -31,7 +31,7 @@ function submitForm(letterGuessed) {
 				<c:forEach items="${QWERTY_KEYBOARD}" var="row">
 					<div class="keyboard-row">
 						<c:forEach items="${row}" var="letter">
-								<input id="letter-${letter}" onclick="submitForm('${letter}')" type="submit" name="guess" value="${letter}"
+								<input id="letter-${letter}" onclick="submitForm('${letter}',${currentGame.id})" type="submit" name="guess" value="${letter}"
 									${ !currentGame.unguessedLetters.contains(letter) ? 
 									'disabled="disabled" class="key-disabled"' : 'class="key"'} />
 							

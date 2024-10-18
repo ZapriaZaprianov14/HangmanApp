@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.proxiad.trainee.Constants;
 import com.proxiad.trainee.GameData;
 import com.proxiad.trainee.NewGameDTO;
 import com.proxiad.trainee.exceptions.CustomException;
@@ -34,7 +35,8 @@ public class GameController {
       @PathVariable("category") String category, HttpSession session, Model model)
       throws InvalidCategoryException {
     NewGameDTO newGameDTO = new NewGameDTO(null, "SINGLEPLAYER", category);
-    gameService.startNewGame(newGameDTO, session);
+    GameData game = gameService.startNewGame(newGameDTO, session);
+    model.addAttribute(Constants.CURRENT_GAME, game);
     return "game-view";
   }
 
@@ -50,7 +52,8 @@ public class GameController {
       return "multiplayer-input-view";
     }
 
-    gameService.startNewGame(newGameDTO, session);
+    GameData game = gameService.startNewGame(newGameDTO, session);
+    model.addAttribute(Constants.CURRENT_GAME, game);
     return "game-view";
   }
 
@@ -61,34 +64,36 @@ public class GameController {
   }
 
   // @PutMapping("/guess/{guess}")
-  @PostMapping("/guess/{guess}")
-  public String playGuess(HttpSession session, @PathVariable String guess, Model model)
+  @PostMapping("/{gameId}/guess/{guess}")
+  public String playGuess(
+      HttpSession session, @PathVariable int gameId, @PathVariable String guess, Model model)
       throws InvalidGuessException, GameNotFoundException {
-    GameData game = gameService.getCurrentGame(session);
+    GameData currentGame = gameService.getGame(gameId, session);
 
-    game = gameService.makeTry(game, guess, session);
+    currentGame = gameService.makeTry(currentGame, guess, session);
 
-    if (game.isFinished()) {
-      model.addAttribute("word", game.getWordProgress());
-      if (game.isGameWon()) {
+    if (currentGame.isFinished()) {
+      model.addAttribute("word", currentGame.getWordProgress());
+      if (currentGame.isGameWon()) {
         return "win-view";
       } else {
         return "loss-view";
       }
     }
+    model.addAttribute(Constants.CURRENT_GAME, currentGame);
     return "game-view";
   }
 
   @PostMapping("{gameId}/resume")
   public String resumeGame(HttpSession session, @PathVariable int gameId, Model model)
       throws GameNotFoundException {
-    gameService.resumeGame(gameId, session);
+    GameData currentGame = gameService.getGame(gameId, session);
+    model.addAttribute(Constants.CURRENT_GAME, currentGame);
     return "game-view";
   }
 
   @PostMapping("/leave")
-  public String leaveGame(HttpSession session) throws GameNotFoundException {
-    gameService.leaveGame(session);
+  public String leaveGame(HttpSession session) {
     return "home-view";
   }
 
@@ -97,17 +102,17 @@ public class GameController {
     return "home-view";
   }
 
-  @GetMapping({
-    "singleplayer/category/{category}",
-    "/{gameId}/resume",
-    "/guess/{guess}",
-    "/multiplayer"
-  })
-  public String handleGetRequests(HttpSession session) throws GameNotFoundException {
-    // if current game is null throws exception
-    gameService.getCurrentGame(session);
-    return "game-view";
-  }
+  //  @GetMapping({
+  //    "singleplayer/category/{category}",
+  //    "/{gameId}/resume",
+  //    "/guess/{guess}",
+  //    "/multiplayer"
+  //  })
+  //  public String handleGetRequests(HttpSession session) throws GameNotFoundException {
+  //    // if current game is null throws exception
+  //    gameService.getCurrentGame(session);
+  //    return "bad-request-view";
+  //  }
 
   @ExceptionHandler(value = CustomException.class)
   public String handleCustomException(

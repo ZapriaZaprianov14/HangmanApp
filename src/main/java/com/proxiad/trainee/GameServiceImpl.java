@@ -49,7 +49,7 @@ public class GameServiceImpl implements GameService {
     }
 
     game.setWordProgress(getWordProgress(game));
-    gameRepository.setCurrentGame(game, session);
+    gameRepository.updateGame(game, session);
     return game;
   }
 
@@ -58,7 +58,7 @@ public class GameServiceImpl implements GameService {
     game.setFinished(true);
     game.setGameWon(gameWon);
     game.setWordProgress(game.getWord());
-    gameRepository.leaveGame(session);
+    // gameRepository.leaveGame(session);
     return game;
   }
 
@@ -93,21 +93,6 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
-    return gameRepository.getCurrentGame(session);
-  }
-
-  @Override
-  public void leaveGame(HttpSession session) throws GameNotFoundException {
-    gameRepository.leaveGame(session);
-  }
-
-  @Override
-  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
-    return gameRepository.resumeGame(id, session);
-  }
-
-  @Override
   public List<GameData> getAllGames(HttpSession session) {
     return gameRepository.getAllGames(session);
   }
@@ -132,7 +117,8 @@ public class GameServiceImpl implements GameService {
     game.setWordProgress(getWordProgress(game));
     GameData.latestGameId += 1;
     game.setId(GameData.latestGameId);
-    gameRepository.setCurrentGame(game, session);
+    // gameRepository.setCurrentGame(game, session);
+    gameRepository.saveGame(game, session);
 
     return game;
   }

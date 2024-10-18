@@ -33,8 +33,6 @@ public class HomeController {
     return "ongoing-view";
   }
 
-  // could return the data without the if and if the data is null then handle that in jsp
-  // this way the if is gone and the empty-view page is also gone
   @GetMapping("/history")
   public String getFinished(HttpSession session, Model model) {
     List<GameData> finishedGames = repository.getAllFinishedGames(session);

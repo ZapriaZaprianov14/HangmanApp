@@ -50,7 +50,6 @@ public class HomeControllerTests {
 
   @Test
   public void returnsOngoingViewWithData() throws Exception {
-    // List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData();
     game.setFinished(false);
     List<GameData> games = Collections.singletonList(game);

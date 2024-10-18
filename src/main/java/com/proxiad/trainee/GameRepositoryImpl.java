@@ -25,6 +25,17 @@ public class GameRepositoryImpl implements GameRepository {
     throw new GameNotFoundException("This game does not exist.");
   }
 
+  // new method, should be tested
+  public void updateGame(GameData updateData, HttpSession session) throws GameNotFoundException {
+    List<GameData> games = getAllGames(session);
+    for (int i = 0; i < games.size(); i++) {
+      if (games.get(i).getId() == updateData.getId()) {
+        games.set(i, updateData);
+      }
+    }
+    session.setAttribute(Constants.PREVIOUS_GAMES, games);
+  }
+
   @Override
   public void saveGame(GameData game, HttpSession session) {
     List<GameData> games = getAllGames(session);
@@ -35,26 +46,26 @@ public class GameRepositoryImpl implements GameRepository {
     session.setAttribute(Constants.PREVIOUS_GAMES, games);
   }
 
-  @Override
-  public void leaveGame(HttpSession session) throws GameNotFoundException {
-    GameData currentGame = getCurrentGame(session);
-    session.removeAttribute(Constants.CURRENT_GAME);
-    saveGame(currentGame, session);
-  }
+  //  @Override
+  //  public void leaveGame(HttpSession session) throws GameNotFoundException {
+  //    GameData currentGame = getCurrentGame(session);
+  //    session.removeAttribute(Constants.CURRENT_GAME);
+  //    saveGame(currentGame, session);
+  //  }
 
-  @Override
-  public void setCurrentGame(GameData game, HttpSession session) {
-    session.setAttribute(Constants.CURRENT_GAME, game);
-  }
+  //  @Override
+  //  public void setCurrentGame(GameData game, HttpSession session) {
+  //    session.setAttribute(Constants.CURRENT_GAME, game);
+  //  }
 
-  @Override
-  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
-    GameData game = (GameData) session.getAttribute(Constants.CURRENT_GAME);
-    if (game == null) {
-      throw new GameNotFoundException("Current game is null");
-    }
-    return game;
-  }
+  //  @Override
+  //  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
+  //    GameData game = (GameData) session.getAttribute(Constants.CURRENT_GAME);
+  //    if (game == null) {
+  //      throw new GameNotFoundException("Current game is null");
+  //    }
+  //    return game;
+  //  }
 
   @Override
   public List<GameData> getAllGames(HttpSession session) {
@@ -78,12 +89,12 @@ public class GameRepositoryImpl implements GameRepository {
     return allGames.stream().filter(x -> !x.isFinished()).toList();
   }
 
-  @Override
-  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
-    GameData game = getGame(id, session);
-    setCurrentGame(game, session);
-    List<GameData> previousGames = getAllGames(session);
-    previousGames.remove(game);
-    return game;
-  }
+  //  @Override
+  //  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
+  //    GameData game = getGame(id, session);
+  //    setCurrentGame(game, session);
+  //    List<GameData> previousGames = getAllGames(session);
+  //    previousGames.remove(game);
+  //    return game;
+  //  }
 }
