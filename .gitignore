@@ -1,2 +1,9 @@
 /target
 /.settings
+/mvnw.cmd
+/mvnw
+/.dockerignore
+/Dockerfile
+/compose.yaml
+/README.Docker.md
+/.mvn
