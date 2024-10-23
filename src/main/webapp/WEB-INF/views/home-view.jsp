@@ -33,7 +33,7 @@
 			    </p>
 			</form>
 			<br>
-			<form action="${GAMES_CONTROLLER_URL}/multiplayerInput">
+			<form action="${GAMES_CONTROLLER_URL}/multiplayer">
 				<input id="multiplayer-btn" class="generic-btn" type="submit" value="Start Multiplayer Game">
 			</form>
 			<br>

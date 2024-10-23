@@ -9,7 +9,6 @@ import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
 
-// changed this recently could cause problems
 @Repository
 public class GameRepositoryImpl implements GameRepository {
 
@@ -25,7 +24,7 @@ public class GameRepositoryImpl implements GameRepository {
     throw new GameNotFoundException("This game does not exist.");
   }
 
-  // new method, should be tested
+  @Override
   public void updateGame(GameData updateData, HttpSession session) throws GameNotFoundException {
     List<GameData> games = getAllGames(session);
     for (int i = 0; i < games.size(); i++) {
@@ -45,27 +44,6 @@ public class GameRepositoryImpl implements GameRepository {
     games.add(game);
     session.setAttribute(Constants.PREVIOUS_GAMES, games);
   }
-
-  //  @Override
-  //  public void leaveGame(HttpSession session) throws GameNotFoundException {
-  //    GameData currentGame = getCurrentGame(session);
-  //    session.removeAttribute(Constants.CURRENT_GAME);
-  //    saveGame(currentGame, session);
-  //  }
-
-  //  @Override
-  //  public void setCurrentGame(GameData game, HttpSession session) {
-  //    session.setAttribute(Constants.CURRENT_GAME, game);
-  //  }
-
-  //  @Override
-  //  public GameData getCurrentGame(HttpSession session) throws GameNotFoundException {
-  //    GameData game = (GameData) session.getAttribute(Constants.CURRENT_GAME);
-  //    if (game == null) {
-  //      throw new GameNotFoundException("Current game is null");
-  //    }
-  //    return game;
-  //  }
 
   @Override
   public List<GameData> getAllGames(HttpSession session) {
@@ -88,13 +66,4 @@ public class GameRepositoryImpl implements GameRepository {
     List<GameData> allGames = getAllGames(session);
     return allGames.stream().filter(x -> !x.isFinished()).toList();
   }
-
-  //  @Override
-  //  public GameData resumeGame(Integer id, HttpSession session) throws GameNotFoundException {
-  //    GameData game = getGame(id, session);
-  //    setCurrentGame(game, session);
-  //    List<GameData> previousGames = getAllGames(session);
-  //    previousGames.remove(game);
-  //    return game;
-  //  }
 }

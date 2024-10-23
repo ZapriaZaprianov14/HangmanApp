@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ page import="static com.proxiad.trainee.enums.GamemodeEnum.MULTIPLAYER" %>
 <%@ page import="static com.proxiad.trainee.Constants.GAMES_CONTROLLER_URL" %>
+<%@ page import="static com.proxiad.trainee.Constants.HOME_URL" %>
 <%@ page import="static com.proxiad.trainee.Constants.QWERTY_KEYBOARD" %>
 <!DOCTYPE html>
 <html>
@@ -41,9 +42,8 @@ function submitForm(letterGuessed,gameId) {
 			</form>
 			<img class="stickman"
 				src="${pageContext.request.contextPath}/images/hangman-${currentGame.lives}.png">
-			<form action="${GAMES_CONTROLLER_URL}/leave" method="post">
-				<input id="leave-btn" class="generic-btn" type="submit" value="Leave game">
-			</form>
+			<br/>
+			<a id="leave-btn" class="generic-btn" href="${HOME_URL}">Leave game</a>
 		</div>
 	</div>
 </body>

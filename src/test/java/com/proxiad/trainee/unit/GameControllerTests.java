@@ -36,10 +36,14 @@ public class GameControllerTests {
 
   @Test
   public void testStartNewSingleplayerGame() throws Exception {
+    GameData game = new GameData();
+    game.setId(0);
+    when(gameService.startNewGame(any(NewGameDTO.class), any(MockHttpSession.class)))
+        .thenReturn(game);
     mockMvc
         .perform(post(CONTROLLER_MAPPING + "/singleplayer/category/{category}", "CARS"))
-        .andExpect(status().isOk())
-        .andExpect(view().name("game-view"));
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/api/games/0"));
   }
 
   @Test
@@ -99,7 +103,7 @@ public class GameControllerTests {
   @Test
   public void testReturnsMultiplayerInputPage() throws Exception {
     mockMvc
-        .perform(get(CONTROLLER_MAPPING + "/multiplayerInput"))
+        .perform(get(CONTROLLER_MAPPING + "/multiplayer"))
         .andExpect(status().isOk())
         .andExpect(view().name("multiplayer-input-view"));
   }
@@ -148,37 +152,19 @@ public class GameControllerTests {
   }
 
   @Test
-  public void testResumesGame() throws Exception {
+  public void testGetsGame() throws Exception {
     mockMvc
-        .perform(post(CONTROLLER_MAPPING + "/{gameID}/resume", "1"))
+        .perform(get(CONTROLLER_MAPPING + "/{gameID}", "1"))
         .andExpect(status().isOk())
         .andExpect(view().name("game-view"));
   }
 
   @Test
-  public void testResumeWhenGameNotFound() throws Exception {
-    mockMvc
-        .perform(post(CONTROLLER_MAPPING + "/{gameId}/resume", "1d"))
-        .andExpect(status().isBadRequest());
-    // says no view and model
+  public void testGetWhenGameNotFound() throws Exception {
+    mockMvc.perform(get(CONTROLLER_MAPPING + "/{gameId}", "1d")).andExpect(status().isBadRequest());
     // .andExpect(view().name("bad-request-view"));
+    // says no view and model
   }
-
-  @Test
-  public void testLeaveGame() throws Exception {
-    mockMvc
-        .perform(post(CONTROLLER_MAPPING + "/leave"))
-        .andExpect(status().isOk())
-        .andExpect(view().name("home-view"));
-  }
-
-  //  @Test
-  //  public void testGetEndpoint() throws Exception {
-  //    mockMvc
-  //        .perform(get(CONTROLLER_MAPPING + "/singleplayer/category/{category}", "CARS"))
-  //        .andExpect(status().isOk())
-  //        .andExpect(view().name("game-view"));
-  //  }
 
   @Test
   public void testInvalidCategoryExceptionHandler() throws Exception {

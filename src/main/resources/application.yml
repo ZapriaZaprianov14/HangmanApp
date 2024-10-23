@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: HangmanApp
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+server:
+  servlet:
+    context-path: /HangmanApp

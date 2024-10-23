@@ -12,7 +12,7 @@
 <script>
 function submitForm(gameId) {
 	var form = document.getElementById('resume-form-' + gameId);
-    form.action = '/HangmanApp/api/games/' + gameId + '/resume';
+    form.action = '/HangmanApp/api/games/' + gameId;
     form.submit();
     return false;
 }
@@ -43,9 +43,7 @@ function submitForm(gameId) {
 									<td>${game.lives}</td>
 									<td>${game.gamemode}</td>
 									<td>
-										<form onsubmit="submitForm('${game.id}')" id="resume-form-${game.id}" method="post">
-										    <input name="resume-btn" class="small-btn generic-btn" type="submit" value="Resume">
-										</form>
+										<a class="small-btn generic-btn" name="resume-btn" href="${GAMES_CONTROLLER_URL}/${game.id}">Resume</a>
 									</td>
 								</tr>
 							</c:forEach>

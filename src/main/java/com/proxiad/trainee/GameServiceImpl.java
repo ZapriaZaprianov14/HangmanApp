@@ -117,7 +117,6 @@ public class GameServiceImpl implements GameService {
     game.setWordProgress(getWordProgress(game));
     GameData.latestGameId += 1;
     game.setId(GameData.latestGameId);
-    // gameRepository.setCurrentGame(game, session);
     gameRepository.saveGame(game, session);
 
     return game;
