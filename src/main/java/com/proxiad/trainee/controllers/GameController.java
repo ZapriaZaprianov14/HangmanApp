@@ -94,12 +94,6 @@ public class GameController {
     return "home-view";
   }
 
-  @GetMapping("/singleplayer/category/{category}")
-  public String handleGetRequests(HttpSession session) throws GameNotFoundException {
-    // throw new GameNotFoundException("This game does not exist");
-    return "game-view";
-  }
-
   @ExceptionHandler(value = CustomException.class)
   public String handleCustomException(
       CustomException exception, Model model, HttpServletResponse response) {

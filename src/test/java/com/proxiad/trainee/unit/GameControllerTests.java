@@ -162,8 +162,6 @@ public class GameControllerTests {
   @Test
   public void testGetWhenGameNotFound() throws Exception {
     mockMvc.perform(get(CONTROLLER_MAPPING + "/{gameId}", "1d")).andExpect(status().isBadRequest());
-    // .andExpect(view().name("bad-request-view"));
-    // says no view and model
   }
 
   @Test
