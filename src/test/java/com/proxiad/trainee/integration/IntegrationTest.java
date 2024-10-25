@@ -30,7 +30,7 @@ public class IntegrationTest {
   @BeforeEach
   public void setUp() {
     driver = new ChromeDriver();
-    driver.get("http://localhost:8080/HangmanApp/api/home");
+    driver.get("http://localhost:8080/HangmanApp/api/v1/home");
     homePage = new HomePage(driver);
     ongoingPage = new OngoingPage(driver);
     gamePage = new GamePage(driver);

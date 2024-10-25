@@ -48,24 +48,6 @@ public class GameRepositoryTests {
   }
 
   @Test
-  public void testReturnsNullWhenListEmpty() {
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
-
-    List<GameData> returnedGames = repository.getAllGames(session);
-
-    assertThat(returnedGames).isEqualTo(new ArrayList<GameData>());
-  }
-
-  @Test
-  public void testReturnsAllGames() {
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(new ArrayList<GameData>());
-
-    List<GameData> returnedGames = repository.getAllGames(session);
-
-    assertThat(returnedGames).isEqualTo(new ArrayList<GameData>());
-  }
-
-  @Test
   public void testReturnsAllFinishedGames() {
     List<GameData> games = new ArrayList<GameData>();
     GameData game1 = new GameData();
@@ -102,7 +84,7 @@ public class GameRepositoryTests {
 
     assertThatThrownBy(
             () -> {
-              repository.getGame(1000, session);
+              repository.getGame(1000L, session);
             })
         .isInstanceOf(GameNotFoundException.class)
         .hasMessageContaining("This game does not exist.");
@@ -125,10 +107,27 @@ public class GameRepositoryTests {
     List<GameData> games = new ArrayList<>();
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
-    repository.saveGame(game, session);
+    repository.postGame(game, session);
 
     verify(session).setAttribute(eq(PREVIOUS_GAMES), anyList());
     assertFalse(games.isEmpty());
     assertTrue(games.size() == 1);
+  }
+
+  @Test
+  public void testUpdatesCorrectGame() throws GameNotFoundException {
+    GameData game = new GameData();
+    game.setId(0L);
+    game.setWord("HONDA");
+    GameData updateData = new GameData();
+    updateData.setId(0L);
+    updateData.setWord("TOYOTA");
+    List<GameData> games = new ArrayList<GameData>();
+    games.add(game);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
+
+    repository.updateGame(updateData, session);
+
+    assertTrue(games.get(0).getWord().equals("TOYOTA"));
   }
 }

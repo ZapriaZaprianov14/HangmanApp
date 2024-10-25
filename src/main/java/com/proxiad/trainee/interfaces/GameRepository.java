@@ -6,13 +6,11 @@ import com.proxiad.trainee.exceptions.GameNotFoundException;
 import jakarta.servlet.http.HttpSession;
 
 public interface GameRepository {
-  GameData getGame(Integer id, HttpSession session) throws GameNotFoundException;
+  GameData getGame(Long id, HttpSession session) throws GameNotFoundException;
 
-  void saveGame(GameData game, HttpSession session);
+  void postGame(GameData game, HttpSession session);
 
   void updateGame(GameData updateData, HttpSession session) throws GameNotFoundException;
-
-  List<GameData> getAllGames(HttpSession session);
 
   List<GameData> getAllFinishedGames(HttpSession session);
 

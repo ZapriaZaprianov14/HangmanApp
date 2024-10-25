@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,17 +86,12 @@ public class GameServiceTests {
     assertFalse(game.getUnguessedLetters().contains('P'));
   }
 
-  // I think these tests are unnecessary since there is no currentGame and everything is directly
-  // saved to the previousGames
-
   @Test
   public void rightGuessSavesWinningGame() throws InvalidGuessException, GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, MAX_LIVES);
     game.getUnguessedLetters().removeAll(Arrays.asList('O', 'P', 'L'));
     game.getRightGuesses().addAll(Arrays.asList('O', 'P', 'L'));
-    // when(session.getAttribute(CURRENT_GAME)).thenReturn(game);
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     gameService.makeTry(game, "e", session);
 
@@ -105,23 +101,13 @@ public class GameServiceTests {
 
   @Test
   public void wrongGuessSavesLosingGame() throws InvalidGuessException, GameNotFoundException {
-    List<GameData> games = new ArrayList<GameData>();
     GameData game = new GameData("OPEL", "CARS", MULTIPLAYER, 1);
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     gameService.makeTry(game, "J", session);
 
     assertTrue(game.isFinished());
     assertFalse(game.isGameWon());
   }
-
-  //  private void assertGameFinished(GameData game, List<GameData> games, boolean expectedIsWon) {
-  //    assertThat(game.getWordProgress()).isEqualTo("OPEL");
-  //    assertTrue(game.isFinished());
-  //    assertThat(game.isGameWon()).isEqualTo(expectedIsWon);
-  //    assertTrue(games.contains(game));
-  //    verify(session, times(1)).setAttribute("previousGames", games);
-  //  }
 
   private void assertGameStarted(GameData game, GamemodeEnum gamemodeEnum) {
     assertThat(game.getCategory()).isEqualTo("CARS");
@@ -144,32 +130,13 @@ public class GameServiceTests {
   }
 
   @Test
-  public void repoReturnsNullWhenListEmpty() {
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(null);
-
-    List<GameData> returnedData = gameService.getAllGames(session);
-
-    assertThat(returnedData).isEqualTo(new ArrayList<GameData>());
-  }
-
-  @Test
-  public void repoReturnsAllGames() {
-    List<GameData> games = new ArrayList<GameData>();
-    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
-
-    List<GameData> returnedData = gameService.getAllGames(session);
-
-    assertThat(returnedData).isEqualTo(games);
-  }
-
-  @Test
   public void returnsNullWhenGameNotFound() throws GameNotFoundException {
     List<GameData> games = new ArrayList<GameData>();
     when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
 
     assertThatThrownBy(
             () -> {
-              gameService.getGame(1000, session);
+              gameService.getGame(1000L, session);
             })
         .isInstanceOf(GameNotFoundException.class)
         .hasMessageContaining("This game does not exist.");
@@ -185,5 +152,35 @@ public class GameServiceTests {
     GameData returnedData = gameService.getGame(game.getId(), session);
 
     assertThat(returnedData).isEqualTo(game);
+  }
+
+  @Test
+  public void testReturnsAllFinishedGames() {
+    List<GameData> games = new ArrayList<GameData>();
+    GameData game1 = new GameData();
+    GameData game2 = new GameData();
+    game2.setFinished(true);
+    games.add(game1);
+    games.add(game2);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
+
+    List<GameData> returnedGames = gameService.getAllFinishedGames(session);
+
+    assertThat(returnedGames).isEqualTo(Arrays.asList(game2));
+  }
+
+  @Test
+  public void testReturnsAllOngoingGames() {
+    List<GameData> games = new ArrayList<GameData>();
+    GameData game1 = new GameData();
+    GameData game2 = new GameData();
+    game2.setFinished(true);
+    games.add(game1);
+    games.add(game2);
+    when(session.getAttribute(PREVIOUS_GAMES)).thenReturn(games);
+
+    List<GameData> returnedGames = gameService.getAllOngoingGames(session);
+
+    assertThat(returnedGames).isEqualTo(Arrays.asList(game1));
   }
 }

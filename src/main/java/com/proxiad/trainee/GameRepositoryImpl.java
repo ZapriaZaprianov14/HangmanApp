@@ -2,9 +2,7 @@ package com.proxiad.trainee;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import com.proxiad.trainee.exceptions.GameNotFoundException;
 import com.proxiad.trainee.interfaces.GameRepository;
 import jakarta.servlet.http.HttpSession;
@@ -13,9 +11,11 @@ import jakarta.servlet.http.HttpSession;
 public class GameRepositoryImpl implements GameRepository {
 
   @Override
-  public GameData getGame(Integer id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(Long id, HttpSession session) throws GameNotFoundException {
     List<GameData> games = getAllGames(session);
-    for (GameData game : games) {
+
+    for (int i = games.size() - 1; i >= 0; i--) {
+      GameData game = games.get(i);
       if (game.getId() == id) {
         return game;
       }
@@ -36,7 +36,7 @@ public class GameRepositoryImpl implements GameRepository {
   }
 
   @Override
-  public void saveGame(GameData game, HttpSession session) {
+  public void postGame(GameData game, HttpSession session) {
     List<GameData> games = getAllGames(session);
     if (games == null) {
       games = new ArrayList<GameData>();
@@ -45,8 +45,7 @@ public class GameRepositoryImpl implements GameRepository {
     session.setAttribute(Constants.PREVIOUS_GAMES, games);
   }
 
-  @Override
-  public List<GameData> getAllGames(HttpSession session) {
+  private List<GameData> getAllGames(HttpSession session) {
     List<GameData> allGames = (List<GameData>) session.getAttribute(Constants.PREVIOUS_GAMES);
     if (allGames == null) {
       return new ArrayList<GameData>();

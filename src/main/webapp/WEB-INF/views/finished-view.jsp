@@ -57,7 +57,6 @@
 					<h2 id="message">No finished games</h2>
 				</c:otherwise>
 			</c:choose>
-			
 			<a id="home-btn" style="margin:20px" class="generic-btn" href="${HOME_URL}">Home</a>
 		</div>
 	</div>

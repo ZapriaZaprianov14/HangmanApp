@@ -14,7 +14,7 @@ body{
 	display: flex;
 	justify-content: center;
   	align-items: center;
-  	width:65%;
+  	width:75%;
   	height: 100%;
   	background-color:white;
   	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -31,6 +31,12 @@ button {
 
 input {
 	font-family: Candara;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }
 
 table {
@@ -124,8 +130,6 @@ a.generic-btn:hover {
 }
 
 .word-input{
-	min-width: 25px;
-	margin: 8px;
 	-webkit-text-security: disc;
     text-security: disc;
 }
@@ -155,6 +159,11 @@ a.generic-btn:hover {
 
 .error {
 	color: red;
+}
+
+.input-error{
+	color: red;
+	font-size:10px;
 }
 
 .preserve-space {

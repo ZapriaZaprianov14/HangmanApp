@@ -1,5 +1,7 @@
 package com.proxiad.trainee.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +25,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/api/games")
+@RequestMapping("/api/v1/games")
 public class GameController {
-  @Autowired private GameService gameService;
+  private final GameService gameService;
+
+  @Autowired
+  public GameController(GameService gameService) {
+    this.gameService = gameService;
+  }
 
   @PostMapping("/singleplayer/category/{category}")
   public String startNewSingleplayerGame(
@@ -33,8 +40,7 @@ public class GameController {
       throws InvalidCategoryException {
     NewGameDTO newGameDTO = new NewGameDTO(null, "SINGLEPLAYER", category);
     GameData game = gameService.startNewGame(newGameDTO, session);
-    model.addAttribute(Constants.CURRENT_GAME, game);
-    return "redirect:/api/games/" + game.getId();
+    return "redirect:/api/v1/games/" + game.getId();
   }
 
   @PostMapping("/multiplayer")
@@ -50,14 +56,13 @@ public class GameController {
     }
 
     GameData game = gameService.startNewGame(newGameDTO, session);
-    model.addAttribute(Constants.CURRENT_GAME, game);
-    return "game-view";
+    return "redirect:/api/v1/games/" + game.getId();
   }
 
   // @PutMapping("/{gameId}/guess/{guess}")
   @PostMapping("/{gameId}/guess/{guess}")
   public String playGuess(
-      HttpSession session, @PathVariable int gameId, @PathVariable String guess, Model model)
+      HttpSession session, @PathVariable Long gameId, @PathVariable String guess, Model model)
       throws InvalidGuessException, GameNotFoundException {
     GameData currentGame = gameService.getGame(gameId, session);
 
@@ -75,18 +80,37 @@ public class GameController {
     return "game-view";
   }
 
+  @GetMapping("/ongoing")
+  public String getOngoing(HttpSession session, Model model) {
+    List<GameData> ongoingGames = gameService.getAllOngoingGames(session);
+    model.addAttribute("gamesReversed", reverseListOfGames(ongoingGames));
+    return "ongoing-view";
+  }
+
+  @GetMapping("/finished")
+  public String getFinished(HttpSession session, Model model) {
+    List<GameData> finishedGames = gameService.getAllFinishedGames(session);
+    model.addAttribute("gamesReversed", reverseListOfGames(finishedGames));
+    return "finished-view";
+  }
+
   @GetMapping("/multiplayer")
   public String showMultiplayerForm(Model model) {
     model.addAttribute("newGameDTO", new NewGameDTO());
     return "multiplayer-input-view";
   }
 
-  @GetMapping({"/{gameId}", "/{gameId}/guess/{guess}"})
-  public String getGame(HttpSession session, @PathVariable int gameId, Model model)
+  @GetMapping("/{gameId}")
+  public String getGame(HttpSession session, @PathVariable Long gameId, Model model)
       throws GameNotFoundException {
     GameData currentGame = gameService.getGame(gameId, session);
     model.addAttribute(Constants.CURRENT_GAME, currentGame);
     return "game-view";
+  }
+
+  @GetMapping("/{gameId}/guess/{guess}")
+  public String getGameWithGuess(HttpSession session, @PathVariable Long gameId, Model model) {
+    return "redirect:/api/v1/games/" + gameId;
   }
 
   @GetMapping("/leave")
@@ -100,5 +124,13 @@ public class GameController {
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     model.addAttribute("message", exception.getMessage());
     return "bad-request-view";
+  }
+
+  private List<GameData> reverseListOfGames(List<GameData> games) {
+    List<GameData> result = new ArrayList<>();
+    for (int i = games.size() - 1; i >= 0; i--) {
+      result.add(games.get(i));
+    }
+    return result;
   }
 }

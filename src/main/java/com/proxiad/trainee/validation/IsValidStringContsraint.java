@@ -8,9 +8,6 @@ import jakarta.validation.ConstraintValidatorContext;
 public class IsValidStringContsraint implements ConstraintValidator<ValidString, String> {
 
   @Override
-  public void initialize(ValidString constraintAnnotation) {}
-
-  @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     if (!stringEndsAndBeginsWithLetter(value)) {
       context.disableDefaultConstraintViolation();

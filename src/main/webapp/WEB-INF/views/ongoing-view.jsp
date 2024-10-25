@@ -9,14 +9,6 @@
 <meta charset="UTF-8">
 <title>Ongoing Games</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/site.css">
-<script>
-function submitForm(gameId) {
-	var form = document.getElementById('resume-form-' + gameId);
-    form.action = '/HangmanApp/api/games/' + gameId;
-    form.submit();
-    return false;
-}
-</script>
 </head>
 <body>
 	<div class="container">

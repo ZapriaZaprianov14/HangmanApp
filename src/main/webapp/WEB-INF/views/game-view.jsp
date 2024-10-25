@@ -14,7 +14,7 @@
 <script>
 function submitForm(letterGuessed,gameId) {
     var form = document.getElementById('keyboard-form');
-    form.action = '/HangmanApp/api/games/' + gameId + '/guess/' + letterGuessed;
+    form.action = '/HangmanApp/api/v1/games/' + gameId + '/guess/' + letterGuessed;
     form.submit();
     return false;
 }

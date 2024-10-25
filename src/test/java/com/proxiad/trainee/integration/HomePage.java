@@ -14,10 +14,10 @@ public class HomePage {
   }
 
   // Web elements
-  @FindBy(xpath = "/html/body/div/div/p[3]/a[1]")
+  @FindBy(id = "history-btn")
   protected WebElement historyButton;
 
-  @FindBy(xpath = "/html/body/div/div/p[3]/a[2]")
+  @FindBy(id = "ongoing-btn")
   protected WebElement ongoingButton;
 
   @FindBy(xpath = "/html/body/div/div/p[1]")

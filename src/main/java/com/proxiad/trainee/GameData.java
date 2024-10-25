@@ -12,9 +12,9 @@ public class GameData implements Serializable {
   /** */
   private static final long serialVersionUID = 1L;
 
-  public static Integer latestGameId = 0;
+  public static Long latestGameId = 0L;
 
-  private int id;
+  private Long id;
   private int lives;
   private int correctlyGuessedLetters;
   private int irrelevantCharacters; // whitespaces _ and - are irrelevant
@@ -108,11 +108,11 @@ public class GameData implements Serializable {
     this.word = word;
   }
 
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -142,9 +142,6 @@ public class GameData implements Serializable {
   }
 
   public GameData(String word, String category, GamemodeEnum gamemode, int lives) {
-    // id should be a sequence
-    // auto increment
-    // or time stamp
     setUnguessedLetters(
         new ArrayList<Character>(
             Arrays.asList(

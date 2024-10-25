@@ -17,11 +17,14 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class GameServiceImpl implements GameService {
+  private final GameRepository gameRepository;
+  private final WordGeneratorService wordGeneratorService;
 
-  @Autowired private GameRepository gameRepository;
-  @Autowired private WordGeneratorService wordGeneratorService;
-
-  public GameServiceImpl() {}
+  @Autowired
+  public GameServiceImpl(GameRepository gameRepository, WordGeneratorService wordGeneratorService) {
+    this.gameRepository = gameRepository;
+    this.wordGeneratorService = wordGeneratorService;
+  }
 
   @Override
   public GameData makeTry(GameData game, String guess, HttpSession session)
@@ -58,7 +61,6 @@ public class GameServiceImpl implements GameService {
     game.setFinished(true);
     game.setGameWon(gameWon);
     game.setWordProgress(game.getWord());
-    // gameRepository.leaveGame(session);
     return game;
   }
 
@@ -68,7 +70,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameData getGame(Integer id, HttpSession session) throws GameNotFoundException {
+  public GameData getGame(Long id, HttpSession session) throws GameNotFoundException {
     return gameRepository.getGame(id, session);
   }
 
@@ -92,11 +94,6 @@ public class GameServiceImpl implements GameService {
     return initializeGame(wordToGuess, game, session);
   }
 
-  @Override
-  public List<GameData> getAllGames(HttpSession session) {
-    return gameRepository.getAllGames(session);
-  }
-
   private GameData initializeGame(String word, GameData game, HttpSession session) {
     Character firstChar = word.charAt(0);
     Character lastChar = word.charAt(word.length() - 1);
@@ -117,7 +114,7 @@ public class GameServiceImpl implements GameService {
     game.setWordProgress(getWordProgress(game));
     GameData.latestGameId += 1;
     game.setId(GameData.latestGameId);
-    gameRepository.saveGame(game, session);
+    gameRepository.postGame(game, session);
 
     return game;
   }
@@ -156,14 +153,6 @@ public class GameServiceImpl implements GameService {
     return wordGeneratorService.createRandomWord(category);
   }
 
-  public void setGameRepository(GameRepository gameRepository) {
-    this.gameRepository = gameRepository;
-  }
-
-  public void setWordGeneratorService(WordGeneratorService wordGeneratorService) {
-    this.wordGeneratorService = wordGeneratorService;
-  }
-
   private boolean isCategoryInvalid(String value) {
     try {
       CategoryEnum.valueOf(value.toUpperCase());
@@ -171,5 +160,15 @@ public class GameServiceImpl implements GameService {
     } catch (IllegalArgumentException e) {
       return true;
     }
+  }
+
+  @Override
+  public List<GameData> getAllFinishedGames(HttpSession session) {
+    return gameRepository.getAllFinishedGames(session);
+  }
+
+  @Override
+  public List<GameData> getAllOngoingGames(HttpSession session) {
+    return gameRepository.getAllOngoingGames(session);
   }
 }
